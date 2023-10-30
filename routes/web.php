@@ -16,5 +16,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', [HomeController::class, 'home'])->name('home');
-Route::get('/seller/register', [SellerController::class, 'create'])->name('seller.register');
-Route::post('/seller/register', [SellerController::class, 'store'])->name('seller.store');
+Route::prefix('/seller/register')->name('seller')->controller(SellerController::class)
+    ->group(function () {
+        Route::get('/', 'create')->name('.register');
+        Route::post('/', 'store')->name('.store');
+    });
