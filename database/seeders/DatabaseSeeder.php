@@ -16,10 +16,11 @@ class DatabaseSeeder extends Seeder
         $this->call([
             PermissionSeeder::class
         ]);
-        $user = User::query()->create([
+        $superAdmin = User::query()->create([
             'name' => 'super-admin',
             'email' => 'super.admin@gmail.com',
-            'password' => '123456'
+            'password' => bcrypt('123456')
         ]);
+        $superAdmin->assignRole('super-admin');
     }
 }

@@ -4,9 +4,38 @@ namespace App\Http\Controllers;
 
 use App\Models\Seller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 
 class SellerController extends Controller
 {
+    public function showLogin()
+    {
+        return view('seller.login');
+    }
+
+
+    /**
+     * @throws ValidationException
+     */
+    public function login(Request $request)
+    {
+        $request->validate([
+            'email' => ['required', 'email'],
+            'password' => ['required'],
+        ]);
+
+        if (Auth::attempt([
+            'email' => $request->post('email'),
+            'password' => $request->post('password')
+        ])) {
+            return redirect('/');
+        }
+
+        throw ValidationException::withMessages([
+            'email' => ['Invalid email or password. Please try again.'],
+        ]);
+    }
     public function create()
     {
         return view('seller.register');
@@ -27,6 +56,6 @@ class SellerController extends Controller
             'password' => bcrypt($request->input('password')),
         ]);
 
-        return redirect('/')->with('success', 'Seller registration successful.');
+        return redirect('/login')->with('success', 'Registration successful. You can now log in.');
     }
 }

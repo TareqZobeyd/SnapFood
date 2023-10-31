@@ -17,7 +17,7 @@
                     <a class="nav-link" href="#">Order Online</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Login</a>
+                    <a class="nav-link" href="/seller/login">Login</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/seller/register">Register</a>
