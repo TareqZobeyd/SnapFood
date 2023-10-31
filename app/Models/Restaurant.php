@@ -17,6 +17,11 @@ class Restaurant extends Model
         'bank_account'
     ];
 
+    public function category()
+    {
+        return $this->belongsTo(Category::class, 'category_id');
+    }
+
     public function foods()
     {
         return $this->hasMany(Food::class);

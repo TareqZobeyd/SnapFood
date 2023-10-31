@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Food;
-use App\Models\FoodCategory;
+use App\Models\Category;
 use Illuminate\Http\Request;
 
 class FoodController extends Controller
@@ -16,8 +16,8 @@ class FoodController extends Controller
 
     public function index()
     {
-        $categories = FoodCategory::all();
-        return view('foods.index', compact('categories'));
+        $foodCategories = Category::query()->where('type', 'food')->get();
+        return view('foods.index', compact('foodCategories'));
     }
 
     public function create()
@@ -50,7 +50,7 @@ class FoodController extends Controller
     public function edit($id)
     {
         $food = Food::find($id);
-        $categories = FoodCategory::all();
+        $categories = Category::all();
         return view('foods.edit', compact('food', 'categories'));
     }
 
@@ -85,5 +85,14 @@ class FoodController extends Controller
         }
 
         return redirect()->route('foods.index')->with('error', 'Food not found.');
+    }
+    public function createCategory(Request $request)
+    {
+        $category = new Category;
+        $category->name = $request->input('name');
+        $category->type = 'food';
+        $category->save();
+
+        return redirect()->route('foods.index');
     }
 }

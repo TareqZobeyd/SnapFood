@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use Illuminate\Http\Request;
 
 class RestaurantController extends Controller
@@ -39,5 +40,14 @@ class RestaurantController extends Controller
     public function destroy($id)
     {
         // Delete a specific food from the database
+    }
+    public function createCategory(Request $request)
+    {
+        $category = new Category;
+        $category->name = $request->input('name');
+        $category->type = 'restaurant';
+        $category->save();
+
+        return redirect()->route('restaurants.create');
     }
 }

@@ -17,7 +17,8 @@ return new class extends Migration {
             $table->decimal('price', 10, 2);
             $table->unsignedBigInteger('category_id');
             $table->foreign('category_id')->references('id')
-                ->on('food_categories')->onDelete('cascade');
+                ->on('categories')
+                ->onDelete('cascade');
             $table->timestamps();
         });
     }

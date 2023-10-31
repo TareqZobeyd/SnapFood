@@ -4,6 +4,7 @@ use App\Http\Controllers\FoodController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\RestaurantController;
 use App\Http\Controllers\SellerController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,6 +19,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', [HomeController::class, 'home'])->name('home');
+Route::post('/logout', [UserController::class, 'logout'])->name('logout');
 Route::prefix('/seller')->name('seller.')->controller(SellerController::class)->group(function () {
     Route::get('/register', 'create')->name('register');
     Route::post('/register', 'store')->name('store');
@@ -25,6 +27,7 @@ Route::prefix('/seller')->name('seller.')->controller(SellerController::class)->
     Route::post('/login', 'login')->name('login');
 });
 Route::middleware(['role:super-admin'])->group(function () {
+    Route::post('/foods/categories', [FoodController::class, 'createCategory'])->name('foods.categories.create');
     Route::get('/foods/list', [FoodController::class, 'list'])->name('foods.list');
     Route::resource('foods', FoodController::class)->names([
         'index' => 'foods.index',
@@ -35,6 +38,8 @@ Route::middleware(['role:super-admin'])->group(function () {
         'update' => 'foods.update',
         'destroy' => 'foods.destroy',
     ]);
+    Route::post('/restaurants/categories', [RestaurantController::class, 'createCategory'])
+        ->name('restaurants.categories.create');
     Route::resource('restaurants', RestaurantController::class)->names([
         'index' => 'restaurants.index',
         'create' => 'restaurants.create',
