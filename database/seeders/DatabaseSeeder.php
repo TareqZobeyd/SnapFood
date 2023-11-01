@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
         $superAdmin = User::query()->create([
             'name' => 'super-admin',
             'email' => 'super.admin@gmail.com',
+            'phone'=> '09168900083',
             'password' => bcrypt('123456')
         ]);
         $superAdmin->assignRole('super-admin');

@@ -8,6 +8,12 @@ use Illuminate\Http\Request;
 
 class FoodController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('role:super-admin');
+
+        $this->middleware('role:user')->only(['create', 'store']);
+    }
     public function list()
     {
         $foods = Food::all();

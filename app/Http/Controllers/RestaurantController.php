@@ -8,6 +8,12 @@ use Illuminate\Http\Request;
 
 class RestaurantController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('role:super-admin');
+
+        $this->middleware('role:user')->only(['create', 'store']);
+    }
     public function index()
     {
         $restaurants = Restaurant::all();

@@ -20,7 +20,7 @@ class PermissionSeeder extends Seeder
                 'name' => 'super-admin'
             ],
             [
-                'name' => 'seller'
+                'name' => 'user'
             ]
         ]);
         DB::table('permissions')->insert([
@@ -56,6 +56,10 @@ class PermissionSeeder extends Seeder
             ]
         ]);
 
-        Role::query()->first()->syncPermissions(Permission::all());
+        $superAdminRole = Role::query()->where('name', 'super-admin')->first();
+        $superAdminRole->syncPermissions(Permission::all());
+
+        $sellerRole = Role::query()->where('name', 'user')->first();
+        $sellerRole->givePermissionTo(['create-foods', 'create-restaurants']);
     }
 }
