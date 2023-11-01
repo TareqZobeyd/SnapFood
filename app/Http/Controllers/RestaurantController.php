@@ -3,23 +3,40 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Restaurant;
 use Illuminate\Http\Request;
 
 class RestaurantController extends Controller
 {
     public function index()
     {
-        // List of all foods
+        $restaurants = Restaurant::all();
+        return view('restaurants.index', compact('restaurants'));
     }
 
     public function create()
     {
-        // Show the form to create a new food
+        $categories = Category::all();
+        return view('restaurants.create', compact('categories'));
     }
 
     public function store(Request $request)
     {
-        // Store a new food in the database
+        $request->validate([
+            'name' => 'required|string|max:255|unique:restaurants',
+            'category_id' => 'required|exists:categories,id',
+            'phone' => 'required|string|min:11',
+            'address' => 'required|string',
+            'bank_account' => 'required|string',
+        ]);
+        Restaurant::query()->create([
+            'name' => $request->input('name'),
+            'category_id' => $request->input('category_id'),
+            'phone' => $request->input('phone'),
+            'address' => $request->input('address'),
+            'bank_account' => $request->input('bank_account'),
+        ]);
+        return redirect()->route('restaurants.create')->with('success', 'Restaurant details completed.');
     }
 
     public function show($id)
@@ -29,25 +46,53 @@ class RestaurantController extends Controller
 
     public function edit($id)
     {
-        // Show the edit form for a specific food
+        $restaurant = Restaurant::find($id);
+        $categories = Category::all();
+
+        if (!$restaurant) {
+            return redirect()->route('restaurants.index')->with('error', 'Restaurant not found.');
+        }
+
+        return view('restaurants.edit', compact('restaurant', 'categories'));
     }
 
     public function update(Request $request, $id)
     {
-        // Update a specific food in the database
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'category_id' => 'required|exists:categories,id',
+            'phone' => 'required|string',
+            'address' => 'required|string',
+            'bank_account' => 'required|string',
+        ]);
+
+        $restaurant = Restaurant::query()->find($id);
+
+        if (!$restaurant) {
+            return redirect()->route('restaurants.index')->with('error', 'Restaurant not found.');
+        }
+
+        $restaurant->update([
+            'name' => $request->input('name'),
+            'category_id' => $request->input('category_id'),
+            'phone' => $request->input('phone'),
+            'address' => $request->input('address'),
+            'bank_account' => $request->input('bank_account'),
+        ]);
+
+        return redirect()->route('restaurants.index')->with('success', 'Restaurant details updated successfully.');
     }
 
     public function destroy($id)
     {
-        // Delete a specific food from the database
-    }
-    public function createCategory(Request $request)
-    {
-        $category = new Category;
-        $category->name = $request->input('name');
-        $category->type = 'restaurant';
-        $category->save();
+        $restaurant = Restaurant::query()->find($id);
 
-        return redirect()->route('restaurants.create');
+        if (!$restaurant) {
+            return redirect()->route('restaurants.index')->with('error', 'Restaurant not found.');
+        }
+
+        $restaurant->delete();
+
+        return redirect()->route('restaurants.index')->with('success', 'Restaurant deleted successfully.');
     }
 }

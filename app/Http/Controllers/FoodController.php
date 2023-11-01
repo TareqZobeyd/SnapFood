@@ -30,7 +30,7 @@ class FoodController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'price' => 'required|numeric',
-            'category_id' => 'required|exists:food_categories,id',
+            'category_id' => 'required|exists:categories,id',
         ]);
 
         Food::query()->create([
@@ -85,14 +85,5 @@ class FoodController extends Controller
         }
 
         return redirect()->route('foods.index')->with('error', 'Food not found.');
-    }
-    public function createCategory(Request $request)
-    {
-        $category = new Category;
-        $category->name = $request->input('name');
-        $category->type = 'food';
-        $category->save();
-
-        return redirect()->route('foods.index');
     }
 }
