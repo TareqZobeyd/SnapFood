@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Restaurant;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -10,6 +11,11 @@ use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
+    public function index()
+    {
+        $restaurants = Restaurant::all();
+        return view('user.restaurants', compact('restaurants'));
+    }
     public function showLogin()
     {
         return view('user.login');
@@ -47,7 +53,7 @@ class UserController extends Controller
     {
         $this->validate($request, [
             'name' => 'required|string',
-            'email' => 'required|email|unique:sellers,email',
+            'email' => 'required|email|unique:users,email',
             'phone' => 'required|string|min:11',
             'password' => 'required|min:6',
         ]);

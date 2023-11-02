@@ -19,17 +19,17 @@
 
                 @auth
                     <li class="nav-item">
-                        <form action="{{ route('logout') }}" method="POST">
+                        <form action="{{ route('user.logout') }}" method="POST">
                             @csrf
                             <button type="submit" class="btn btn-link nav-link">Log Out</button>
                         </form>
                     </li>
                 @else
                     <li class="nav-item">
-                        <a class="nav-link" href="/seller/login">Log In</a>
+                        <a class="nav-link" href="/user/login">Log In</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/seller/register">Register</a>
+                        <a class="nav-link" href="/user/register">Register</a>
                     </li>
                 @endauth
             </ul>

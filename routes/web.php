@@ -19,7 +19,6 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', [HomeController::class, 'home'])->name('home');
-Route::post('/logout', [UserController::class, 'logout'])->name('logout');
 Route::middleware(['role:super-admin'])->group(function () {
     Route::resource('categories', CategoryController::class)->names([
         'index' => 'categories.index',
@@ -36,6 +35,8 @@ Route::prefix('/user')->name('user.')->controller(UserController::class)->group(
     Route::post('/register', 'store')->name('store');
     Route::get('/login', 'showLogin')->name('show-login');
     Route::post('/login', 'login')->name('login');
+    Route::post('/logout', 'logout')->name('logout');
+    Route::get('/restaurants', 'index')->name('restaurants');
 });
 Route::middleware(['role:super-admin'])->group(function () {
     Route::get('/foods/list', [FoodController::class, 'list'])->name('foods.list');
@@ -48,13 +49,13 @@ Route::middleware(['role:super-admin'])->group(function () {
         'update' => 'foods.update',
         'destroy' => 'foods.destroy',
     ]);
-    Route::resource('restaurants', RestaurantController::class)->names([
-        'index' => 'restaurants.index',
-        'create' => 'restaurants.create',
-        'store' => 'restaurants.store',
-        'show' => 'restaurants.show',
-        'edit' => 'restaurants.edit',
-        'update' => 'restaurants.update',
-        'destroy' => 'restaurants.destroy',
-    ]);
+});
+Route::get('restaurants/create', [RestaurantController::class, 'create'])->name('restaurants.create');
+Route::post('restaurants', [RestaurantController::class, 'store'])->name('restaurants.store');
+
+Route::middleware(['role:super-admin'])->group(function () {
+Route::get('admin/restaurants', [RestaurantController::class, 'index'])->name('admin.restaurants.index');
+Route::get('admin/restaurants/{restaurant}/edit', [RestaurantController::class, 'edit'])->name('admin.restaurants.edit');
+Route::put('admin/restaurants/{restaurant}', [RestaurantController::class, 'update'])->name('admin.restaurants.update');
+Route::delete('admin/restaurants/{restaurant}', [RestaurantController::class, 'destroy'])->name('admin.restaurants.destroy');
 });

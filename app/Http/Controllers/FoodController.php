@@ -12,7 +12,7 @@ class FoodController extends Controller
     {
         $this->middleware('role:super-admin');
 
-        $this->middleware('role:user')->only(['create', 'store']);
+        $this->middleware('role:seller')->only(['create', 'store']);
     }
     public function list()
     {

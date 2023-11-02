@@ -8,16 +8,16 @@ use Illuminate\Http\Request;
 
 class RestaurantController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('role:super-admin');
-
-        $this->middleware('role:user')->only(['create', 'store']);
-    }
+//    public function __construct()
+//    {
+//        $this->middleware('role:super-admin');
+//
+//        $this->middleware('role:seller')->only(['create', 'store']);
+//    }
     public function index()
     {
         $restaurants = Restaurant::all();
-        return view('restaurants.index', compact('restaurants'));
+        return view('admin.restaurants.index', compact('restaurants'));
     }
 
     public function create()
@@ -59,7 +59,7 @@ class RestaurantController extends Controller
             return redirect()->route('restaurants.index')->with('error', 'Restaurant not found.');
         }
 
-        return view('restaurants.edit', compact('restaurant', 'categories'));
+        return view('admin.restaurants.edit', compact('restaurant', 'categories'));
     }
 
     public function update(Request $request, $id)
@@ -75,7 +75,7 @@ class RestaurantController extends Controller
         $restaurant = Restaurant::query()->find($id);
 
         if (!$restaurant) {
-            return redirect()->route('restaurants.index')->with('error', 'Restaurant not found.');
+            return redirect()->route('admin.restaurants.index')->with('error', 'Restaurant not found.');
         }
 
         $restaurant->update([
@@ -86,7 +86,7 @@ class RestaurantController extends Controller
             'bank_account' => $request->input('bank_account'),
         ]);
 
-        return redirect()->route('restaurants.index')->with('success', 'Restaurant details updated successfully.');
+        return redirect()->route('admin.restaurants.index')->with('success', 'Restaurant details updated successfully.');
     }
 
     public function destroy($id)
@@ -94,11 +94,11 @@ class RestaurantController extends Controller
         $restaurant = Restaurant::query()->find($id);
 
         if (!$restaurant) {
-            return redirect()->route('restaurants.index')->with('error', 'Restaurant not found.');
+            return redirect()->route('admin.restaurants.index')->with('error', 'Restaurant not found.');
         }
 
         $restaurant->delete();
 
-        return redirect()->route('restaurants.index')->with('success', 'Restaurant deleted successfully.');
+        return redirect()->route('admin.restaurants.index')->with('success', 'Restaurant deleted successfully.');
     }
 }

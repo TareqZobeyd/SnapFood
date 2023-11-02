@@ -11,7 +11,7 @@
                         <div class="card-body">
                             <h5 class="card-title">{{ $restaurant->name }}</h5>
                             <p class="card-text">{{ $restaurant->description }}</p>
-                            <a href="{{ route('restaurants.show', ['restaurant' => $restaurant->id]) }}"
+                            <a href="{{ route('user.restaurants', ['restaurant' => $restaurant->id]) }}"
                                class="btn btn-primary">View Details</a>
                         </div>
                     </div>
