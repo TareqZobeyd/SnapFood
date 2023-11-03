@@ -50,7 +50,7 @@ Route::middleware(['role:super-admin'])->group(function () {
         'destroy' => 'foods.destroy',
     ]);
 });
-Route::get('restaurants/create', [RestaurantController::class, 'create'])->name('restaurants.create');
+Route::get('restaurants/create', [RestaurantController::class, 'create'])->middleware('auth')->name('restaurants.create');
 Route::post('restaurants', [RestaurantController::class, 'store'])->name('restaurants.store');
 
 Route::middleware(['role:super-admin'])->group(function () {

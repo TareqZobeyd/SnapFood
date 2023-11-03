@@ -11,18 +11,17 @@
                     <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Restaurants</a>
+                    <a class="nav-link" href="user/restaurants">Restaurants</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Order Online</a>
-                </li>
-
                 @auth
                     <li class="nav-item">
                         <form action="{{ route('user.logout') }}" method="POST">
                             @csrf
                             <button type="submit" class="btn btn-link nav-link">Log Out</button>
                         </form>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="restaurants/create">Create Your Restaurant</a>
                     </li>
                 @else
                     <li class="nav-item">
