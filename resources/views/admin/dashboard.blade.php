@@ -3,41 +3,49 @@
 @section('content')
     <div class="container-fluid">
         <div class="row">
+            <!-- Sidebar -->
             <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block bg-light sidebar">
                 <div class="position-sticky">
                     <ul class="nav flex-column">
                         <li class="nav-item">
-{{--                            <a class="nav-link" href="{{ route('admin.users') }}">--}}
+                            <a class="nav-link {{ request()->routeIs('admin.users') ? 'active' : '' }}"
+                               href="{{ route('admin.users') }}">
                                 Users
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('foods.list') }}">
+                            <a class="nav-link {{ request()->routeIs('foods.list') ? 'active' : '' }}"
+                               href="{{ route('foods.list') }}">
                                 Foods
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('admin.restaurants.index') }}">
+                            <a class="nav-link {{ request()->routeIs('admin.restaurants.index') ? 'active' : '' }}"
+                               href="{{ route('admin.restaurants.index') }}">
                                 Restaurants
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('categories.index') }}">
+                            <a class="nav-link {{ request()->routeIs('categories.index') ? 'active' : '' }}"
+                               href="{{ route('categories.index') }}">
                                 Categories
                             </a>
                         </li>
                         <li class="nav-item">
-{{--                            <a class="nav-link" href="{{ route('admin.discounts') }}">--}}
+{{--                            <a class="nav-link {{ request()->routeIs('admin.discounts') ? 'active' : '' }}"--}}
+{{--                               href="{{ route('admin.discounts') }}">--}}
                                 Discounts
                             </a>
                         </li>
                         <li class="nav-item">
-{{--                            <a class="nav-link" href="{{ route('admin.comments') }}">--}}
+{{--                            <a class="nav-link {{ request()->routeIs('admin.comments') ? 'active' : '' }}"--}}
+{{--                               href="{{ route('admin.comments') }}">--}}
                                 Comments
                             </a>
                         </li>
                         <li class="nav-item">
-{{--                            <a class="nav-link" href="{{ route('admin.banners') }}">--}}
+{{--                            <a class="nav-link {{ request()->routeIs('admin.banners') ? 'active' : '' }}"--}}
+{{--                               href="{{ route('admin.banners') }}">--}}
                                 Banners
                             </a>
                         </li>
@@ -45,7 +53,9 @@
                 </div>
             </nav>
 
+            <!-- Main Content -->
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <!-- Your content goes here -->
             </main>
         </div>
     </div>

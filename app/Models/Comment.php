@@ -2,17 +2,14 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Order extends Model
+class Comment extends Model
 {
-    use HasFactory;
-
     protected $fillable = [
         'user_id',
         'restaurant_id',
-        'total_amount',
+        'content'
     ];
 
     public function user()
@@ -24,6 +21,4 @@ class Order extends Model
     {
         return $this->belongsTo(Restaurant::class);
     }
-
-    // Add any additional methods or relationships here
 }
