@@ -16,6 +16,7 @@ return new class extends Migration {
             $table->id();
             $table->unsignedBigInteger('food_id');
             $table->decimal('discount_amount', 10, 2);
+            $table->string('food_party')->nullable();
             $table->timestamps();
             $table->foreign('food_id')->references('id')
                 ->on('food')->onDelete('cascade');

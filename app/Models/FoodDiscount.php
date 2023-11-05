@@ -11,7 +11,8 @@ class FoodDiscount extends Model
 
     protected $fillable = [
         'food_id',
-        'discount_amount'
+        'discount_amount',
+        'food_party',
     ];
 
     public function food()

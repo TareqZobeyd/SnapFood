@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\FoodController;
 use App\Http\Controllers\HomeController;
@@ -19,10 +20,11 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', [HomeController::class, 'home'])->name('home');
+Route::get('categories/index', [CategoryController::class, 'index'])->middleware('role:super-admin')->name('categories.index');
 Route::middleware(['role:super-admin'])->group(function () {
     Route::resource('categories', CategoryController::class)->names([
-        'index' => 'categories.index',
         'create' => 'categories.create',
+        'index' => 'categories.index',
         'store' => 'categories.store',
         'show' => 'categories.show',
         'edit' => 'categories.edit',
@@ -39,22 +41,23 @@ Route::prefix('/user')->name('user.')->controller(UserController::class)->group(
     Route::get('/restaurants', 'index')->name('restaurants');
 });
 
-    Route::get('/foods/list', [FoodController::class, 'list'])->name('foods.list');
-    Route::resource('foods', FoodController::class)->names([
-        'index' => 'foods.index',
-        'create' => 'foods.create',
-        'store' => 'foods.store',
-        'show' => 'foods.show',
-        'edit' => 'foods.edit',
-        'update' => 'foods.update',
-        'destroy' => 'foods.destroy',
-    ]);
+Route::get('/foods/list', [FoodController::class, 'list'])->name('foods.list');
+Route::resource('foods', FoodController::class)->names([
+    'index' => 'foods.index',
+    'create' => 'foods.create',
+    'store' => 'foods.store',
+    'show' => 'foods.show',
+    'edit' => 'foods.edit',
+    'update' => 'foods.update',
+    'destroy' => 'foods.destroy',
+]);
 Route::get('restaurants/create', [RestaurantController::class, 'create'])->middleware('auth')->name('restaurants.create');
 Route::post('restaurants', [RestaurantController::class, 'store'])->name('restaurants.store');
 
 Route::middleware(['role:super-admin'])->group(function () {
-Route::get('admin/restaurants', [RestaurantController::class, 'index'])->name('admin.restaurants.index');
-Route::get('admin/restaurants/{restaurant}/edit', [RestaurantController::class, 'edit'])->name('admin.restaurants.edit');
-Route::put('admin/restaurants/{restaurant}', [RestaurantController::class, 'update'])->name('admin.restaurants.update');
-Route::delete('admin/restaurants/{restaurant}', [RestaurantController::class, 'destroy'])->name('admin.restaurants.destroy');
+    Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
+    Route::get('admin/restaurants', [RestaurantController::class, 'index'])->name('admin.restaurants.index');
+    Route::get('admin/restaurants/{restaurant}/edit', [RestaurantController::class, 'edit'])->name('admin.restaurants.edit');
+    Route::put('admin/restaurants/{restaurant}', [RestaurantController::class, 'update'])->name('admin.restaurants.update');
+    Route::delete('admin/restaurants/{restaurant}', [RestaurantController::class, 'destroy'])->name('admin.restaurants.destroy');
 });

@@ -12,7 +12,9 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        return view('categories.index');
+        $categories = Category::all();
+
+        return view('categories.index', compact('categories'));
 
     }
 
@@ -21,7 +23,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        //
+        return view('categories.create');
     }
 
     /**
@@ -39,7 +41,7 @@ class CategoryController extends Controller
             'type' => $request->input('type'),
         ]);
 
-        return redirect()->route('categories.index')->with('success', 'Category created successfully.');
+        return redirect()->route('categories.create')->with('success', 'Category created successfully.');
     }
 
     /**
@@ -47,9 +49,7 @@ class CategoryController extends Controller
      */
     public function show(string $id)
     {
-        $categories = Category::all();
 
-        return view('categories.show', compact('categories'));
     }
 
     /**
