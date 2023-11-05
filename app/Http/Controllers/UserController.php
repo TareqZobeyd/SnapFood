@@ -58,16 +58,13 @@ class UserController extends Controller
             'password' => 'required|min:6',
         ]);
 
-        $user = User::query()->create([
+         User::query()->create([
             'name' => $request->input('name'),
             'email' => $request->input('email'),
             'phone' => $request->input('phone'),
             'password' => bcrypt($request->input('password')),
         ]);
-        if ($user->is_seller) {
-            $sellerRole = Role::query()->where('name', 'user')->first();
-            $user->assignRole($sellerRole);
-        }
+
 
         return redirect('user/login')->with('success', 'Registration successful. You can now log in.');
     }

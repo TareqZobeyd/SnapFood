@@ -38,7 +38,7 @@ Route::prefix('/user')->name('user.')->controller(UserController::class)->group(
     Route::post('/logout', 'logout')->name('logout');
     Route::get('/restaurants', 'index')->name('restaurants');
 });
-Route::middleware(['role:super-admin'])->group(function () {
+
     Route::get('/foods/list', [FoodController::class, 'list'])->name('foods.list');
     Route::resource('foods', FoodController::class)->names([
         'index' => 'foods.index',
@@ -49,7 +49,6 @@ Route::middleware(['role:super-admin'])->group(function () {
         'update' => 'foods.update',
         'destroy' => 'foods.destroy',
     ]);
-});
 Route::get('restaurants/create', [RestaurantController::class, 'create'])->middleware('auth')->name('restaurants.create');
 Route::post('restaurants', [RestaurantController::class, 'store'])->name('restaurants.store');
 

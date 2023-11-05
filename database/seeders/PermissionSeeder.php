@@ -59,7 +59,7 @@ class PermissionSeeder extends Seeder
         $superAdminRole = Role::query()->where('name', 'super-admin')->first();
         $superAdminRole->syncPermissions(Permission::all());
 
-        $sellerRole = Role::query()->where('name', 'user')->first();
+        $sellerRole = Role::query()->where('name', 'seller')->first();
         $sellerRole->givePermissionTo(['create-foods', 'create-restaurants']);
     }
 }

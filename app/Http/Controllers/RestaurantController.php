@@ -4,16 +4,18 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Restaurant;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Spatie\Permission\Models\Role;
 
 class RestaurantController extends Controller
 {
-//    public function __construct()
-//    {
-//        $this->middleware('role:super-admin');
-//
-//        $this->middleware('role:seller')->only(['create', 'store']);
-//    }
+    public function __construct()
+    {
+        $this->middleware('role:super-admin');
+
+        $this->middleware('role:seller')->only(['create', 'store']);
+    }
     public function index()
     {
         $restaurants = Restaurant::all();
@@ -35,13 +37,17 @@ class RestaurantController extends Controller
             'address' => 'required|string',
             'bank_account' => 'required|string',
         ]);
-        Restaurant::query()->create([
+        $user = Restaurant::query()->create([
             'name' => $request->input('name'),
             'category_id' => $request->input('category_id'),
             'phone' => $request->input('phone'),
             'address' => $request->input('address'),
             'bank_account' => $request->input('bank_account'),
         ]);
+        if ($user->is_seller) {
+            $sellerRole = Role::query()->where('name', 'seller')->first();
+            $user->assignRole($sellerRole);
+        }
         return redirect()->route('restaurants.create')->with('success', 'Restaurant details completed.');
     }
 
@@ -50,9 +56,9 @@ class RestaurantController extends Controller
         // Display a specific food
     }
 
-    public function edit($id)
+    public function edit(Restaurant $restaurant)
     {
-        $restaurant = Restaurant::find($id);
+//        $restaurant = Restaurant::find($id);
         $categories = Category::all();
 
         if (!$restaurant) {

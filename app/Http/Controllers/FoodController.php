@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Food;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Spatie\Permission\Models\Role;
 
 class FoodController extends Controller
 {
@@ -39,7 +40,7 @@ class FoodController extends Controller
             'category_id' => 'required|exists:categories,id',
         ]);
 
-        Food::query()->create([
+         Food::query()->create([
             'name' => $request->input('name'),
             'price' => $request->input('price'),
             'category_id' => $request->input('category_id'),

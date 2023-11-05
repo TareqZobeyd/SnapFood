@@ -23,9 +23,9 @@
                     <td>{{ $restaurant->address }}</td>
                     <td>{{ $restaurant->bank_account }}</td>
                     <td>
-                        <a href="{{ route('restaurants.edit', ['restaurant' => $restaurant->id]) }}"
+                        <a href="{{ route('admin.restaurants.edit', ['restaurant' => $restaurant->id]) }}"
                            class="btn btn-primary">Edit</a>
-                        <form action="{{ route('restaurants.destroy', ['restaurant' => $restaurant->id]) }}"
+                        <form action="{{ route('admin.restaurants.destroy', ['restaurant' => $restaurant->id]) }}"
                               method="POST" style="display: inline;">
                             @csrf
                             @method('DELETE')
