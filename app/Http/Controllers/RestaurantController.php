@@ -10,12 +10,6 @@ use Spatie\Permission\Models\Role;
 
 class RestaurantController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('role:super-admin');
-
-        $this->middleware('role:seller')->only(['create', 'store']);
-    }
     public function index()
     {
         $restaurants = Restaurant::all();

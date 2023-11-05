@@ -9,12 +9,6 @@ use Spatie\Permission\Models\Role;
 
 class FoodController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('role:super-admin');
-
-        $this->middleware('role:seller')->only(['create', 'store']);
-    }
     public function list()
     {
         $foods = Food::all();
@@ -38,12 +32,14 @@ class FoodController extends Controller
             'name' => 'required|string|max:255',
             'price' => 'required|numeric',
             'category_id' => 'required|exists:categories,id',
+            'food_discount_id' => 'nullable|exists:food_discounts,id',
         ]);
 
-         Food::query()->create([
+        Food::query()->create([
             'name' => $request->input('name'),
             'price' => $request->input('price'),
             'category_id' => $request->input('category_id'),
+            'food_discount_id' => $request->input('food_discount_id')
         ]);
 
         return redirect()->route('foods.index')->with('success', 'Food created successfully.');
@@ -66,7 +62,7 @@ class FoodController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'price' => 'required|numeric',
-            'category_id' => 'required|exists:food_categories,id',
+            'category_id' => 'required|exists:categories,id',
         ]);
 
         $food = Food::find($id);

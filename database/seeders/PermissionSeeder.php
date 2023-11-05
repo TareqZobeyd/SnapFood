@@ -20,8 +20,12 @@ class PermissionSeeder extends Seeder
                 'name' => 'super-admin'
             ],
             [
+                'name' => 'seller'
+            ],
+            [
                 'name' => 'user'
             ]
+
         ]);
         DB::table('permissions')->insert([
             [

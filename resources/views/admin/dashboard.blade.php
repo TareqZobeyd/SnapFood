@@ -32,8 +32,8 @@
                             </a>
                         </li>
                         <li class="nav-item">
-{{--                            <a class="nav-link {{ request()->routeIs('admin.discounts') ? 'active' : '' }}"--}}
-{{--                               href="{{ route('admin.discounts') }}">--}}
+                            <a class="nav-link {{ request()->routeIs('food_discounts.index') ? 'active' : '' }}"
+                               href="{{ route('food_discounts.index') }}">
                                 Discounts
                             </a>
                         </li>

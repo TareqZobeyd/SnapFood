@@ -2,21 +2,22 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class FoodDiscount extends Model
 {
-    use HasFactory;
-
     protected $fillable = [
-        'food_id',
-        'discount_amount',
+        'restaurant_id',
+        'discount_percentage',
         'food_party',
     ];
-
-    public function food()
+    public function foods()
     {
-        return $this->belongsTo(Food::class, 'food_id');
+        return $this->hasMany(Food::class);
     }
+    public function restaurant()
+    {
+        return $this->belongsTo(Restaurant::class);
+    }
+
 }

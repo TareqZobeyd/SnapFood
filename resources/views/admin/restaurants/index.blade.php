@@ -2,8 +2,10 @@
 @extends('layouts.main')
 @section('content')
     <div class="container">
+        <br>
         <h1>Restaurant List</h1>
-
+        <br>
+        <a href="{{ route('restaurants.create') }}" class="btn btn-success mb-2">Create Restaurant</a>
         <table class="table">
             <thead>
             <tr>

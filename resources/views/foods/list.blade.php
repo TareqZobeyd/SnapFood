@@ -3,6 +3,9 @@
 @section('content')
     <div class="container mt-5">
         <h2>Food List</h2>
+        <div class="mb-3">
+            <a href="{{ route('foods.index') }}" class="btn btn-success">Create Food</a>
+        </div>
         <table class="table">
             <thead>
             <tr>

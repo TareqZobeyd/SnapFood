@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\FoodController;
+use App\Http\Controllers\FoodDiscountController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\RestaurantController;
@@ -42,8 +43,8 @@ Route::prefix('/user')->name('user.')->controller(UserController::class)->group(
     Route::get('/restaurants', 'index')->name('restaurants');
 });
 
-Route::get('/foods/list', [FoodController::class, 'list'])->name('foods.list');
-Route::resource('foods', FoodController::class)->names([
+Route::get('/foods/list', [FoodController::class, 'list'])->middleware('role:super-admin')->name('foods.list');
+Route::resource('foods', FoodController::class)->middleware('role:super-admin|seller')->names([
     'index' => 'foods.index',
     'create' => 'foods.create',
     'store' => 'foods.store',
@@ -72,4 +73,18 @@ Route::resource('orders', OrderController::class)->middleware('auth')->names([
     'update' => 'orders.update',
     'destroy' => 'orders.destroy',
 ]);
+Route::middleware(['role:super-admin'])->group(function () {
+    Route::resource('food_discounts', FoodDiscountController::class)->names([
+        'index' => 'food_discounts.index',
+        'create' => 'food_discounts.create',
+        'store' => 'food_discounts.store',
+        'show' => 'food_discounts.show',
+        'edit' => 'food_discounts.edit',
+        'update' => 'food_discounts.update',
+        'destroy' => 'food_discounts.destroy',
+    ]);
+});
+
+
+
 

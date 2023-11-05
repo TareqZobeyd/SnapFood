@@ -20,13 +20,8 @@ class Food extends Model
         return $this->belongsTo(Category::class, 'category_id');
     }
 
-    public function discounts()
+    public function foodDiscount()
     {
-        return $this->hasMany(FoodDiscount::class);
-    }
-
-    public function parties()
-    {
-        return $this->belongsToMany(FoodParty::class, 'food_party_food');
+        return $this->belongsTo(FoodDiscount::class);
     }
 }

@@ -9,6 +9,7 @@
                     <div class="panel-heading">Categories</div>
                     <br>
                     <div class="panel-body">
+                        <a href="{{ route('categories.create') }}" class="btn btn-success mb-2">Create Category</a>
                         <table class="table">
                             <thead>
                             <tr>

@@ -10,12 +10,12 @@
                 <li class="nav-item active">
                     <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
                 </li>
+                @auth
                 @if(!auth()->user()->hasRole('super-admin'))
                     <li class="nav-item">
                         <a class="nav-link" href="user/restaurants">Restaurants</a>
                     </li>
                 @endif
-                @auth
                     @if(auth()->user()->hasRole('super-admin'))
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('admin.dashboard') }}">Dashboard</a>

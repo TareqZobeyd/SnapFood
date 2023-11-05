@@ -16,9 +16,13 @@ return new class extends Migration {
             $table->string('name');
             $table->decimal('price', 10, 2);
             $table->unsignedBigInteger('category_id');
+            $table->unsignedBigInteger('food_discount_id')->nullable();
             $table->foreign('category_id')->references('id')
                 ->on('categories')
                 ->onDelete('cascade');
+            $table->foreign('food_discount_id')->references('id')
+                ->on('food_discounts');
+
             $table->timestamps();
         });
     }

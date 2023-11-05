@@ -14,12 +14,12 @@ return new class extends Migration {
             $table->engine = 'InnoDB';
 
             $table->id();
-            $table->unsignedBigInteger('food_id');
-            $table->decimal('discount_amount', 10, 2);
+            $table->unsignedBigInteger('restaurant_id')->nullable();
+            $table->decimal('discount_percentage', 5, 2);
             $table->string('food_party')->nullable();
             $table->timestamps();
-            $table->foreign('food_id')->references('id')
-                ->on('food')->onDelete('cascade');
+            $table->foreign('restaurant_id')->references('id')
+                ->on('restaurants')->onDelete('cascade');
 
         });
     }
