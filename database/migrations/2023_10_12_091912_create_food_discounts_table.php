@@ -18,9 +18,6 @@ return new class extends Migration {
             $table->decimal('discount_percentage', 5, 2);
             $table->string('food_party')->nullable();
             $table->timestamps();
-            $table->foreign('restaurant_id')->references('id')
-                ->on('restaurants')->onDelete('cascade');
-
         });
     }
 

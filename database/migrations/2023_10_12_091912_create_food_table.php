@@ -17,6 +17,9 @@ return new class extends Migration {
             $table->decimal('price', 10, 2);
             $table->unsignedBigInteger('category_id');
             $table->unsignedBigInteger('food_discount_id')->nullable();
+            $table->unsignedBigInteger('restaurant_id');
+            $table->foreign('restaurant_id')->references('id')
+                ->on('restaurants')->onDelete('cascade');
             $table->foreign('category_id')->references('id')
                 ->on('categories')
                 ->onDelete('cascade');

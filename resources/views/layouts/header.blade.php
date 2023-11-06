@@ -11,14 +11,19 @@
                     <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
                 </li>
                 @auth
-                @if(!auth()->user()->hasRole('super-admin'))
-                    <li class="nav-item">
-                        <a class="nav-link" href="user/restaurants">Restaurants</a>
-                    </li>
-                @endif
+                    @if(auth()->user()->hasRole('seller'))
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('seller.dashboard.index') }}">Dashboard</a>
+                        </li>
+                    @endif
                     @if(auth()->user()->hasRole('super-admin'))
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('admin.dashboard') }}">Dashboard</a>
+                        </li>
+                    @endif
+                    @if(!auth()->user()->hasRole('super-admin'))
+                        <li class="nav-item">
+                            <a class="nav-link" href="restaurants/create">Create Your Restaurant</a>
                         </li>
                     @endif
                     <li class="nav-item">
@@ -27,11 +32,6 @@
                             <button type="submit" class="btn btn-link nav-link">Log Out</button>
                         </form>
                     </li>
-                    @if(!auth()->user()->hasRole('super-admin'))
-                        <li class="nav-item">
-                            <a class="nav-link" href="restaurants/create">Create Your Restaurant</a>
-                        </li>
-                    @endif
                 @else
                     <li class="nav-item">
                         <a class="nav-link" href="/user/login">Log In</a>

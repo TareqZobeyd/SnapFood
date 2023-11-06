@@ -31,17 +31,20 @@ class RestaurantController extends Controller
             'address' => 'required|string',
             'bank_account' => 'required|string',
         ]);
-        $user = Restaurant::query()->create([
+         Restaurant::query()->create([
             'name' => $request->input('name'),
             'category_id' => $request->input('category_id'),
             'phone' => $request->input('phone'),
             'address' => $request->input('address'),
             'bank_account' => $request->input('bank_account'),
         ]);
-        if ($user->is_seller) {
+        $user = auth()->user();
+
+        if (!$user->hasRole('seller')) {
             $sellerRole = Role::query()->where('name', 'seller')->first();
             $user->assignRole($sellerRole);
         }
+
         return redirect()->route('restaurants.create')->with('success', 'Restaurant details completed.');
     }
 
