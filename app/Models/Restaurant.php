@@ -17,10 +17,12 @@ class Restaurant extends Model
         'bank_account',
         'user_id'
     ];
+
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
     public function category()
     {
         return $this->belongsTo(Category::class, 'category_id');
@@ -36,4 +38,13 @@ class Restaurant extends Model
         return $this->hasMany(Comment::class);
     }
 
+    public function address()
+    {
+        return $this->morphOne(Address::class, 'addressable');
+    }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
 }

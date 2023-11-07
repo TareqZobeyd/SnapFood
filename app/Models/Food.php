@@ -33,6 +33,16 @@ class Food extends Model
         return $this->belongsTo(Restaurant::class, 'restaurant_id');
     }
 
+    public function orders()
+    {
+        return $this->belongsToMany(Order::class)->withPivot('count');
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
+
     public function calculateDiscountedPrice()
     {
         if ($this->food_discount) {
