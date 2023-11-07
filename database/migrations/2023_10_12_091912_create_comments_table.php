@@ -13,14 +13,18 @@ return new class extends Migration {
         Schema::create('comments', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('restaurant_id');
+            $table->unsignedBigInteger('order_id');
+            $table->unsignedBigInteger('food_id');
             $table->text('content');
-            $table->timestamps();
-
+            $table->enum('score', ['1', '2', '3', '4', '5']);
             $table->foreign('user_id')->references('id')
                 ->on('users')->onDelete('cascade');
-            $table->foreign('restaurant_id')->references('id')
-                ->on('restaurants')->onDelete('cascade');
+            $table->foreign('order_id')->references('id')
+                ->on('orders')->onDelete('cascade');
+            $table->foreign('food_id')->references('id')
+                ->on('food')->onDelete('cascade');
+
+            $table->timestamps();
 
         });
     }

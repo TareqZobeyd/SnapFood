@@ -8,8 +8,10 @@ class Comment extends Model
 {
     protected $fillable = [
         'user_id',
-        'restaurant_id',
-        'content'
+        'food_id',
+        'order_id',
+        'content',
+        'score'
     ];
 
     public function user()

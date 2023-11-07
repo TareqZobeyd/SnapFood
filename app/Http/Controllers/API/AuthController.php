@@ -54,4 +54,24 @@ class AuthController extends Controller
         return response(['Message' => 'logged out'], 200);
     }
 
+    public function edit(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string',
+            'email' => 'required|email',
+            'phone' => 'required|string|min:11',
+            'password' => 'required|string',
+        ]);
+
+        $user = User::query()->find(auth()->user()->id);
+
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->phone = $request->phone;
+        $user->password = bcrypt($request->password);
+
+        $user->save();
+
+        return response(['Message' => 'Your personal information updated successfully', 'user' => $user]);
+    }
 }

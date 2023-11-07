@@ -12,6 +12,8 @@ class Order extends Model
     protected $fillable = [
         'user_id',
         'restaurant_id',
+        'user_status',
+        'seller_status',
         'total_amount',
     ];
 
@@ -25,5 +27,13 @@ class Order extends Model
         return $this->belongsTo(Restaurant::class);
     }
 
-    // Add any additional methods or relationships here
+    public function foods()
+    {
+        return $this->belongsToMany(Food::class)->withPivot('count');
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
 }
