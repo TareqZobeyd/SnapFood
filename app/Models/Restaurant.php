@@ -14,17 +14,21 @@ class Restaurant extends Model
         'category_id',
         'address',
         'phone',
-        'bank_account'
+        'bank_account',
+        'user_id'
     ];
-
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
     public function category()
     {
         return $this->belongsTo(Category::class, 'category_id');
     }
 
-    public function foods()
+    public function food()
     {
-        return $this->hasMany(Food::class);
+        return $this->hasMany(Food::class, 'restaurant_id');
     }
 
     public function comments()

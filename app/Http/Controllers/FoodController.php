@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Food;
 use App\Models\Category;
+use App\Models\FoodDiscount;
+use App\Models\Restaurant;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Models\Role;
 
 class FoodController extends Controller
@@ -17,13 +20,16 @@ class FoodController extends Controller
 
     public function index()
     {
+        $user = Auth::user();
         $foodCategories = Category::query()->where('type', 'food')->get();
-        return view('foods.index', compact('foodCategories'));
+        $discounts = FoodDiscount::all();
+        $restaurants = Restaurant::all();
+        return view('foods.index', compact('foodCategories', 'discounts', 'restaurants'));
     }
 
     public function create()
     {
-        // Show the form to create a new food
+
     }
 
     public function store(Request $request)
@@ -34,15 +40,28 @@ class FoodController extends Controller
             'category_id' => 'required|exists:categories,id',
             'food_discount_id' => 'nullable|exists:food_discounts,id',
         ]);
-
+        $user = Auth::user();
+        $restaurant = $user->restaurant;
+        $originalPrice = $request->input('price');
+        $foodDiscountId = $request->input('food_discount_id');
+        $discountedPrice = $this->calculateDiscountedPrice($originalPrice, $foodDiscountId);
         Food::query()->create([
             'name' => $request->input('name'),
             'price' => $request->input('price'),
             'category_id' => $request->input('category_id'),
-            'food_discount_id' => $request->input('food_discount_id')
+            'food_discount_id' => $request->input('food_discount_id'),
+            'restaurant_id' => $restaurant->id,
         ]);
 
         return redirect()->route('foods.index')->with('success', 'Food created successfully.');
+    }
+    private function calculateDiscountedPrice($originalPrice, $foodDiscountId)
+    {
+        $discount = FoodDiscount::query()->find($foodDiscountId)->discount_percentage;
+
+        $discountedPrice = $originalPrice - ($originalPrice * ($discount / 100));
+
+        return $discountedPrice;
     }
 
     public function show($id)

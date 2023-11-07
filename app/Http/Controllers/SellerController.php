@@ -8,8 +8,12 @@ class SellerController extends Controller
 {
     public function index()
     {
-        return view('seller.dashboard');
+        $user = auth()->user();
+        $restaurant = $user->restaurant;
+
+        return view('seller.dashboard', compact('restaurant'));
     }
+
     public function store(Request $request)
     {
         $request->validate([
@@ -31,4 +35,11 @@ class SellerController extends Controller
         return redirect()->route('seller.food.index')->with('success', 'Food item created successfully.');
     }
 
+    public function showRestaurant()
+    {
+        $user = auth()->user();
+        $restaurant = $user->restaurant;
+
+        return view('seller.restaurant', compact('restaurant'));
+    }
 }

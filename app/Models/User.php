@@ -44,6 +44,10 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+    public function restaurant()
+    {
+        return $this->hasOne(Restaurant::class);
+    }
     /**
      * Determine if the user is a user.
      *

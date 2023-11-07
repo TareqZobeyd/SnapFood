@@ -61,13 +61,15 @@ Route::middleware(['role:super-admin'])->group(function () {
     Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard.blade.php');
     Route::get('admin/users', [AdminController::class, 'showUsers'])->name('admin.users');
     Route::get('admin/restaurants', [RestaurantController::class, 'index'])->name('admin.restaurants.index');
-    Route::get('admin/restaurants/{restaurant}/edit', [RestaurantController::class, 'edit'])->name('admin.restaurants.edit');
-    Route::put('admin/restaurants/{restaurant}', [RestaurantController::class, 'update'])->name('admin.restaurants.update');
-    Route::delete('admin/restaurants/{restaurant}', [RestaurantController::class, 'destroy'])->name('admin.restaurants.destroy');
+
 });
 
 Route::middleware(['role:seller|super-admin'])->group(function () {
     Route::get('/seller/dashboard', [SellerController::class, 'index'])->name('seller.dashboard.index');
+    Route::get('/seller/restaurant', [SellerController::class, 'showRestaurant'])->name('seller.restaurant');
+    Route::get('admin/restaurants/{restaurant}/edit', [RestaurantController::class, 'edit'])->name('admin.restaurants.edit');
+    Route::put('admin/restaurants/{restaurant}', [RestaurantController::class, 'update'])->name('admin.restaurants.update');
+    Route::delete('admin/restaurants/{restaurant}', [RestaurantController::class, 'destroy'])->name('admin.restaurants.destroy');
 });
 
 Route::resource('orders', OrderController::class)->middleware('auth')->names([
