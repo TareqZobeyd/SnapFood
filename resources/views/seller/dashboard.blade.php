@@ -39,24 +39,29 @@
                 @yield('dashboard-content')
                 <div class="row">
                     @if ($restaurant->food)
-                    @foreach($restaurant->food as $food)
-                        <div class="col-md-4">
-                            <div class="card">
-                                <img src="{{ $food->image_url }}" class="card-img-top" alt="Food Image">
-                                <div class="card-body">
-                                    <h5 class="card-title">{{ $food->name }}</h5>
-                                    <p class="card-text">Price: ${{ $food->price }}</p>
-                                    <p class="card-text">Category: {{ $food->category->name }}</p>
-                                    @if ($food->food_discount)
-                                        <p class="card-text">Discount: {{ $food->food_discount->discount_percentage }}%</p>
-                                    @endif
+                        @foreach($restaurant->food as $food)
+                            <div class="col-md-4">
+                                <div class="card">
+                                    <img src="{{ $food->image_url }}" class="card-img-top" alt="Food Image">
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ $food->name }}</h5>
+                                        <p class="card-text">Price: ${{ $food->price }}</p>
+                                        <p class="card-text">Category: {{ $food->category->name }}</p>
+                                        @if ($food->food_discount_id)
+                                            @php
+                                                $discountedPrice = $food->calculateDiscountedPrice();
+                                            @endphp
+                                            <p class="card-text">Price With Discount: {{ $food->food_discount->discount_percentage }}%</p>
+                                                <i class="fas fa-arrow-right" style="color: green;"></i>
+                                                <span  style="color: green;">${{ $discountedPrice }}</span>
+                                        @endif
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    @endforeach
+                        @endforeach
+
                     @endif
                 </div>
-
             </main>
         </div>
     </div>

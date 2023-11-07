@@ -14,7 +14,8 @@ class Food extends Model
         'price',
         'category_id',
         'food_discount_id',
-        'restaurant_id'
+        'restaurant_id',
+        'discounted_price'
     ];
 
     public function category()
@@ -22,12 +23,26 @@ class Food extends Model
         return $this->belongsTo(Category::class, 'category_id');
     }
 
-    public function foodDiscount()
+    public function food_discount()
     {
         return $this->belongsTo(FoodDiscount::class, 'food_discount_id');
     }
+
     public function restaurant()
     {
         return $this->belongsTo(Restaurant::class, 'restaurant_id');
     }
+
+    public function calculateDiscountedPrice()
+    {
+        if ($this->food_discount) {
+            $discountPercentage = $this->food_discount->discount_percentage;
+            $discountedPrice = $this->price - ($this->price * ($discountPercentage / 100));
+            return $discountedPrice;
+        } else {
+            return $this->price;
+        }
+    }
+
+
 }

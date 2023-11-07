@@ -22,12 +22,6 @@
                         <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
-
-                    <div class="form-group">
-                        <label for="discounted_price">Discounted Price:</label>
-                        <input type="text" class="form-control discounted-price" name="discounted_price"
-                               id="discounted_price" value="{{ old('discounted_price') }}" disabled>
-                    </div>
                     <div class="form-group">
                         <label for="discount">Discount</label>
                         <select name="food_discount_id" class="form-control" id="discount">

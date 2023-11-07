@@ -47,9 +47,10 @@ class FoodController extends Controller
         $discountedPrice = $this->calculateDiscountedPrice($originalPrice, $foodDiscountId);
         Food::query()->create([
             'name' => $request->input('name'),
-            'price' => $request->input('price'),
+            'price' => $originalPrice,
+            'discounted_price' => $discountedPrice,
             'category_id' => $request->input('category_id'),
-            'food_discount_id' => $request->input('food_discount_id'),
+            'food_discount_id' => $foodDiscountId,
             'restaurant_id' => $restaurant->id,
         ]);
 
