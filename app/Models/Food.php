@@ -17,6 +17,8 @@ class Food extends Model
         'restaurant_id',
         'discounted_price'
     ];
+    protected $visible = ['discounted_price','price', 'count', 'pivot_count'];
+
 
     public function category()
     {
