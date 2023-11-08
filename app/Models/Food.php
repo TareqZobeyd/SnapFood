@@ -17,7 +17,7 @@ class Food extends Model
         'restaurant_id',
         'discounted_price'
     ];
-    protected $visible = ['discounted_price','price', 'count', 'pivot_count'];
+    protected $visible = ['discounted_price', 'price', 'count', 'pivot_count'];
 
 
     public function category()
@@ -44,17 +44,16 @@ class Food extends Model
     {
         return $this->hasMany(Comment::class);
     }
-
-    public function calculateDiscountedPrice()
+    public static function calculateDiscountedPrice($originalPrice, $foodDiscountId)
     {
-        if ($this->food_discount) {
-            $discountPercentage = $this->food_discount->discount_percentage;
-            $discountedPrice = $this->price - ($this->price * ($discountPercentage / 100));
-            return $discountedPrice;
-        } else {
-            return $this->price;
+        if ($foodDiscountId !== null) {
+            $foodDiscount = FoodDiscount::find($foodDiscountId);
+            if ($foodDiscount) {
+                $discount = $foodDiscount->discount_percentage;
+                return $originalPrice - ($originalPrice * ($discount / 100));
+            }
         }
+
+        return $originalPrice;
     }
-
-
 }

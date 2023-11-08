@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\API\AddressController;
 use App\Http\Controllers\API\AuthController;
+use App\Http\Controllers\API\OrderController;
 use App\Http\Controllers\API\RestaurantController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -32,4 +33,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/restaurants/{id}', [RestaurantController::class, 'show']);
     Route::get('/restaurants', [RestaurantController::class, 'index'])->name('api/restaurants');
     Route::get('/restaurants/{id}/foods', [RestaurantController::class, 'food'])->name('api/restaurants/foods');
+    Route::get('/carts', [OrderController::class, 'getAllCards']);
+    Route::post('carts/add', [OrderController::class, 'add']);
+    Route::put('carts/add', [OrderController::class, 'update']);
+    Route::patch('carts/add', [OrderController::class, 'update']);
+    Route::get('carts/{cartId}', [OrderController::class, 'getCard'])->whereNumber('cartId');
+    Route::post('carts/{cartId}/pay', [OrderController::class, 'payCard'])->whereNumber('cartId');
 });

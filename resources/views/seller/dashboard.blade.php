@@ -12,8 +12,8 @@
                             </a>
                         </li>
                         <li class="nav-item">
-{{--                            <a class="nav-link" href="{{ route('seller.orders') }}">--}}
-                                Orders
+                            {{--                            <a class="nav-link" href="{{ route('seller.orders') }}">--}}
+                            Orders
                             </a>
                         </li>
                         <li class="nav-item">
@@ -27,8 +27,8 @@
                             </a>
                         </li>
                         <li class="nav-item">
-{{--                            <a class="nav-link" href="{{ route('seller.comments') }}">--}}
-                                Comments
+                            {{--                            <a class="nav-link" href="{{ route('seller.comments') }}">--}}
+                            Comments
                             </a>
                         </li>
                     </ul>
@@ -49,11 +49,12 @@
                                         <p class="card-text">Category: {{ $food->category->name }}</p>
                                         @if ($food->food_discount_id)
                                             @php
-                                                $discountedPrice = $food->calculateDiscountedPrice();
+                                                $discountedPrice = \App\Models\Food::calculateDiscountedPrice($food->price, $food->food_discount_id);
                                             @endphp
-                                            <p class="card-text">Price With Discount: {{ $food->food_discount->discount_percentage }}%</p>
-                                                <i class="fas fa-arrow-right" style="color: green;"></i>
-                                                <span  style="color: green;">${{ $discountedPrice }}</span>
+                                            <p class="card-text">Price With
+                                                Discount: {{ $food->food_discount->discount_percentage }}%</p>
+                                            <i class="fas fa-arrow-right" style="color: green;"></i>
+                                            <span style="color: green;">${{ $discountedPrice }}</span>
                                         @endif
                                     </div>
                                 </div>

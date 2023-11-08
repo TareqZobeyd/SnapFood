@@ -31,9 +31,21 @@ class FoodController extends Controller
     {
 
     }
+    private function calculateDiscountedPrice($originalPrice, $foodDiscountId)
+    {
+        if ($foodDiscountId !== null) {
+            $foodDiscount = FoodDiscount::find($foodDiscountId);
+            if ($foodDiscount) {
+                $discount = $foodDiscount->discount_percentage;
+                return $originalPrice - ($originalPrice * ($discount / 100));
+            }
+        }
 
+        return $originalPrice;
+    }
     public function store(Request $request)
     {
+
         $request->validate([
             'name' => 'required|string|max:255',
             'price' => 'required|numeric',
@@ -56,15 +68,6 @@ class FoodController extends Controller
 
         return redirect()->route('foods.index')->with('success', 'Food created successfully.');
     }
-    private function calculateDiscountedPrice($originalPrice, $foodDiscountId)
-    {
-        $discount = FoodDiscount::query()->find($foodDiscountId)->discount_percentage;
-
-        $discountedPrice = $originalPrice - ($originalPrice * ($discount / 100));
-
-        return $discountedPrice;
-    }
-
     public function show($id)
     {
         // Display a specific food
