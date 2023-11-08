@@ -13,7 +13,8 @@ class RestaurantController extends Controller
 
     public function index(Request $request)
     {
-
+        $restaurants = Restaurant::all();
+        return response(['Restaurants' => $restaurants]);
     }
 
 
@@ -27,10 +28,11 @@ class RestaurantController extends Controller
 
     public function food($id)
     {
-
-        $restaurant_IDs = Restaurant::all()->pluck('id')->toArray();
-        if (!in_array($id, $restaurant_IDs)) return \response(['Message' => "'This restaurant isn't exist"]);
-
-        return \response(["Foods details of restaurant number $id:" => (Restaurant::query()->find($id))]);
+        $restaurant = Restaurant::query()->find($id);
+        if (!$restaurant) {
+            return response(['Message' => "This restaurant doesn't exist"], 404);
+        }
+        $foods = $restaurant->food;
+        return response(["Foods details of restaurant number $id" => $foods]);
     }
 }

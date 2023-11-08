@@ -44,10 +44,12 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
     public function restaurant()
     {
         return $this->hasOne(Restaurant::class);
     }
+
     /**
      * Determine if the user is a user.
      *
@@ -57,10 +59,20 @@ class User extends Authenticatable
     {
         return $this->hasRole('user');
     }
+
     public function comments()
     {
         return $this->hasMany(Comment::class);
     }
 
+    public function addresses()
+    {
+        return $this->morphMany(Address::class, 'addressable');
+    }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
 
 }

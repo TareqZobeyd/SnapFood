@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\Address;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Gate;
 
 class AddressController extends Controller
 {
@@ -57,20 +56,14 @@ class AddressController extends Controller
     public function update(Request $request, $id)
     {
         $address = Address::query()->find($id);
-        $gate = Gate::allows('view', $address);
-
-        if ($gate) {
-            $request->validate([
-                'title' => 'required|string',
-                'address' => 'required|string',
-                'latitude' => 'required|numeric',
-                'longitude' => 'required|numeric',
-            ]);
-            $address->update($request->all());
-            return response(['Message' => 'Your address is updated successfully', 'Address details' => ($address)]);
-        }
-
-        return response(['Message' => "You don't have access"], 403);
+        $request->validate([
+            'title' => 'required|string',
+            'address' => 'required|string',
+            'latitude' => 'required|numeric',
+            'longitude' => 'required|numeric',
+        ]);
+        $address->update($request->all());
+        return response(['Message' => 'Your address is updated successfully', 'Address details' => ($address)]);
     }
 
     /**
@@ -82,14 +75,11 @@ class AddressController extends Controller
     public function setActiveAddress($id)
     {
         $address = Address::query()->find($id);
-        $gate = Gate::allows('view', $address);
 
-        if ($gate) {
-            $addresses = User::query()->find(auth()->user()->id)->addresses;
-            foreach ($addresses as $address) {
-                if ($address->id == $id) $address->update(['active' => '1']);
-                else $address->update(['active' => '0']);
-            }
+        $addresses = User::query()->find(auth()->user()->id)->addresses;
+        foreach ($addresses as $address) {
+            if ($address->id == $id) $address->update(['active' => '1']);
+            else $address->update(['active' => '0']);
 
             return response(['Message' => 'Your main address is updated', 'Active address'
             => (User::query()->find(auth()->user()->id)->addresses)
