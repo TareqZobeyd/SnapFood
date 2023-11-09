@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\Food;
 use App\Models\Order;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Gate;
 
 class OrderController extends Controller
 {
@@ -15,15 +14,26 @@ class OrderController extends Controller
         $orders = Order::with('restaurant', 'foods')->get();
 
         $transformedOrders = $orders->map(function ($order) {
-            return array_merge($order->toArray(), [
-                'additional_info' => $order->additional_info,
-            ]);
+            return [
+                'id' => $order->id,
+                'restaurant' => [
+                    'title' => $order->restaurant->name,
+                    'image' => $order->restaurant->image,
+                ],
+                'foods' => $order->foods->map(function ($food) {
+                    return [
+                        'id' => $food->id,
+                        'title' => $food->title,
+                        'count' => $food->pivot->count,
+                        'price' => $food->discounted_price,
+                    ];
+                }),
+                'created_at' => $order->created_at,
+                'updated_at' => $order->updated_at,
+            ];
         });
-
-        return response(['orders' => $transformedOrders]);
+        return response(['carts' => $transformedOrders]);
     }
-
-
     public function getCard($id)
     {
         $order = Order::query()->find($id);
