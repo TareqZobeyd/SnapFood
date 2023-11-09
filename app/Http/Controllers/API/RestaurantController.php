@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use App\Models\Food;
 use App\Models\Restaurant;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 
 class RestaurantController extends Controller
 {
@@ -29,10 +29,37 @@ class RestaurantController extends Controller
     public function food($id)
     {
         $restaurant = Restaurant::query()->find($id);
+
         if (!$restaurant) {
             return response(['Message' => "This restaurant doesn't exist"], 404);
         }
-        $foods = $restaurant->food;
-        return response(["Foods details of restaurant number $id" => $foods]);
+        $categories = Category::query()->where('id', $restaurant->category_id)->get();
+
+        $responseCategories = $categories->map(function ($category) use ($restaurant) {
+            $foods = $category->foods;
+
+            $foodDetails = $foods->map(function ($food) {
+                $foodDetails = [
+                    'id' => $food->id,
+                    'title' => $food->name,
+                    'price' => $food->price,
+                ];
+
+                if ($food->food_discount_id) {
+                    $foodDetails['off'] = [
+                        'label' => $food->food_discount_id,
+                    ];
+                }
+                return $foodDetails;
+            });
+            return [
+                'id' => $category->id,
+                'title' => $category->name,
+                'foods' => $foodDetails,
+            ];
+        });
+        return response(['categories' => $responseCategories]);
     }
+
+
 }

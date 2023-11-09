@@ -16,8 +16,17 @@ class AddressController extends Controller
      */
     public function index()
     {
-        $addresses = (User::query()->find(auth()->user()->id)->addresses);
-        return response(['All Addresses' => $addresses]);
+        $user = auth()->user();
+        $addresses = $user->addresses->map(function ($address) {
+            return [
+                'id' => $address->id,
+                'title' => $address->title,
+                'address' => $address->address,
+                'latitude' => $address->latitude,
+                'longitude' => $address->longitude,
+            ];
+        });
+        return response($addresses);
     }
 
     /**
@@ -42,9 +51,8 @@ class AddressController extends Controller
             'longitude' => $fields['longitude'],
         ]);
 
-        return response(['Message' => 'Your address is submitted successfully', 'Address details' => ($address)]);
+        return response(['Message' => 'Your address is submitted successfully']);
     }
-
 
     /**
      * Update the specified resource in storage.
@@ -63,29 +71,6 @@ class AddressController extends Controller
             'longitude' => 'required|numeric',
         ]);
         $address->update($request->all());
-        return response(['Message' => 'Your address is updated successfully', 'Address details' => ($address)]);
-    }
-
-    /**
-     * Set location the specified resource from storage.
-     *
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function setActiveAddress($id)
-    {
-        $address = Address::query()->find($id);
-
-        $addresses = User::query()->find(auth()->user()->id)->addresses;
-        foreach ($addresses as $address) {
-            if ($address->id == $id) $address->update(['active' => '1']);
-            else $address->update(['active' => '0']);
-
-            return response(['Message' => 'Your main address is updated', 'Active address'
-            => (User::query()->find(auth()->user()->id)->addresses)
-                    ->where('active', '1')]);
-        }
-
-        return response(['Message' => "You don't have access to this address"], 403);
+        return response(['Message' => 'Your address is updated successfully']);
     }
 }
