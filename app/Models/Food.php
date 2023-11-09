@@ -40,10 +40,6 @@ class Food extends Model
         return $this->belongsToMany(Order::class)->withPivot('count');
     }
 
-    public function comments()
-    {
-        return $this->hasMany(Comment::class);
-    }
     public static function calculateDiscountedPrice($originalPrice, $foodDiscountId)
     {
         if ($foodDiscountId !== null) {

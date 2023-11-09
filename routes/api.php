@@ -2,9 +2,9 @@
 
 use App\Http\Controllers\API\AddressController;
 use App\Http\Controllers\API\AuthController;
+use App\Http\Controllers\API\CommentController;
 use App\Http\Controllers\API\OrderController;
 use App\Http\Controllers\API\RestaurantController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -39,4 +39,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::patch('carts/add', [OrderController::class, 'update']);
     Route::get('carts/{cartId}', [OrderController::class, 'getCard'])->whereNumber('cartId');
     Route::post('carts/{cartId}/pay', [OrderController::class, 'payCard'])->whereNumber('cartId');
+    Route::get('comments', [CommentController::class, 'index']);
+    Route::post('comments', [CommentController::class, 'store']);
 });

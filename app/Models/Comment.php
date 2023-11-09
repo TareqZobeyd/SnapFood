@@ -10,7 +10,7 @@ class Comment extends Model
         'user_id',
         'food_id',
         'order_id',
-        'content',
+        'message',
         'score'
     ];
 
@@ -19,12 +19,7 @@ class Comment extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function food()
-    {
-        return $this->belongsTo(Food::class);
-    }
-
-    public function order()
+    public function orders()
     {
         return $this->belongsTo(Order::class);
     }
