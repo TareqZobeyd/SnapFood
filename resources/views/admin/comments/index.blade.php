@@ -11,8 +11,9 @@
                         <th>ID</th>
                         <th>User</th>
                         <th>Comment</th>
-                        <th>Created At</th>
                         <th>Score</th>
+                        <th>Order ID</th>
+                        <th>Created At</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -22,6 +23,7 @@
                             <td>{{ $comment->user->name }}</td>
                             <td>{{ $comment->message }}</td>
                             <td>{{ $comment->score }}</td>
+                            <td>{{ $comment->order_id }}</td>
                             <td>{{ $comment->created_at }}</td>
                         </tr>
                     @endforeach
