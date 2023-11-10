@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\API\CommentController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\FoodController;
 use App\Http\Controllers\FoodDiscountController;
@@ -58,9 +59,11 @@ Route::get('restaurants/create', [RestaurantController::class, 'create'])->middl
 Route::post('restaurants', [RestaurantController::class, 'store'])->name('restaurants.store');
 
 Route::middleware(['role:super-admin'])->group(function () {
-    Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard.blade.php');
+    Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
     Route::get('admin/users', [AdminController::class, 'showUsers'])->name('admin.users');
     Route::get('admin/restaurants', [RestaurantController::class, 'index'])->name('admin.restaurants.index');
+    Route::get('/admin/comments', [AdminController::class, 'showComments'])->name('admin.comments');
+
 
 });
 

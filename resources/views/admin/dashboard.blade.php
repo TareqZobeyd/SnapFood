@@ -37,10 +37,10 @@
                             </a>
                         </li>
                         <li class="nav-item">
-{{--                            <a class="nav-link {{ request()->routeIs('admin.comments') ? 'active' : '' }}"--}}
-{{--                               href="{{ route('admin.comments') }}">--}}
+                            <a class="nav-link {{ request()->routeIs('admin.comments') ? 'active' : '' }}"
+                               href="{{ route('admin.comments') }}">
                                 Comments
-{{--                            </a>--}}
+                            </a>
                         </li>
                         <li class="nav-item">
 {{--                            <a class="nav-link {{ request()->routeIs('admin.banners') ? 'active' : '' }}"--}}
