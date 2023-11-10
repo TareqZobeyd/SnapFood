@@ -73,6 +73,8 @@ Route::middleware(['role:seller|super-admin'])->group(function () {
     Route::get('admin/restaurants/{restaurant}/edit', [RestaurantController::class, 'edit'])->name('admin.restaurants.edit');
     Route::put('admin/restaurants/{restaurant}', [RestaurantController::class, 'update'])->name('admin.restaurants.update');
     Route::delete('admin/restaurants/{restaurant}', [RestaurantController::class, 'destroy'])->name('admin.restaurants.destroy');
+    Route::get('/seller/orders', [SellerController::class, 'getOrders'])->name('seller.orders');
+
 });
 
 Route::resource('orders', OrderController::class)->middleware('auth')->names([

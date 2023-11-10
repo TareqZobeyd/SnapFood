@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Order;
 use Illuminate\Http\Request;
 
 class SellerController extends Controller
@@ -41,5 +42,20 @@ class SellerController extends Controller
         $restaurant = $user->restaurant;
 
         return view('seller.restaurant', compact('restaurant'));
+    }
+    public function getOrders(Request $request)
+    {
+        $user = auth()->user();
+        $restaurant = $user->restaurant;
+
+        $query = Order::query()->where('restaurant_id', $restaurant->id);
+
+        if ($request->has('food_id')) {
+            $query->whereHas('foods', function ($foodQuery) use ($request) {
+                $foodQuery->where('id', $request->input('food_id'));
+            });
+        }
+        $orders = $query->get();
+        return view('seller.orders', compact('orders'));
     }
 }
