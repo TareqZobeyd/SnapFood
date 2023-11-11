@@ -31,6 +31,7 @@ class FoodController extends Controller
     {
 
     }
+
     private function calculateDiscountedPrice($originalPrice, $foodDiscountId)
     {
         if ($foodDiscountId !== null) {
@@ -40,9 +41,9 @@ class FoodController extends Controller
                 return $originalPrice - ($originalPrice * ($discount / 100));
             }
         }
-
         return $originalPrice;
     }
+
     public function store(Request $request)
     {
 
@@ -68,6 +69,7 @@ class FoodController extends Controller
 
         return redirect()->route('foods.index')->with('success', 'Food created successfully.');
     }
+
     public function show($id)
     {
         // Display a specific food
@@ -75,9 +77,10 @@ class FoodController extends Controller
 
     public function edit($id)
     {
-        $food = Food::find($id);
+        $food = Food::query()->find($id);
         $categories = Category::all();
-        return view('foods.edit', compact('food', 'categories'));
+        $discounts = FoodDiscount::all();
+        return view('foods.edit', compact('food', 'categories', 'discounts'));
     }
 
     public function update(Request $request, $id)
@@ -86,20 +89,23 @@ class FoodController extends Controller
             'name' => 'required|string|max:255',
             'price' => 'required|numeric',
             'category_id' => 'required|exists:categories,id',
+            'food_discount_id' => 'nullable|exists:food_discounts,id',
+            'custom_discount' => 'nullable|numeric|between:5,95',
         ]);
-
-        $food = Food::find($id);
+        $food = Food::query()->find($id);
         if (!$food) {
             return redirect()->route('foods.index')->with('error', 'Food not found.');
         }
-
+        $discountPercentage = $request->input('custom_discount') ?? ($food->food_discount ? $food->food_discount->discount_percentage : null);
         $food->update([
             'name' => $request->input('name'),
             'price' => $request->input('price'),
             'category_id' => $request->input('category_id'),
+            'food_discount_id' => $request->input('food_discount_id'),
+            'custom_discount' => $discountPercentage,
         ]);
 
-        return redirect()->route('foods.list')->with('success', 'Food updated successfully.');
+        return redirect()->route('foods.index')->with('success', 'Food updated successfully.');
     }
 
     public function destroy($id)

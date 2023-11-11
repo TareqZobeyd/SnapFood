@@ -51,16 +51,22 @@
                                             @php
                                                 $discountedPrice = \App\Models\Food::calculateDiscountedPrice($food->price, $food->food_discount_id);
                                             @endphp
-                                            <p class="card-text">Price With
-                                                Discount: {{ $food->food_discount->discount_percentage }}%</p>
+                                            <p class="card-text">Price With Discount: {{ $food->food_discount->discount_percentage }}%</p>
                                             <i class="fas fa-arrow-right" style="color: green;"></i>
                                             <span style="color: green;">${{ $discountedPrice }}</span>
                                         @endif
+                                        <div class="mt-3">
+                                            <a href="{{ route('foods.edit', $food->id) }}" class="btn btn-primary">Edit</a>
+                                            <form action="{{ route('foods.destroy', $food->id) }}" method="post" style="display: inline-block;">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
+                                            </form>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         @endforeach
-
                     @endif
                 </div>
             </main>
