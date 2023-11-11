@@ -23,7 +23,7 @@ class FoodDiscountController extends Controller
     {
         $data = $request->validate([
             'restaurant_id' => 'nullable|exists:restaurants,id',
-            'discount_percentage' => 'required|numeric',
+            'discount_percentage' => 'required|numeric|between:5,95',
             'food_party' => 'nullable|string',
         ]);
         $foodDiscount = FoodDiscount::query()->create([

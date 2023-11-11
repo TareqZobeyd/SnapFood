@@ -12,6 +12,9 @@
             <div class="form-group">
                 <label for="discount_percentage">Discount Percentage:</label>
                 <input type="text" class="form-control" id="discount_percentage" name="discount_percentage">
+                @error('discount_percentage')
+                <div class="alert alert-danger">{{ $message }}</div>
+                @enderror
             </div>
             <div class="form-group">
                 <label for="food_party">Food Party (optional):</label>
