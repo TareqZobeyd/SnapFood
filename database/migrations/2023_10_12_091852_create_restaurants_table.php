@@ -22,6 +22,9 @@ return new class extends Migration {
             $table->foreign('category_id')->references('id')
                 ->on('categories')
                 ->onDelete('cascade');
+            $table->boolean('is_open')->default(true);
+            $table->decimal('delivery_cost', 8, 2)->default(0);
+            $table->string('working_hours')->nullable();
             $table->timestamps();
         });
     }

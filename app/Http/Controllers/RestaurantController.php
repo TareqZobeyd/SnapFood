@@ -56,7 +56,6 @@ class RestaurantController extends Controller
 
     public function edit(Restaurant $restaurant)
     {
-//        $restaurant = Restaurant::find($id);
         $categories = Category::all();
 
         if (!$restaurant) {
@@ -74,6 +73,9 @@ class RestaurantController extends Controller
             'phone' => 'required|string',
             'address' => 'required|string',
             'bank_account' => 'required|string',
+            'is_open' => 'required|boolean',
+            'delivery_cost' => 'required|numeric',
+            'working_hours' => 'nullable|string',
         ]);
 
         $restaurant = Restaurant::query()->find($id);
@@ -88,6 +90,9 @@ class RestaurantController extends Controller
             'phone' => $request->input('phone'),
             'address' => $request->input('address'),
             'bank_account' => $request->input('bank_account'),
+            'is_open' => $request->input('is_open'),
+            'delivery_cost' => $request->input('delivery_cost'),
+            'working_hours' => $request->input('working_hours'),
         ]);
 
         return redirect()->route('admin.restaurants.index')->with('success', 'Restaurant details updated successfully.');
