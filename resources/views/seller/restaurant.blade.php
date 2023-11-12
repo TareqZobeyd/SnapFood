@@ -47,12 +47,13 @@
                                     <p class="card-text">Address: {{ $restaurant->address }}</p>
                                     <p class="card-text">Phone: {{ $restaurant->phone }}</p>
                                     <p class="card-text">Bank Account: {{ $restaurant->bank_account }}</p>
+                                    <p class="card-text">Is Open: {{ $restaurant->is_open ? 'Yes' : 'No' }}</p>
+                                    <p class="card-text">Delivery Cost: {{ $restaurant->delivery_cost }}</p>
+                                    <p class="card-text">Working Hours: {{ $restaurant->working_hours }}</p>
 
-                                    <a href="{{ route('admin.restaurants.edit', $restaurant->id) }}"
-                                       class="btn btn-primary">Edit</a>
+                                    <a href="{{ route('admin.restaurants.edit', $restaurant->id) }}" class="btn btn-primary">Edit</a>
 
-                                    <form action="{{ route('admin.restaurants.destroy', $restaurant->id) }}"
-                                          method="POST">
+                                    <form action="{{ route('admin.restaurants.destroy', $restaurant->id) }}" method="POST">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-danger">Delete</button>
