@@ -23,12 +23,17 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('seller.restaurant') }}">
-                                Restaurant Profile
+                                Restaurant Settings
                             </a>
                         </li>
                         <li class="nav-item">
 {{--                            <a class="nav-link" href="{{ route('seller.comments') }}">--}}
                                 Comments
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('seller.archive') }}">
+                                Archive
                             </a>
                         </li>
                     </ul>

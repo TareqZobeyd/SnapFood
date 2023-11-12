@@ -73,7 +73,7 @@ class RestaurantController extends Controller
             'phone' => 'required|string',
             'address' => 'required|string',
             'bank_account' => 'required|string',
-            'is_open' => 'required|boolean',
+            'is_open' => 'required|in:on,off',
             'delivery_cost' => 'required|numeric',
             'working_hours' => 'nullable|string',
         ]);
@@ -81,8 +81,9 @@ class RestaurantController extends Controller
         $restaurant = Restaurant::query()->find($id);
 
         if (!$restaurant) {
-            return redirect()->route('admin.restaurants.index')->with('error', 'Restaurant not found.');
+            return redirect()->route('home')->with('error', 'Restaurant not found.');
         }
+        $is_open = $request->input('is_open') === 'on';
 
         $restaurant->update([
             'name' => $request->input('name'),
@@ -90,12 +91,12 @@ class RestaurantController extends Controller
             'phone' => $request->input('phone'),
             'address' => $request->input('address'),
             'bank_account' => $request->input('bank_account'),
-            'is_open' => $request->input('is_open'),
+            'is_open' => $is_open,
             'delivery_cost' => $request->input('delivery_cost'),
             'working_hours' => $request->input('working_hours'),
         ]);
 
-        return redirect()->route('admin.restaurants.index')->with('success', 'Restaurant details updated successfully.');
+        return redirect()->route('home')->with('success', 'Restaurant details updated successfully.');
     }
 
     public function destroy($id)

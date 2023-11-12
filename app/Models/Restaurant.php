@@ -15,7 +15,10 @@ class Restaurant extends Model
         'address',
         'phone',
         'bank_account',
-        'user_id'
+        'user_id',
+        'is_open',
+        'delivery_cost',
+        'working_hours'
     ];
 
     public function user()
