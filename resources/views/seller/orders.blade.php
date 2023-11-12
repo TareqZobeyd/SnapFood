@@ -19,7 +19,8 @@
                     </thead>
                     <tbody>
                     @foreach ($orders as $order)
-                        <tr>
+                        @if ($order->seller_status !== 'delivered')
+                            <tr>
                             <td>{{ $order->id }}</td>
                             <td>{{ $order->user_id }}</td>
                             <td>{{ $order->customer_status }}</td>
@@ -44,6 +45,7 @@
                                 @endforeach
                             </td>
                         </tr>
+                        @endif
                     @endforeach
                     </tbody>
                 </table>
