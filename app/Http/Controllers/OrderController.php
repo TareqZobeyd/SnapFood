@@ -70,4 +70,10 @@ class OrderController extends Controller
         $orders = Order::all();
         return view('seller.orders', compact('orders', 'success'));
     }
+    public function archive()
+    {
+        $deliveredOrders = Order::query()->where('seller_status', 'delivered')->get();
+
+        return view('seller.archive', compact('deliveredOrders'));
+    }
 }

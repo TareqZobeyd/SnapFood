@@ -76,6 +76,8 @@ Route::middleware(['role:seller|super-admin'])->group(function () {
     Route::get('/seller/orders', [SellerController::class, 'getOrders'])->name('seller.orders');
     Route::patch('/orders/{id}/update-seller-status', [OrderController::class, 'updateSellerStatus'])
         ->name('orders.update-seller-status');
+    Route::get('/seller/archive', 'OrderController@archive')->name('seller.archive');
+
 });
 
 Route::resource('orders', OrderController::class)->middleware('auth')->names([
