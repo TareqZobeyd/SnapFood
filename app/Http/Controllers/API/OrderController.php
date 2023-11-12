@@ -23,7 +23,7 @@ class OrderController extends Controller
                 'foods' => $order->foods->map(function ($food) {
                     return [
                         'id' => $food->id,
-                        'title' => $food->title,
+                        'title' => $food->name,
                         'count' => $food->pivot->count,
                         'price' => $food->discounted_price,
                     ];

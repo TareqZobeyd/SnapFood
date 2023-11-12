@@ -74,7 +74,8 @@ Route::middleware(['role:seller|super-admin'])->group(function () {
     Route::put('admin/restaurants/{restaurant}', [RestaurantController::class, 'update'])->name('admin.restaurants.update');
     Route::delete('admin/restaurants/{restaurant}', [RestaurantController::class, 'destroy'])->name('admin.restaurants.destroy');
     Route::get('/seller/orders', [SellerController::class, 'getOrders'])->name('seller.orders');
-
+    Route::patch('/orders/{id}/update-seller-status', [OrderController::class, 'updateSellerStatus'])
+        ->name('orders.update-seller-status');
 });
 
 Route::resource('orders', OrderController::class)->middleware('auth')->names([
