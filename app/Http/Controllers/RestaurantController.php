@@ -25,11 +25,11 @@ class RestaurantController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255|unique:restaurants',
+            'name' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
-            'phone' => 'required|string|min:11',
+            'phone' => 'required|string|min:11|unique:restaurants',
             'address' => 'required|string',
-            'bank_account' => 'required|string',
+            'bank_account' => 'required|string|unique:restaurants',
         ]);
         $user = auth()->user();
         Restaurant::query()->create([
