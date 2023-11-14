@@ -34,6 +34,14 @@
                         </select>
                     </div>
                     <div class="form-group">
+                        <label for="custom_discount">Custom Discount (%):</label>
+                        <input type="text" class="form-control" name="custom_discount" id="custom_discount"
+                               value="{{ old('custom_discount') }}">
+                        @error('custom_discount')
+                        <div class="text-danger">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <div class="form-group">
                         <label for="category_id">Category:</label>
                         <select class="form-control" name="category_id" id="category_id">
                             @foreach($foodCategories as $category)
