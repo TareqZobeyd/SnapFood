@@ -25,12 +25,18 @@
                 <input type="text" class="form-control" name="price" id="price" value="{{ $food->price }}">
             </div>
             <div class="form-group">
-                <label for="discount">Discount</label>
-                <select name="food_discount_id" class="form-control" id="discount">
+                <label for="custom_discount">Custom Discount:</label>
+                <input type="text" class="form-control" name="custom_discount" id="custom_discount"
+                       value="{{ $food->custom_discount }}">
+            </div>
+            <div class="form-group">
+                <label for="food_discount_id">Food Discount:</label>
+                <select name="food_discount_id" class="form-control" id="food_discount_id">
                     <option value="">No Discount</option>
                     @foreach($discounts as $discount)
-                        <option value="{{ $discount->id }}">{{ $discount->food_party }}
-                            - {{ $discount->discount_percentage }}%
+                        <option
+                            value="{{ $discount->id }}" {{ $discount->id == $food->food_discount_id ? 'selected' : '' }}>
+                            {{ $discount->food_party }} - {{ $discount->discount_percentage }}%
                         </option>
                     @endforeach
                 </select>
