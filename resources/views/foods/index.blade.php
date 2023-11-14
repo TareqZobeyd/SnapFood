@@ -23,7 +23,7 @@
                         @enderror
                     </div>
                     <div class="form-group">
-                        <label for="discount">Discount</label>
+                        <label for="discount">Food Party</label>
                         <select name="food_discount_id" class="form-control" id="discount">
                             <option value="">No Discount</option>
                             @foreach($discounts as $discount)
