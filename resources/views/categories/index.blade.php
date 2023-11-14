@@ -6,7 +6,7 @@
             <div class="col-md-12">
                 <div class="panel panel-default">
                     <br>
-                    <div class="panel-heading">Categories</div>
+                    <h2 class="panel-heading">Categories</h2>
                     <br>
                     <div class="panel-body">
                         <a href="{{ route('categories.create') }}" class="btn btn-success mb-2">Create Category</a>

@@ -53,25 +53,39 @@
                                         <h5 class="card-title">{{ $food->name }}</h5>
                                         <p class="card-text">Price: ${{ $food->price }}</p>
                                         <p class="card-text">Category: {{ $food->category->name }}</p>
-                                        @if ($food->food_discount_id)
+
+                                        @if ($food->custom_discount)
                                             @php
-                                                $discountedPrice = \App\Models\Food::calculateDiscountedPrice($food->price, $food->food_discount_id);
+                                                $discountedPrice = \App\Models\Food::calculateDiscountedPrice($food->price, null, $food->custom_discount);
                                             @endphp
-                                            <p class="card-text">Price With Discount: {{ $food->food_discount->discount_percentage }}%</p>
+                                            <p class="card-text">Price With Custom Discount: {{ $food->custom_discount }}%</p>
+                                            <i class="fas fa-arrow-right" style="color: blue;"></i>
+                                            <span style="color: green;">${{ $discountedPrice }}</span>
+                                        @elseif ($food->food_discount_id)
+                                            @php
+                                                $discountedPrice = \App\Models\Food::calculateDiscountedPrice($food->price, $food->food_discount_id, null);
+                                            @endphp
+                                            <p class="card-text">Price With Food Discount: {{ $food->food_discount->discount_percentage }}%</p>
                                             <i class="fas fa-arrow-right" style="color: green;"></i>
                                             <span style="color: green;">${{ $discountedPrice }}</span>
                                         @endif
+
                                         <div class="mt-3">
-                                            <a href="{{ route('foods.edit', $food->id) }}" class="btn btn-primary">Edit</a>
-                                            <form action="{{ route('foods.destroy', $food->id) }}" method="post" style="display: inline-block;">
+                                            <a href="{{ route('foods.edit', $food->id) }}"
+                                               class="btn btn-primary">Edit</a>
+                                            <form action="{{ route('foods.destroy', $food->id) }}" method="post"
+                                                  style="display: inline-block;">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
+                                                <button type="submit" class="btn btn-danger"
+                                                        onclick="return confirm('Are you sure?')">Delete
+                                                </button>
                                             </form>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+
                         @endforeach
                     @endif
                 </div>

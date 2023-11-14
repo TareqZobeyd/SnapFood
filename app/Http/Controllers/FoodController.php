@@ -32,10 +32,13 @@ class FoodController extends Controller
 
     }
 
-    private function calculateDiscountedPrice($originalPrice, $foodDiscountId)
+    private function calculateDiscountedPrice($originalPrice, $foodDiscountId, $customDiscount)
     {
+        if ($customDiscount !== null) {
+            return $originalPrice - ($originalPrice * ($customDiscount / 100));
+        }
         if ($foodDiscountId !== null) {
-            $foodDiscount = FoodDiscount::find($foodDiscountId);
+            $foodDiscount = FoodDiscount::query()->find($foodDiscountId);
             if ($foodDiscount) {
                 $discount = $foodDiscount->discount_percentage;
                 return $originalPrice - ($originalPrice * ($discount / 100));
@@ -46,29 +49,33 @@ class FoodController extends Controller
 
     public function store(Request $request)
     {
-
         $request->validate([
             'name' => 'required|string|max:255',
             'price' => 'required|numeric',
             'category_id' => 'required|exists:categories,id',
             'food_discount_id' => 'nullable|exists:food_discounts,id',
+            'custom_discount' => 'nullable|numeric|between:5,95',
         ]);
         $user = Auth::user();
         $restaurant = $user->restaurant;
         $originalPrice = $request->input('price');
         $foodDiscountId = $request->input('food_discount_id');
-        $discountedPrice = $this->calculateDiscountedPrice($originalPrice, $foodDiscountId);
+        $discountPercentage = $request->input('custom_discount');
+        $discountedPrice = $this->calculateDiscountedPrice($originalPrice, $foodDiscountId, $discountPercentage);
+
         Food::query()->create([
             'name' => $request->input('name'),
             'price' => $originalPrice,
             'discounted_price' => $discountedPrice,
             'category_id' => $request->input('category_id'),
             'food_discount_id' => $foodDiscountId,
+            'custom_discount' => $discountPercentage,
             'restaurant_id' => $restaurant->id,
         ]);
 
         return redirect()->route('foods.index')->with('success', 'Food created successfully.');
     }
+
 
     public function show($id)
     {
