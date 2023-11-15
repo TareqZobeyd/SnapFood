@@ -10,7 +10,9 @@ class Comment extends Model
         'user_id',
         'order_id',
         'message',
-        'score'
+        'score',
+        'seller_response',
+
     ];
 
     public function user()

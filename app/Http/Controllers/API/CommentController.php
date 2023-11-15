@@ -59,6 +59,20 @@ class CommentController extends Controller
             return response(['comments' => $sortedComments]);
         }
     }
+    public function respond(Request $request, $commentId)
+    {
+        $request->validate([
+            'seller_response' => 'required|string',
+        ]);
+
+        $comment = Comment::query()->find($commentId);
+
+        auth()->user();
+
+        $comment->update(['seller_response' => $request->seller_response]);
+
+        return response(['Message' => 'Seller response added successfully']);
+    }
 
     public function store(Request $request)
     {

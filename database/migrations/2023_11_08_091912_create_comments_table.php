@@ -20,9 +20,10 @@ return new class extends Migration {
                 ->on('users')->onDelete('cascade');
             $table->foreign('order_id')->references('id')
                 ->on('orders')->onDelete('cascade');
-
             $table->timestamps();
-
+        });
+        Schema::table('comments', function (Blueprint $table) {
+            $table->text('seller_response')->nullable()->after('message');
         });
     }
 
