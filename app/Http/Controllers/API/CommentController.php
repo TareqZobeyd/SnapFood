@@ -74,6 +74,12 @@ class CommentController extends Controller
         if ($order->seller_status !== 'delivered') {
             return response(['error' => 'You can only comment on delivered orders.']);
         }
+        $existingComment = Comment::where('user_id', auth()->user()->id)
+            ->where('order_id', $order->id)
+            ->first();
+        if ($existingComment) {
+            return response(['error' => 'You have already commented on this order.']);
+        }
         Comment::query()->create([
             'user_id' => auth()->user()->id,
             'order_id' => $order->id,
