@@ -23,6 +23,14 @@
                             <td>{{ $comment->score }}</td>
                             <td>{{ $comment->order_id }}</td>
                             <td>{{ $comment->created_at }}</td>
+                            <td>{{ $comment->seller_response }}</td>
+                            <td>
+                                <form method="post" action="{{ route('comments.respond', $comment->id) }}">
+                                    @csrf
+                                    <textarea name="seller_response" placeholder="Write a response"></textarea>
+                                    <button type="submit">Submit Response</button>
+                                </form>
+                            </td>
                         </tr>
                     @endforeach
                     </tbody>
