@@ -24,15 +24,15 @@ Route::post('auth/register', [AuthController::class, 'register'])->name('api.aut
 Route::post('auth/login', [AuthController::class, 'logIn'])->name('api.auth.login');
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('auth/logout', [AuthController::class, 'logout'])->name('api.auth.logout');
-    Route::put('auth/edit', [AuthController::class, 'edit'])->name('api.auth.edit');
-    Route::patch('auth/edit', [AuthController::class, 'edit'])->name('api.auth.edit');
-    Route::get('addresses', [AddressController::class, 'index'])->name('api.addresses');
+    Route::get('auth/logout', [AuthController::class, 'logout']);
+    Route::put('auth/edit', [AuthController::class, 'edit']);
+    Route::patch('auth/edit', [AuthController::class, 'edit']);
+    Route::get('addresses', [AddressController::class, 'index']);
     Route::post('addresses', [AddressController::class, 'store']);
     Route::post('addresses/{id}', [AddressController::class, 'setActiveAddress']);
     Route::get('restaurants/{id}', [RestaurantController::class, 'show']);
-    Route::get('restaurants', [RestaurantController::class, 'index'])->name('api/restaurants');
-    Route::get('restaurants/{id}/foods', [RestaurantController::class, 'food'])->name('api/restaurants/foods');
+    Route::get('restaurants', [RestaurantController::class, 'index']);
+    Route::get('restaurants/{id}/foods', [RestaurantController::class, 'food']);
     Route::get('carts', [OrderController::class, 'getAllCards']);
     Route::post('carts/add', [OrderController::class, 'add']);
     Route::put('carts/add', [OrderController::class, 'update']);
