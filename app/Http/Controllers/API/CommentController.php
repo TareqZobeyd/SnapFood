@@ -63,7 +63,7 @@ class CommentController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'order_id' => 'required',
+            'order_id' => 'required|integer',
             'score' => 'required|integer|min:1|max:5',
             'message' => 'required|string',
         ]);
@@ -76,7 +76,7 @@ class CommentController extends Controller
         }
         Comment::query()->create([
             'user_id' => auth()->user()->id,
-            'order_id' => $order,
+            'order_id' => $order->id,
             'message' => $request->message,
             'score' => $request->score,
         ]);

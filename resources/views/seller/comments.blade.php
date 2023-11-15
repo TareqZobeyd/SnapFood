@@ -13,6 +13,7 @@
                         <th>Score</th>
                         <th>Order ID</th>
                         <th>Created At</th>
+                        <th>Response</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -27,8 +28,14 @@
                             <td>
                                 <form method="post" action="{{ route('comments.respond', $comment->id) }}">
                                     @csrf
-                                    <textarea name="seller_response" placeholder="Write a response"></textarea>
-                                    <button type="submit">Submit Response</button>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <textarea name="seller_response" placeholder="Write a response" class="form-control"></textarea>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <button type="submit" class="btn btn-primary">Submit Response</button>
+                                        </div>
+                                    </div>
                                 </form>
                             </td>
                         </tr>

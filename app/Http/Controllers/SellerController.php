@@ -70,16 +70,16 @@ class SellerController extends Controller
 
     public function respond(Request $request, $commentId)
     {
+        $user = auth()->user();
+        $restaurant = $user->restaurant;
         $request->validate([
             'seller_response' => 'required|string',
         ]);
 
         $comment = Comment::query()->find($commentId);
-
         auth()->user();
-
         $comment->update(['seller_response' => $request->seller_response]);
 
-        return view('seller.dashboard')->with('success', 'respond added successfully');
+        return view('seller.dashboard', compact('restaurant'))->with('success', 'respond added successfully');
     }
 }
