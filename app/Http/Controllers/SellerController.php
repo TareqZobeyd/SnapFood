@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Comment;
 use App\Models\Order;
 use Illuminate\Http\Request;
 
@@ -57,5 +58,11 @@ class SellerController extends Controller
         }
         $orders = $query->get();
         return view('seller.orders', compact('orders'));
+    }
+    public function showComments()
+    {
+        $comments = Comment::all();
+
+        return view('seller.comments', compact('comments'));
     }
 }
