@@ -44,6 +44,7 @@ class SellerController extends Controller
 
         return view('seller.restaurant', compact('restaurant'));
     }
+
     public function getOrders(Request $request)
     {
         $user = auth()->user();
@@ -59,10 +60,26 @@ class SellerController extends Controller
         $orders = $query->get();
         return view('seller.orders', compact('orders'));
     }
+
     public function showComments()
     {
         $comments = Comment::all();
 
         return view('seller.comments', compact('comments'));
+    }
+
+    public function respond(Request $request, $commentId)
+    {
+        $request->validate([
+            'seller_response' => 'required|string',
+        ]);
+
+        $comment = Comment::query()->find($commentId);
+
+        auth()->user();
+
+        $comment->update(['seller_response' => $request->seller_response]);
+
+        return view('seller.dashboard')->with('success', 'respond added successfully');
     }
 }
