@@ -34,6 +34,7 @@ class OrderController extends Controller
         });
         return response(['carts' => $transformedOrders]);
     }
+
     public function getCard($id)
     {
         $order = Order::query()->find($id);
@@ -52,6 +53,9 @@ class OrderController extends Controller
         ]);
 
         $food = Food::query()->find($request->food_id);
+        if (!$food) {
+            return response(['error' => 'Food not found.']);
+        }
 
         $order = Order::query()->where([
             'user_id' => auth()->user()->id,
@@ -98,20 +102,20 @@ class OrderController extends Controller
             'user_id' => auth()->user()->id, 'customer_status' => 'unpaid'])->first();
         if ($order == null) return \response(['Message' => "You don't have unpaid card"]);
 
-            $foods = $order->foods->first()->pivot->pluck('food_id')->toArray();
-            if (!in_array($request->food_id, $foods)) return response("this food isn't added yet");
+        $foods = $order->foods->first()->pivot->pluck('food_id')->toArray();
+        if (!in_array($request->food_id, $foods)) return response("this food isn't added yet");
 
-            $pivot = $order->foods->first()->pivot->where('food_id', $request->food_id)->first();
-            $food_id = $pivot->food_id;
-            $oldCount = $pivot->count;
-            $pivot->count = $request->count;
-            $pivot->save();
+        $pivot = $order->foods->first()->pivot->where('food_id', $request->food_id)->first();
+        $food_id = $pivot->food_id;
+        $oldCount = $pivot->count;
+        $pivot->count = $request->count;
+        $pivot->save();
 
-            $order->total_amount += ((Food::query()->find($food_id)->discounted_price * $request->count)
-                - (Food::query()->find($food_id)->discounted_price * $oldCount));
-            $order->save();
+        $order->total_amount += ((Food::query()->find($food_id)->discounted_price * $request->count)
+            - (Food::query()->find($food_id)->discounted_price * $oldCount));
+        $order->save();
 
-            return response(['Message' => 'count of food is updated']);
+        return response(['Message' => 'count of food is updated']);
     }
 
 
