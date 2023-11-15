@@ -18,7 +18,7 @@
                 <tr>
                     <td>{{ $food->name }}</td>
                     <td>{{ $food->price }}</td>
-                    <td>{{ $food->category->name }}</td>
+                    <td>{{ $food->categories->name }}</td>
                     <td>
                         <a href="{{ route('foods.edit', $food->id) }}" class="btn btn-primary">Edit</a>
                     </td>
