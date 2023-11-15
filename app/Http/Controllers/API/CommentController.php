@@ -21,12 +21,12 @@ class CommentController extends Controller
         if (!is_null($request->food_id)) {
             $comments = Comment::query()
                 ->where(['food_id' => $request->food_id, 'user_id' => $user->id])
-                ->with(['user', 'order'])
+                ->with(['user', 'order.foods'])
                 ->orderByDesc('created_at')
                 ->get();
 
             $transformedComments = $comments->map(function ($comment) {
-                return $comment->additional_info;
+                return $this->transformComment($comment);
             });
 
             return response(['comments' => $transformedComments]);
@@ -35,12 +35,21 @@ class CommentController extends Controller
         if (!is_null($request->restaurant_id)) {
             $orders = Order::query()
                 ->where(['restaurant_id' => $request->restaurant_id, 'user_id' => $user->id])
+                ->with('foods')
                 ->get();
 
             $comments = collect([]);
             foreach ($orders as $order) {
-                $orderComments = $order->comments->map(function ($comment) {
-                    return $comment->additional_info;
+                $orderComments = $order->comments->map(function ($comment) use ($order) {
+                    return [
+                        'author' => [
+                            'name' => $comment->user->name,
+                        ],
+                        'foods' => $order->foods->pluck('name')->toArray(),
+                        'created_at' => '',
+                        'score' => $comment->score,
+                        'content' => $comment->message,
+                    ];
                 });
                 $comments = $comments->concat($orderComments);
             }
@@ -50,7 +59,6 @@ class CommentController extends Controller
             return response(['comments' => $sortedComments]);
         }
     }
-
 
     public function store(Request $request)
     {
