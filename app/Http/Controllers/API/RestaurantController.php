@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\RestaurantFoodsResource;
 use App\Models\Category;
 use App\Models\Comment;
 use App\Models\Food;
@@ -85,38 +86,12 @@ class RestaurantController extends Controller
     }
 
 
-    public function food($id)
-    {
-        $restaurant = Restaurant::query()->find($id);
+    public function food($id){
 
-        if (!$restaurant) {
-            return response(['Message' => "This restaurant doesn't exist"], 404);
-        }
-        $categories = Category::query()->where('id', $restaurant->category_id)->get();
+        $restaurant_IDs = Restaurant::all()->pluck('id')->toArray();
+        if (!in_array($id, $restaurant_IDs)) return \response(['Message' => "'This restaurant isn't exist"]);
 
-        $responseCategories = $categories->map(function ($category) use ($restaurant) {
-            $foods = $category->foods;
-
-            $foodDetails = $foods->map(function ($food) {
-                $foodDetails = [
-                    'id' => $food->id,
-                    'title' => $food->name,
-                    'price' => $food->price,
-                ];
-
-                if ($food->food_discount_id) {
-                    $foodDetails['off'] = [
-                        'label' => $food->food_discount_id,
-                    ];
-                }
-                return $foodDetails;
-            });
-            return [
-                'id' => $category->id,
-                'title' => $category->name,
-                'foods' => $foodDetails,
-            ];
-        });
-        return response(['categories' => $responseCategories]);
+        return \response(["Foods details of restaurant number $id:" => new RestaurantFoodsResource(Restaurant::query()->find($id))]);
     }
+
 }

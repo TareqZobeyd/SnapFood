@@ -21,7 +21,7 @@ class Food extends Model
     protected $visible = ['discounted_price', 'price', 'count', 'pivot_count'];
 
 
-    public function category()
+    public function categories()
     {
         return $this->belongsTo(Category::class, 'category_id');
     }
@@ -39,6 +39,10 @@ class Food extends Model
     public function orders()
     {
         return $this->belongsToMany(Order::class)->withPivot('count');
+    }
+    public function off()
+    {
+        return $this->belongsTo(FoodDiscount::class, 'food_discount_id');
     }
 
     public static function calculateDiscountedPrice($originalPrice, $foodDiscountId, $customDiscount)
