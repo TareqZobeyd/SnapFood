@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use App\Models\Category;
+use App\Models\FoodDiscount;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -16,21 +17,20 @@ class FoodResource extends JsonResource
     public function toArray($request)
     {
         $categoryName = Category::query()->find($this->category_id)->name;
+        $discount = $this->food_discount;
 
         return [
             'id' => $this->id,
             'name' => $this->name,
             'category' => $categoryName,
             'price' => $this->price,
-            $this->mergeWhen(!is_null($this->discount_id),
-                [
-                    'off' =>
-                        [
-                            'label' => $this->discount?->value,
-                            'factor' => (100 - $this->discount?->value)/100
-                        ]
-                ]
-            ),
+            'off' => $this->when($discount, function () use ($discount) {
+                $customDiscount = $this->custom_discount;
+                return [
+                    'label' => $customDiscount !== null ? $customDiscount . '%' : $discount->discount_percentage . '%',
+                    'factor' => $customDiscount !== null ? (100 - $customDiscount) / 100 : (100 - $discount->discount_percentage) / 100,
+                ];
+            }),
         ];
     }
 }
