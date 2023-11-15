@@ -14,8 +14,23 @@ class RestaurantController extends Controller
     public function index(Request $request)
     {
         $restaurants = Restaurant::all();
-        return response(['Restaurants' => $restaurants]);
+
+        $responseRestaurants = $restaurants->map(function ($restaurant) {
+            return [
+                'id' => $restaurant->id,
+                'title' => $restaurant->name,
+                'address' => [
+                    'address' => $restaurant->address,
+                    'latitude' => $restaurant->latitude,
+                    'longitude' => $restaurant->longitude,
+                ],
+                'is_open' => (bool)$restaurant->is_open,
+                'score' => $restaurant->score ?? null,
+            ];
+        });
+        return response($responseRestaurants);
     }
+
 
     public function show($id)
     {
