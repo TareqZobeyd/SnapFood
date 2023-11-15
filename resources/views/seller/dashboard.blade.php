@@ -52,7 +52,7 @@
                                     <div class="card-body">
                                         <h5 class="card-title">{{ $food->name }}</h5>
                                         <p class="card-text">Price: ${{ $food->price }}</p>
-                                        <p class="card-text">Category: {{ $food->category->name }}</p>
+                                        <p class="card-text">Category: {{ $food->categories->name }}</p>
 
                                         @if ($food->custom_discount)
                                             @php
