@@ -38,6 +38,9 @@ class OrderController extends Controller
     {
         $order = Order::query()->find($id);
 
+        if (!$order) {
+            return response(['error' => 'Order not found.']);
+        }
         return response($order);
     }
 
