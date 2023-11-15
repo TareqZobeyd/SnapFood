@@ -59,6 +59,7 @@ class CommentController extends Controller
             return response(['comments' => $sortedComments]);
         }
     }
+
     public function respond(Request $request, $commentId)
     {
         $request->validate([
@@ -81,8 +82,13 @@ class CommentController extends Controller
             'score' => 'required|integer|min:1|max:5',
             'message' => 'required|string',
         ]);
-        $order = $request->order_id;
-
+        $order = Order::query()->find($request->order_id);
+        if (!$order) {
+            return response(['error' => 'Order not found.']);
+        }
+        if ($order->seller_status !== 'delivered') {
+            return response(['error' => 'You can only comment on delivered orders.']);
+        }
         Comment::query()->create([
             'user_id' => auth()->user()->id,
             'order_id' => $order,
