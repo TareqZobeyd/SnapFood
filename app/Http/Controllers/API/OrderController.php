@@ -28,8 +28,8 @@ class OrderController extends Controller
                         'price' => $food->discounted_price,
                     ];
                 }),
-                'created_at' => $order->created_at,
-                'updated_at' => $order->updated_at,
+                'created_at' => '',
+                'updated_at' => '',
             ];
         });
         return response(['carts' => $transformedOrders]);
