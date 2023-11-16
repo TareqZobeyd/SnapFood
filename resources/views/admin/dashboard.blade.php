@@ -13,12 +13,6 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link {{ request()->routeIs('foods.list') ? 'active' : '' }}"
-                               href="{{ route('foods.list') }}">
-                                Foods
-                            </a>
-                        </li>
-                        <li class="nav-item">
                             <a class="nav-link {{ request()->routeIs('admin.restaurants.index') ? 'active' : '' }}"
                                href="{{ route('admin.restaurants.index') }}">
                                 Restaurants

@@ -53,7 +53,7 @@ class SellerController extends Controller
         $query = Order::query()->where('restaurant_id', $restaurant->id);
 
         if ($request->has('food_id')) {
-            $query->whereHas('foods', function ($foodQuery) use ($request) {
+            $query->whereHas('food', function ($foodQuery) use ($request) {
                 $foodQuery->where('id', $request->input('food_id'));
             });
         }

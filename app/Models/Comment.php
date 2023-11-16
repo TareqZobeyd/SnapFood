@@ -36,7 +36,7 @@ class Comment extends Model
             'content' => $this->message,
         ];
         if ($this->order) {
-            $additionalInfo['foods'] = $this->order->foods->pluck('name')->all();
+            $additionalInfo['food'] = $this->order->foods->pluck('name')->all();
         }
         return $additionalInfo;
     }

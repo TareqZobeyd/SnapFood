@@ -32,7 +32,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('addresses/{id}', [AddressController::class, 'setActiveAddress']);
     Route::get('restaurants/{id}', [RestaurantController::class, 'show']);
     Route::get('restaurants', [RestaurantController::class, 'index']);
-    Route::get('restaurants/{id}/foods', [RestaurantController::class, 'food']);
+    Route::get('restaurants/{id}/food', [RestaurantController::class, 'food']);
     Route::get('carts', [OrderController::class, 'getAllCards']);
     Route::post('carts/add', [OrderController::class, 'add']);
     Route::put('carts/add', [OrderController::class, 'update']);

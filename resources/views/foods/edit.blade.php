@@ -13,7 +13,7 @@
                 {{ session('error') }}
             </div>
         @endif
-        <form action="{{ route('foods.update', $food->id) }}" method="POST">
+        <form action="{{ route('food.update', $food->id) }}" method="POST">
             @csrf
             @method('PUT')
             <div class="form-group">

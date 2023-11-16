@@ -41,16 +41,16 @@ class PermissionSeeder extends Seeder
                 'name' => 'delete-restaurants'
             ],
             [
-                'name' => 'view-foods'
+                'name' => 'view-food'
             ],
             [
-                'name' => 'create-foods'
+                'name' => 'create-food'
             ],
             [
-                'name' => 'edit-foods'
+                'name' => 'edit-food'
             ],
             [
-                'name' => 'delete-foods'
+                'name' => 'delete-food'
             ],
             [
                 'name' => 'create-discount'
@@ -64,8 +64,8 @@ class PermissionSeeder extends Seeder
         $superAdminRole->syncPermissions(Permission::all());
 
         $sellerRole = Role::query()->where('name', 'seller')->first();
-        $sellerRole->givePermissionTo(['create-foods', 'edit-foods',
-            'delete-foods', 'create-restaurants',
+        $sellerRole->givePermissionTo(['create-food', 'edit-food',
+            'delete-food', 'create-restaurants',
             'edit-restaurants', 'delete-restaurants']);
     }
 }

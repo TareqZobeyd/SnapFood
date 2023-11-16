@@ -53,7 +53,7 @@ class Order extends Model
             'restaurant' => [
                 'title' => $restaurant->name,
             ],
-            'foods' => $foods,
+            'food' => $foods,
         ];
     }
 }

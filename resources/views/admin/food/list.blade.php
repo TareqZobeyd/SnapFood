@@ -3,6 +3,8 @@
 @section('content')
     <div class="container mt-5">
         <h2>Food List</h2>
+        @dd($foods)
+
         <table class="table">
             <thead>
             <tr>
@@ -18,12 +20,12 @@
                 <tr>
                     <td>{{ $food->name }}</td>
                     <td>{{ $food->price }}</td>
-                    <td>{{ $food->categories->name }}</td>
+                    <td>{{ $food->category ? $food->category->name : 'N/A' }}</td>
                     <td>
-                        <a href="{{ route('foods.edit', $food->id) }}" class="btn btn-primary">Edit</a>
+                        <a href="{{ route('food.edit', $food->id) }}" class="btn btn-primary">Edit</a>
                     </td>
                     <td>
-                        <form action="{{ route('foods.destroy', $food->id) }}" method="POST">
+                        <form action="{{ route('food.destroy', $food->id) }}" method="POST">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="btn btn-danger"

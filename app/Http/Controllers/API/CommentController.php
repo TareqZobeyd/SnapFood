@@ -12,7 +12,7 @@ class CommentController extends Controller
     public function index(Request $request)
     {
         $request->validate([
-            'food_id' => 'nullable|exists:foods,id',
+            'food_id' => 'nullable|exists:food,id',
             'restaurant_id' => 'nullable|exists:restaurants,id',
         ]);
 
@@ -21,7 +21,7 @@ class CommentController extends Controller
         if (!is_null($request->food_id)) {
             $comments = Comment::query()
                 ->where(['food_id' => $request->food_id, 'user_id' => $user->id])
-                ->with(['user', 'order.foods'])
+                ->with(['user', 'order.food'])
                 ->orderByDesc('created_at')
                 ->get();
 
@@ -35,7 +35,7 @@ class CommentController extends Controller
         if (!is_null($request->restaurant_id)) {
             $orders = Order::query()
                 ->where(['restaurant_id' => $request->restaurant_id, 'user_id' => $user->id])
-                ->with('foods')
+                ->with('food')
                 ->get();
 
             $comments = collect([]);
@@ -45,7 +45,7 @@ class CommentController extends Controller
                         'author' => [
                             'name' => $comment->user->name,
                         ],
-                        'foods' => $order->foods->pluck('name')->toArray(),
+                        'food' => $order->foods->pluck('name')->toArray(),
                         'created_at' => '',
                         'score' => $comment->score,
                         'content' => $comment->message,

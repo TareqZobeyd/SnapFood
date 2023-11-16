@@ -45,15 +45,15 @@ Route::prefix('/user')->name('user.')->controller(UserController::class)->group(
     Route::get('/restaurants', 'index')->name('restaurants');
 });
 
-Route::get('/foods/list', [FoodController::class, 'list'])->middleware('role:super-admin')->name('foods.list');
-Route::resource('foods', FoodController::class)->middleware('role:super-admin|seller')->names([
-    'index' => 'foods.index',
-    'create' => 'foods.create',
-    'store' => 'foods.store',
-    'show' => 'foods.show',
-    'edit' => 'foods.edit',
-    'update' => 'foods.update',
-    'destroy' => 'foods.destroy',
+Route::get('/food/list', [FoodController::class, 'list'])->middleware('role:super-admin')->name('food.list');
+Route::resource('food', FoodController::class)->middleware('role:super-admin|seller')->names([
+    'index' => 'food.index',
+    'create' => 'food.create',
+    'store' => 'food.store',
+    'show' => 'food.show',
+    'edit' => 'food.edit',
+    'update' => 'food.update',
+    'destroy' => 'food.destroy',
 ]);
 Route::get('restaurants/create', [RestaurantController::class, 'create'])->middleware('auth')->name('restaurants.create');
 Route::post('restaurants', [RestaurantController::class, 'store'])->name('restaurants.store');

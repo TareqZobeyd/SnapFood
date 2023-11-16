@@ -4,7 +4,7 @@
     <div class="container mt-5">
         <h2>Food List</h2>
         <div class="mb-3">
-            <a href="{{ route('foods.index') }}" class="btn btn-success">Create Food</a>
+            <a href="{{ route('food.index') }}" class="btn btn-success">Create Food</a>
         </div>
         <table class="table">
             <thead>
@@ -23,10 +23,10 @@
                     <td>{{ $food->price }}</td>
                     <td>{{ $food->category->name }}</td>
                     <td>
-                        <a href="{{ route('foods.edit', $food->id) }}" class="btn btn-primary">Edit</a>
+                        <a href="{{ route('food.edit', $food->id) }}" class="btn btn-primary">Edit</a>
                     </td>
                     <td>
-                        <form action="{{ route('foods.destroy', $food->id) }}" method="POST">
+                        <form action="{{ route('food.destroy', $food->id) }}" method="POST">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="btn btn-danger"

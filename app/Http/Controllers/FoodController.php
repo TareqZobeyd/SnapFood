@@ -15,7 +15,7 @@ class FoodController extends Controller
     public function list()
     {
         $foods = Food::all();
-        return view('foods.list', compact('foods'));
+        return view('food.list', compact('foods'));
     }
 
     public function index()
@@ -24,7 +24,7 @@ class FoodController extends Controller
         $foodCategories = Category::query()->where('type', 'food')->get();
         $discounts = FoodDiscount::all();
         $restaurants = Restaurant::all();
-        return view('foods.index', compact('foodCategories', 'discounts', 'restaurants'));
+        return view('food.index', compact('foodCategories', 'discounts', 'restaurants'));
     }
 
     public function create()
@@ -73,7 +73,7 @@ class FoodController extends Controller
             'restaurant_id' => $restaurant->id,
         ]);
 
-        return redirect()->route('foods.index')->with('success', 'Food created successfully.');
+        return redirect()->route('food.index')->with('success', 'Food created successfully.');
     }
 
 
@@ -87,7 +87,7 @@ class FoodController extends Controller
         $food = Food::query()->find($id);
         $categories = Category::all();
         $discounts = FoodDiscount::all();
-        return view('foods.edit', compact('food', 'categories', 'discounts'));
+        return view('food.edit', compact('food', 'categories', 'discounts'));
     }
 
     public function update(Request $request, $id)
@@ -101,7 +101,7 @@ class FoodController extends Controller
         ]);
         $food = Food::query()->find($id);
         if (!$food) {
-            return redirect()->route('foods.index')->with('error', 'Food not found.');
+            return redirect()->route('food.index')->with('error', 'Food not found.');
         }
         $discountPercentage = $request->input('custom_discount') ?? ($food->food_discount ? $food->food_discount->discount_percentage : null);
         $food->update([
@@ -112,7 +112,7 @@ class FoodController extends Controller
             'custom_discount' => $discountPercentage,
         ]);
 
-        return redirect()->route('foods.index')->with('success', 'Food updated successfully.');
+        return redirect()->route('food.index')->with('success', 'Food updated successfully.');
     }
 
     public function destroy($id)
@@ -120,9 +120,9 @@ class FoodController extends Controller
         $food = Food::find($id);
         if ($food) {
             $food->delete();
-            return redirect()->route('foods.index')->with('success', 'Food deleted successfully.');
+            return redirect()->route('food.index')->with('success', 'Food deleted successfully.');
         }
 
-        return redirect()->route('foods.index')->with('error', 'Food not found.');
+        return redirect()->route('food.index')->with('error', 'Food not found.');
     }
 }

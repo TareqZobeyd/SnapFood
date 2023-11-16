@@ -17,7 +17,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('foods.index') }}">
+                            <a class="nav-link" href="{{ route('food.index') }}">
                                 New Food
                             </a>
                         </li>
@@ -73,9 +73,9 @@
                                         @endif
 
                                         <div class="mt-3">
-                                            <a href="{{ route('foods.edit', $food->id) }}"
+                                            <a href="{{ route('food.edit', $food->id) }}"
                                                class="btn btn-primary">Edit</a>
-                                            <form action="{{ route('foods.destroy', $food->id) }}" method="post"
+                                            <form action="{{ route('food.destroy', $food->id) }}" method="post"
                                                   style="display: inline-block;">
                                                 @csrf
                                                 @method('DELETE')

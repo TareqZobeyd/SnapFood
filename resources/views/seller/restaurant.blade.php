@@ -17,7 +17,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('foods.index') }}">
+                            <a class="nav-link" href="{{ route('food.index') }}">
                                 New Food
                             </a>
                         </li>

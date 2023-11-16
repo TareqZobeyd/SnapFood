@@ -5,7 +5,7 @@
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <h2>Create Food Item</h2>
-                <form action="{{ route('foods.store') }}" method="post">
+                <form action="{{ route('food.store') }}" method="post">
                     @csrf
                     <div class="form-group">
                         <label for="name">Name:</label>

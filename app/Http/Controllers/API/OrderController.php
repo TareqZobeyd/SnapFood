@@ -11,7 +11,7 @@ class OrderController extends Controller
 {
     public function getAllCards()
     {
-        $orders = Order::with('restaurant', 'foods')->get();
+        $orders = Order::with('restaurant', 'food')->get();
 
         $transformedOrders = $orders->map(function ($order) {
             return [
@@ -20,7 +20,7 @@ class OrderController extends Controller
                     'title' => $order->restaurant->name,
                     'image' => $order->restaurant->image,
                 ],
-                'foods' => $order->foods->map(function ($food) {
+                'food' => $order->foods->map(function ($food) {
                     return [
                         'id' => $food->id,
                         'title' => $food->name,
