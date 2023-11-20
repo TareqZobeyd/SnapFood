@@ -90,7 +90,8 @@ class OrderController extends Controller
         }
         Mail::to(auth()->user()->email)->send(new OrderPlaced($order));
 
-        return response(['Message' => 'Food added to cart successfully',
+        return response([
+            'Message' => 'Food added to cart successfully',
             'Cart ID' => $order->id,
             'Email Sent' => true,
         ]);

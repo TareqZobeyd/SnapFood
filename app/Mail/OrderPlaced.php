@@ -26,22 +26,22 @@ class OrderPlaced extends Mailable
     /**
      * Get the message envelope.
      */
-    public function envelope(): Envelope
-    {
-        return new Envelope(
-            subject: 'Order Placed',
-        );
-    }
+//    public function envelope(): Envelope
+//    {
+//        return new Envelope(
+//            subject: 'Order Placed',
+//        );
+//    }
 
     /**
      * Get the message content definition.
      */
-    public function content(): Content
-    {
-        return new Content(
-            view: 'view.name',
-        );
-    }
+//    public function content(): Content
+//    {
+//        return new Content(
+//            view: 'view.name',
+//        );
+//    }
 
     /**
      * Get the attachments for the message.
