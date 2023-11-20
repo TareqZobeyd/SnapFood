@@ -23,24 +23,24 @@ class SellerReportsController extends Controller
         $status = $request->input('seller_status');
         $foodId = $request->input('food_id');
         $foods = Food::all();
-        $orders =Order::all();
         $restaurant = auth()->user()->restaurant;
 
-        $query = $restaurant->orders();
+        $query = $restaurant->orders()->where('restaurant_id', $restaurant->id);
 
         if ($status) {
             $query->where('seller_status', $status);
         }
-
         if ($foodId) {
             $query->whereHas('foods', function ($foodQuery) use ($foodId) {
-                $foodQuery->where('id', $foodId);
+                $foodQuery->where('food.id', $foodId);
             });
         }
-
         $filteredOrders = $query->get();
         $totalRevenue = $filteredOrders->sum('total_amount');
 
+        $orders = Order::query()->where('restaurant_id', $restaurant->id)->get();
+
         return view('seller.reports.index', compact('filteredOrders', 'totalRevenue', 'foods', 'orders'));
     }
+
 }
