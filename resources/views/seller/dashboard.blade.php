@@ -36,6 +36,12 @@
                                 Archive
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('seller.reports.index') }}">
+                                Reports
+                            </a>
+                        </li>
+
                     </ul>
                 </div>
             </nav>
