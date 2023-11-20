@@ -63,10 +63,16 @@ class SellerController extends Controller
 
     public function showComments()
     {
-        $comments = Comment::all();
+        $user = auth()->user();
+        $restaurant = $user->restaurant;
+
+        $comments = Comment::query()->whereHas('orders.foods', function ($query) use ($restaurant) {
+            $query->where('restaurant_id', $restaurant->id);
+        })->get();
 
         return view('seller.comments', compact('comments'));
     }
+
 
     public function respond(Request $request, $commentId)
     {

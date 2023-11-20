@@ -117,7 +117,7 @@ class FoodController extends Controller
 
     public function destroy($id)
     {
-        $food = Food::find($id);
+        $food = Food::query()->find($id);
         if ($food) {
             $food->delete();
             return redirect()->route('food.index')->with('success', 'Food deleted successfully.');
