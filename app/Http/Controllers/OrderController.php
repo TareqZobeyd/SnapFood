@@ -72,8 +72,14 @@ class OrderController extends Controller
     }
     public function archive()
     {
-        $deliveredOrders = Order::query()->where('seller_status', 'delivered')->get();
+        $user = auth()->user();
+        $restaurantId = $user->restaurant->id;
+
+        $deliveredOrders = Order::query()->where('seller_status', 'delivered')
+            ->where('restaurant_id', $restaurantId)
+            ->get();
 
         return view('seller.archive', compact('deliveredOrders'));
     }
+
 }
