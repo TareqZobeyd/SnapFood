@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Food;
 use Illuminate\Http\Request;
 
 class SellerReportsController extends Controller
@@ -10,15 +11,32 @@ class SellerReportsController extends Controller
     {
         $orders = auth()->user()->restaurant->orders;
         $totalRevenue = $orders->sum('total_price');
+        $foods = Food::all();
 
-        return view('seller.reports.index', compact('orders', 'totalRevenue'));
+        return view('seller.reports.index', compact('orders', 'totalRevenue', 'foods'));
     }
 
     public function filter(Request $request)
     {
-        // Implement filtering logic based on status and foods
-        // You can use $request->input('status') and $request->input('food_id') to get filter criteria
+        $status = $request->input('status');
+        $foodId = $request->input('food_id');
 
-        // Return filtered results to the view
+        $restaurant = auth()->user()->restaurant;
+
+        $query = $restaurant->orders();
+
+        if ($status) {
+            $query->where('status', $status);
+        }
+
+        if ($foodId) {
+            $query->whereHas('food', function ($foodQuery) use ($foodId) {
+                $foodQuery->where('id', $foodId);
+            });
+        }
+        $filteredOrders = $query->get();
+        $totalRevenue = $filteredOrders->sum('total_price');
+
+        return view('seller.reports.index', compact('filteredOrders', 'totalRevenue'));
     }
 }
