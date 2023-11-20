@@ -24,7 +24,7 @@ class FoodController extends Controller
         $foodCategories = Category::query()->where('type', 'food')->get();
         $discounts = FoodDiscount::all();
         $restaurants = Restaurant::all();
-        return view('food.index', compact('foodCategories', 'discounts', 'restaurants'));
+        return view('foods.index', compact('foodCategories', 'discounts', 'restaurants'));
     }
 
     public function create()
@@ -87,7 +87,7 @@ class FoodController extends Controller
         $food = Food::query()->find($id);
         $categories = Category::all();
         $discounts = FoodDiscount::all();
-        return view('food.edit', compact('food', 'categories', 'discounts'));
+        return view('foods.edit', compact('food', 'categories', 'discounts'));
     }
 
     public function update(Request $request, $id)
@@ -112,7 +112,7 @@ class FoodController extends Controller
             'custom_discount' => $discountPercentage,
         ]);
 
-        return redirect()->route('food.index')->with('success', 'Food updated successfully.');
+        return redirect()->route('foods.index')->with('success', 'Food updated successfully.');
     }
 
     public function destroy($id)
@@ -123,6 +123,6 @@ class FoodController extends Controller
             return redirect()->route('food.index')->with('success', 'Food deleted successfully.');
         }
 
-        return redirect()->route('food.index')->with('error', 'Food not found.');
+        return redirect()->route('foods.index')->with('error', 'Food not found.');
     }
 }
