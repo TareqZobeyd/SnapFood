@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Food;
 use App\Models\Order;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\OrderPlaced;
 
 class OrderController extends Controller
 {
@@ -86,8 +88,12 @@ class OrderController extends Controller
 
             $order->foods()->attach($food, ['count' => $request->count]);
         }
+        Mail::to(auth()->user()->email)->send(new OrderPlaced($order));
 
-        return response(['Message' => 'Food added to cart successfully', 'Cart ID' => $order->id]);
+        return response(['Message' => 'Food added to cart successfully',
+            'Cart ID' => $order->id,
+            'Email Sent' => true,
+        ]);
     }
 
 
