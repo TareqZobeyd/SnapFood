@@ -48,34 +48,7 @@
                             <td>{{ $order->id }}</td>
                             <td>{{ $order->user->name }}</td>
                             <td>{{ $order->customer_status }}</td>
-                            <td>
-                                <form action="{{ route('orders.update-seller-status', ['id' => $order->id]) }}"
-                                      method="POST">
-                                    @csrf
-                                    @method('PATCH')
-                                    <div class="form-group">
-                                        <select name="seller_status" class="form-control"
-                                                onchange="this.form.submit()">
-                                            <option
-                                                value="pending" {{ $order->seller_status === 'pending' ? 'selected' : '' }}>
-                                                Pending
-                                            </option>
-                                            <option
-                                                value="preparing" {{ $order->seller_status === 'preparing' ? 'selected' : '' }}>
-                                                Preparing
-                                            </option>
-                                            <option
-                                                value="send" {{ $order->seller_status === 'send' ? 'selected' : '' }}>
-                                                Send
-                                            </option>
-                                            <option
-                                                value="delivered" {{ $order->seller_status === 'delivered' ? 'selected' : '' }}>
-                                                Delivered
-                                            </option>
-                                        </select>
-                                    </div>
-                                </form>
-                            </td>
+                            <td>{{ $order->seller_status }}</td>
                             <td>{{ $order->total_amount }}</td>
                             <td>{{ $order->created_at }}</td>
                             <td>
@@ -88,9 +61,6 @@
                     </tbody>
                 </table>
             </div>
-            <table>
-                <!-- Display filteredOrders in a table -->
-            </table>
         </main>
     </div>
 @endsection
