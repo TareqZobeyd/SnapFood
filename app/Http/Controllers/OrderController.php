@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Order;
+use Illuminate\Support\Facades\Mail;
 
 class OrderController extends Controller
 {
@@ -68,7 +69,9 @@ class OrderController extends Controller
 
         $success = 'Seller status updated successfully.';
         $orders = Order::query()->where('restaurant_id', $user->restaurant->id)->get();
-
+        if ($request->seller_status === 'delivered' && $order->seller_status !== 'delivered') {
+            Mail::to($order->user->email)->send(new OrderDelivered($order));
+        }
         return view('seller.orders', compact('orders', 'success'));
     }
 
