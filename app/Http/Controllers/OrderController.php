@@ -57,19 +57,21 @@ class OrderController extends Controller
         $request->validate([
             'seller_status' => 'required|in:pending,preparing,send,delivered',
         ]);
-        $order = Order::query()->findOrFail($id);
 
-        if ($order->restaurant_id !== auth()->user()->restaurant->id) {
-            $orders = Order::all();
-            $error = "You don't have permission to update this order's status.";
-            return view('seller.orders', compact('orders', 'error'));
-        }
+        $user = auth()->user();
+        $order = Order::query()->where('id', $id)
+            ->where('restaurant_id', $user->restaurant->id)
+            ->firstOrFail();
+
         $order->seller_status = $request->seller_status;
         $order->save();
+
         $success = 'Seller status updated successfully.';
-        $orders = Order::all();
+        $orders = Order::query()->where('restaurant_id', $user->restaurant->id)->get();
+
         return view('seller.orders', compact('orders', 'success'));
     }
+
     public function archive()
     {
         $user = auth()->user();
@@ -81,5 +83,4 @@ class OrderController extends Controller
 
         return view('seller.archive', compact('deliveredOrders'));
     }
-
 }
