@@ -9,8 +9,8 @@
             <p>Total Revenue: ${{ $totalRevenue }}</p>
             <form action="{{ route('seller.reports.filter') }}" method="post">
                 @csrf
-                <label for="status">Status:</label>
-                <select name="status" id="status">
+                <label for="seller_status">Status:</label>
+                <select name="seller_status" id="seller_status">
                     <option value="">All</option>
                     <option value="pending">Pending</option>
                     <option value="preparing">Preparing</option>

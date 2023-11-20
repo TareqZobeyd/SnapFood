@@ -38,7 +38,7 @@ class SellerReportsController extends Controller
         $filteredOrders = $query->get();
         $totalRevenue = $filteredOrders->sum('total_amount');
 
-        $orders = Order::query()->where('restaurant_id', $restaurant->id)->get();
+        $orders = $query->get();
 
         return view('seller.reports.index', compact('filteredOrders', 'totalRevenue', 'foods', 'orders'));
     }
