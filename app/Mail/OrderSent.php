@@ -9,7 +9,7 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class OrderDelivered extends Mailable
+class OrderSent extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -55,6 +55,6 @@ class OrderDelivered extends Mailable
 
     public function build()
     {
-        return $this->subject('Order Delivered')->view('emails.order_delivered');
+        return $this->subject('Order Sent')->view('emails.order_sent');
     }
 }

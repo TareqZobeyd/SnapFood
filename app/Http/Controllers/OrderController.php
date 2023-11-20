@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\OrderSent;
 use Illuminate\Http\Request;
 use App\Models\Order;
 use Illuminate\Support\Facades\Mail;
@@ -10,22 +11,18 @@ class OrderController extends Controller
 {
     public function index()
     {
-        // Retrieve and display a list of orders
         $orders = Order::all();
         return view('orders.index', compact('orders'));
     }
 
     public function create()
     {
-        // Display a form to create a new order
         return view('orders.create');
     }
 
     public function store(Request $request)
     {
-        // Store a new order in the database
-        // Validate and save the order data
-        // Redirect to the index page with a success message
+
     }
 
     public function show(Order $order)
@@ -36,21 +33,17 @@ class OrderController extends Controller
 
     public function edit(Order $order)
     {
-        // Display a form to edit a specific order
         return view('orders.edit', compact('order'));
     }
 
     public function update(Request $request, Order $order)
     {
-        // Update the specific order in the database
-        // Validate and save the updated order data
-        // Redirect to the index page with a success message
+
     }
 
     public function destroy(Order $order)
     {
-        // Delete a specific order from the database
-        // Redirect to the index page with a success message
+
     }
 
     public function updateSellerStatus(Request $request, $id)
@@ -69,8 +62,8 @@ class OrderController extends Controller
 
         $success = 'Seller status updated successfully.';
         $orders = Order::query()->where('restaurant_id', $user->restaurant->id)->get();
-        if ($request->seller_status === 'delivered' && $order->seller_status !== 'delivered') {
-            Mail::to($order->user->email)->send(new OrderDelivered($order));
+        if ($request->seller_status === 'send' && $order->seller_status !== 'send') {
+            Mail::to($order->user->email)->send(new OrderSent($order));
         }
         return view('seller.orders', compact('orders', 'success'));
     }
