@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Food;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
     public function home()
     {
-        return view('home');
+        $foods = Food::all();
+        return view('home', compact('foods'));
     }
 }
