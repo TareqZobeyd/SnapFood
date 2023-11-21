@@ -20,8 +20,9 @@
                             <h5 class="card-title">{{ $food->name }}</h5>
                             <p class="card-text">Price: ${{ $food->price }}</p>
                             <p class="card-text">Category: {{ $food->categories->name }}</p>
+                            <p class="card-text">Restaurant: {{ $food->restaurant->name }}</p>
 
-                            @if ($food->custom_discount)
+                        @if ($food->custom_discount)
                                 @php
                                     $discountedPrice = \App\Models\Food::calculateDiscountedPrice($food->price, null, $food->custom_discount);
                                 @endphp
