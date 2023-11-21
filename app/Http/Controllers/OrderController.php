@@ -62,7 +62,7 @@ class OrderController extends Controller
 
         $success = 'Seller status updated successfully.';
         $orders = Order::query()->where('restaurant_id', $user->restaurant->id)->get();
-        if ($request->seller_status === 'send' && $order->seller_status !== 'send') {
+        if ($request->seller_status === 'send') {
             Mail::to($order->user->email)->send(new OrderSent($order));
         }
         return view('seller.orders', compact('orders', 'success'));
