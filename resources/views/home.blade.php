@@ -26,14 +26,14 @@
                                 @php
                                     $discountedPrice = \App\Models\Food::calculateDiscountedPrice($food->price, null, $food->custom_discount);
                                 @endphp
-                                <p class="card-text">Price With Custom Discount: {{ $food->custom_discount }}%</p>
+                                <p class="card-text">Price With Discount: {{ $food->custom_discount }}%</p>
                                 <i class="fas fa-arrow-right" style="color: blue;"></i>
                                 <span style="color: green;">${{ $discountedPrice }}</span>
                             @elseif ($food->food_discount_id)
                                 @php
                                     $discountedPrice = \App\Models\Food::calculateDiscountedPrice($food->price, $food->food_discount_id, null);
                                 @endphp
-                                <p class="card-text">Price With Food Discount: {{ $food->food_discount->discount_percentage }}%</p>
+                                <p class="card-text">Price With Food Party Discount: {{ $food->food_discount->discount_percentage }}%</p>
                                 <i class="fas fa-arrow-right" style="color: green;"></i>
                                 <span style="color: green;">${{ $discountedPrice }}</span>
                             @endif
