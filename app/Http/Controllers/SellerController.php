@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Comment;
+use App\Models\Food;
 use App\Models\Order;
 use Illuminate\Http\Request;
 
@@ -61,16 +62,26 @@ class SellerController extends Controller
         return view('seller.orders', compact('orders'));
     }
 
-    public function showComments()
+    public function showComments(Request $request)
     {
         $user = auth()->user();
         $restaurant = $user->restaurant;
+        $foods = Food::all();
 
-        $comments = Comment::query()->whereHas('orders.foods', function ($query) use ($restaurant) {
-            $query->where('restaurant_id', $restaurant->id);
-        })->get();
+        $commentsQuery = Comment::query()->whereHas('orders.foods', function ($query) use ($restaurant) {
+            $query->where('orders.restaurant_id', $restaurant->id); // Explicitly specify the table for restaurant_id
+        });
 
-        return view('seller.comments', compact('comments'));
+        if ($request->has('food_id')) {
+            $foodId = $request->input('food_id');
+            $commentsQuery->whereHas('orders.foods', function ($query) use ($foodId) {
+                $query->where('food.id', $foodId); // Explicitly specify the table for foods.id
+            });
+        }
+
+        $comments = $commentsQuery->get();
+
+        return view('seller.comments', compact('comments', 'foods'));
     }
 
 
