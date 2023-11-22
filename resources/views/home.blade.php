@@ -22,19 +22,20 @@
                             <p class="card-text">Category: {{ $food->categories->name }}</p>
                             <p class="card-text">Restaurant: {{ $food->restaurant->name }}</p>
 
-                        @if ($food->custom_discount)
+                            @if ($food->custom_discount)
                                 @php
                                     $discountedPrice = \App\Models\Food::calculateDiscountedPrice($food->price, null, $food->custom_discount);
                                 @endphp
                                 <p class="card-text">Price With Discount: {{ $food->custom_discount }}%</p>
-                                <i class="fas fa-arrow-right" style="color: blue;"></i>
+                                <i class="fas fa-arrow-right" style="color: cornflowerblue;"></i>
                                 <span style="color: green;">${{ $discountedPrice }}</span>
                             @elseif ($food->food_discount_id)
                                 @php
                                     $discountedPrice = \App\Models\Food::calculateDiscountedPrice($food->price, $food->food_discount_id, null);
                                 @endphp
-                                <p class="card-text">Price With Food Party Discount: {{ $food->food_discount->discount_percentage }}%</p>
-                                <i class="fas fa-arrow-right" style="color: green;"></i>
+                                <p class="card-text">Price With Food Party
+                                    Discount: {{ $food->food_discount->discount_percentage }}%</p>
+                                <i class="fas fa-arrow-right" style="color: cornflowerblue;"></i>
                                 <span style="color: green;">${{ $discountedPrice }}</span>
                             @endif
                         </div>
