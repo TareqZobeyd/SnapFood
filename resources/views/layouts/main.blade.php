@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Online Food Delivery</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         body {
             display: flex;
@@ -31,6 +32,12 @@
             background-repeat: no-repeat;
             background-attachment: fixed;
             margin-top: auto;
+        }
+
+        .food-delivery-icon {
+            margin-right: 10px;
+            font-size: 24px;
+            color: #ff5733;
         }
     </style>
 </head>

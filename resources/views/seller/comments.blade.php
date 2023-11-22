@@ -16,6 +16,7 @@
                     </select>
                     <button type="submit" class="btn btn-primary">Apply Filter</button>
                 </form>
+                <br>
                 <table class="table">
                     <thead>
                     <tr>
