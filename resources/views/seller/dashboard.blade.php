@@ -66,7 +66,7 @@
                                             @endphp
                                             <p class="card-text">Price With Custom
                                                 Discount: {{ $food->custom_discount }}%</p>
-                                            <i class="fas fa-arrow-right" style="color: blue;"></i>
+                                            <i class="fas fa-arrow-right" style="color: cornflowerblue;"></i>
                                             <span style="color: green;">${{ $discountedPrice }}</span>
                                         @elseif ($food->food_discount_id)
                                             @php
@@ -74,7 +74,7 @@
                                             @endphp
                                             <p class="card-text">Price With Food
                                                 Discount: {{ $food->food_discount->discount_percentage }}%</p>
-                                            <i class="fas fa-arrow-right" style="color: green;"></i>
+                                            <i class="fas fa-arrow-right" style="color: cornflowerblue;"></i>
                                             <span style="color: green;">${{ $discountedPrice }}</span>
                                         @endif
 
