@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Food;
 use App\Models\Order;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 
 class SellerReportsController extends Controller
 {
@@ -34,6 +35,13 @@ class SellerReportsController extends Controller
             $query->whereHas('foods', function ($foodQuery) use ($foodId) {
                 $foodQuery->where('food.id', $foodId);
             });
+        }
+        if ($request->input('filter_last_week')) {
+            $query->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]);
+        }
+
+        if ($request->input('filter_last_month')) {
+            $query->whereBetween('created_at', [Carbon::now()->startOfMonth(), Carbon::now()->endOfMonth()]);
         }
         $filteredOrders = $query->get();
         $totalRevenue = $filteredOrders->sum('total_amount');

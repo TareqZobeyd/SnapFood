@@ -25,7 +25,11 @@
                         <option value="{{ $food->id }}">{{ $food->name }}</option>
                     @endforeach
                 </select>
+                <label for="filter_last_week">Last Week:</label>
+                <input type="checkbox" name="filter_last_week" id="filter_last_week">
 
+                <label for="filter_last_month">Last Month:</label>
+                <input type="checkbox" name="filter_last_month" id="filter_last_month">
                 <button type="submit">Apply Filters</button>
             </form>
             <br>
