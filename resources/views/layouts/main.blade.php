@@ -34,10 +34,19 @@
             margin-top: auto;
         }
 
+        .card {
+            margin-bottom: 20px;
+        }
+
         .food-delivery-icon {
             margin-right: 10px;
             font-size: 24px;
             color: #ff5733;
+        }
+
+        .main-container {
+            width: 80%; /* Set the desired width of the main container */
+            margin: auto;
         }
     </style>
 </head>
