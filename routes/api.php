@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\API\AddressController;
 use App\Http\Controllers\API\AuthController;
+use App\Http\Controllers\API\CartController;
 use App\Http\Controllers\API\CommentController;
 use App\Http\Controllers\API\OrderController;
 use App\Http\Controllers\API\RestaurantController;
@@ -33,12 +34,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('restaurants/{id}', [RestaurantController::class, 'show']);
     Route::get('restaurants', [RestaurantController::class, 'index']);
     Route::get('restaurants/{id}/food', [RestaurantController::class, 'food']);
-    Route::get('carts', [OrderController::class, 'getAllCards']);
-    Route::post('carts/add', [OrderController::class, 'add']);
-    Route::put('carts/add', [OrderController::class, 'update']);
-    Route::patch('carts/add', [OrderController::class, 'update']);
-    Route::get('carts/{cartId}', [OrderController::class, 'getCard'])->whereNumber('cartId');
-    Route::post('carts/{cartId}/pay', [OrderController::class, 'payCard'])->whereNumber('cartId');
+    Route::get('carts', [CartController::class, 'getAllCarts']);
+    Route::post('carts/add', [CartController::class, 'addToCart']);
+    Route::put('carts/add', [CartController::class, 'update']);
+    Route::patch('carts/add', [CartController::class, 'update']);
+    Route::get('carts/{cartId}', [CartController::class, 'getCart'])->whereNumber('cartId');
+    Route::post('carts/{cartId}/pay', [CartController::class, 'payCart'])->whereNumber('cartId');
     Route::get('comments', [CommentController::class, 'index']);
     Route::post('comments', [CommentController::class, 'store']);
 });
