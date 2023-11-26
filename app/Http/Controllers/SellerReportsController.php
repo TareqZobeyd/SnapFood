@@ -50,5 +50,4 @@ class SellerReportsController extends Controller
 
         return view('seller.reports.index', compact('filteredOrders', 'totalRevenue', 'foods', 'orders'));
     }
-
 }
