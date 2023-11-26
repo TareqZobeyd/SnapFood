@@ -117,8 +117,8 @@ class CartController extends Controller
                     'price' => $food['price'],
                 ];
             }),
-            'created_at' => $cart['created_at'],
-            'updated_at' => $cart['updated_at'],
+            'created_at' => $cart[''],
+            'updated_at' => $cart[''],
         ];
     }
 
@@ -170,7 +170,7 @@ class CartController extends Controller
         ]);
 
         foreach ($cart['foods'] as $cartFood) {
-            $food = Food::find($cartFood['id']);
+            $food = Food::query()->find($cartFood['id']);
             $order->foods()->attach($food, ['count' => $cartFood['count']]);
         }
 
@@ -188,8 +188,6 @@ class CartController extends Controller
             $this->storeRedisCart($cart['id'], $cart);
         }
     }
-
-    // Other cart-related methods (remove) can be added here
 
     private function getRedisCarts()
     {
