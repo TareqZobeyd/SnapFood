@@ -25,6 +25,9 @@ class CartController extends Controller
                 $transformedOrders->push($this->transformCart($cart));
             }
         }
+        if ($transformedOrders->isEmpty()) {
+            return response(['message' => 'No carts found.']);
+        }
         return response(['carts' => $transformedOrders]);
     }
 
@@ -118,7 +121,6 @@ class CartController extends Controller
     }
 
 
-
     private function getOrCreateRedisCart($id)
     {
         $cart = $this->getRedisCart($id);
@@ -188,15 +190,24 @@ class CartController extends Controller
 
     private function updateCartWithFoodCount($cart, $foodId, $count)
     {
-        $existingFood = collect($cart['foods'])->where('id', $foodId)->first();
+        $existingFoodIndex = collect($cart['foods'])->search(function ($item) use ($foodId) {
+            return $item['id'] == $foodId;
+        });
 
-        if ($existingFood) {
-            $oldCount = $existingFood['count'];
+        if ($existingFoodIndex !== false) {
+            $existingFood = $cart['foods'][$existingFoodIndex];
+
             $existingFood['count'] = $count;
-            $cart['total_amount'] += ($existingFood['price'] * $count) - ($existingFood['price'] * $oldCount);
+
+            $cart['total_amount'] = $count * $existingFood['price'];
+
+            $cart['foods'][$existingFoodIndex] = $existingFood;
+
             $this->storeRedisCart($cart['id'], $cart);
         }
     }
+
+
     private function getRestaurantDetails($restaurantId)
     {
         $restaurant = Restaurant::query()->find($restaurantId);
@@ -210,9 +221,11 @@ class CartController extends Controller
 
         return null;
     }
+
     private function getRedisCarts()
     {
-        return Redis::keys('cart:*');
+        $cartKeys = Redis::keys('cart:*');
+        return $cartKeys;
     }
 
     private function getRedisCart($id)
