@@ -64,8 +64,8 @@ Route::middleware(['role:super-admin'])->group(function () {
     Route::get('admin/users', [AdminController::class, 'showUsers'])->name('admin.users');
     Route::get('admin/restaurants', [RestaurantController::class, 'index'])->name('admin.restaurants.index');
     Route::get('/admin/comments', [AdminController::class, 'showComments'])->name('admin.comments');
-
-
+    Route::delete('/admin/comments/{id}/soft-delete', [AdminController::class, 'softDeleteComment'])
+        ->name('admin.comments.softDelete');
 });
 
 Route::middleware(['role:seller|super-admin'])->group(function () {
@@ -85,15 +85,6 @@ Route::middleware(['role:seller|super-admin'])->group(function () {
 
 });
 
-Route::resource('orders', OrderController::class)->middleware('auth')->names([
-    'index' => 'orders.index',
-    'create' => 'orders.create',
-    'store' => 'orders.store',
-    'show' => 'orders.show',
-    'edit' => 'orders.edit',
-    'update' => 'orders.update',
-    'destroy' => 'orders.destroy',
-]);
 Route::middleware(['role:super-admin'])->group(function () {
     Route::resource('food_discounts', FoodDiscountController::class)->names([
         'index' => 'food_discounts.index',

@@ -25,6 +25,13 @@
                             <td>{{ $comment->score }}</td>
                             <td>{{ $comment->order_id }}</td>
                             <td>{{ $comment->created_at }}</td>
+                            <td>
+                                <form action="{{ route('admin.comments.softDelete', $comment->id) }}" method="POST">
+                                    @method('DELETE')
+                                    @csrf
+                                    <button type="submit" class="btn btn-danger">Soft Delete</button>
+                                </form>
+                            </td>
                         </tr>
                     @endforeach
                     </tbody>
