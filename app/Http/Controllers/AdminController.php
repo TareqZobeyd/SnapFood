@@ -25,4 +25,15 @@ class AdminController extends Controller
 
         return view('admin.comments.index', compact('comments'));
     }
+    public function softDeleteComment($id)
+    {
+        $comment = Comment::query()->find($id);
+
+        if ($comment) {
+            $comment->delete();
+            return redirect()->route('admin.comments')->with('success', 'Comment soft deleted successfully.');
+        }
+
+        return redirect()->route('admin.comments')->with('error', 'Comment not found.');
+    }
 }

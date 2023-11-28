@@ -207,7 +207,6 @@ class CartController extends Controller
         }
     }
 
-
     private function getRestaurantDetails($restaurantId)
     {
         $restaurant = Restaurant::query()->find($restaurantId);
