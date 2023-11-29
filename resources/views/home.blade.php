@@ -12,24 +12,25 @@
         <div class="row">
             @foreach($banners as $banner)
                 <div class="col-md-4 mb-3">
-                        <div class="card" style="width: 120%;">
-                            <img src="{{ url('storage/' . $banner->image_path) }}" class="card-img-top"
-                                 alt="Banner Image">
-                            <div class="card-body">
-                                <p class="card-text">{{ $banner->description }}</p>
-                            </div>
+                    <div class="card-img-top" style="width: 450px; object-fit: cover;">
+                        <img src="{{ url('storage/' . $banner->image_path) }}" class="card-img-top"
+                             alt="Banner Image">
+                        <div class="card-body">
+                            <p class="card-text">{{ $banner->description }}</p>
                         </div>
                     </div>
                 </div>
-            @endforeach
         </div>
+        @endforeach
+    </div>
     <main class="col-md-9 ms-sm-auto col-lg-9 px-md-3 main-container">
         <br>
         <div class="row">
             @foreach($foods as $food)
                 <div class="col-md-4">
                     <div class="card">
-                        <img src="{{ url('storage/' . $food->image_path) }}" class="card-img-top" alt="Food Image">
+                        <img src="{{ url('storage/' . $food->image_path) }}" class="card-img-top" alt="Food Image"
+                             style="height: 200px; object-fit: cover;">
                         <div class="card-body">
                             <h5 class="card-title">{{ $food->name }}</h5>
                             <p class="card-text">Price: ${{ $food->price }}</p>
