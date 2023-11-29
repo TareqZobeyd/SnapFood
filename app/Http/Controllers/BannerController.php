@@ -26,8 +26,11 @@ class BannerController extends Controller
             'description' => 'nullable|string',
         ]);
 
-        $imagePath = $request->file('image_path')->store('banners', 'public');
-
+        try {
+            $imagePath = $request->file('image_path')->store('banners', 'public');
+        } catch (\Exception $e) {
+            return redirect()->route('admin.banners.create')->with('error', 'Error uploading image.');
+        }
         Banner::query()->create([
             'image_path' => $imagePath,
             'description' => $request->input('description'),

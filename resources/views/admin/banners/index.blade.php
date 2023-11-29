@@ -10,14 +10,23 @@
                     @csrf
                     <div class="mb-3">
                         <label for="description" class="form-label">Description:</label>
-                        <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
+                        <textarea class="form-control" id="description" name="description" rows="3"></textarea>
                     </div>
                     <div class="mb-3">
                         <label for="image" class="form-label">Image:</label>
-                        <input type="file" class="form-control" id="image" name="image" accept="image/*" required>
+                        <input type="file" class="form-control" id="image" name="image_path" accept="image/*">
                     </div>
                     <button type="submit" class="btn btn-success">Create Banner</button>
                 </form>
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
                 <br>
                 <h2>Banners</h2>
                 <div class="table-responsive">

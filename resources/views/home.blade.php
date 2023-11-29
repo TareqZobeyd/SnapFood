@@ -9,6 +9,21 @@
             <p>You have to log in or register first</p>
         </div>
     </div>
+    <div class="container mt-4">
+        <h2>Featured Banners</h2>
+        <div class="row">
+            @foreach($banners as $banner)
+                <div class="col-md-4 mb-3">
+                    <div class="card">
+                        <img src="{{ asset('storage/' . $banner->image_path) }}" class="card-img-top" alt="Banner Image">
+                        <div class="card-body">
+                            <p class="card-text">{{ $banner->description }}</p>
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+    </div>
     <main class="col-md-9 ms-sm-auto col-lg-9 px-md-3 main-container">
         <br>
         <div class="row">
