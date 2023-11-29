@@ -4,6 +4,21 @@
     <div class="container-fluid">
         <div class="row">
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <br>
+                <h2>Create Banner</h2>
+                <form action="{{ route('admin.banners.store') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Description:</label>
+                        <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="image" class="form-label">Image:</label>
+                        <input type="file" class="form-control" id="image" name="image" accept="image/*" required>
+                    </div>
+                    <button type="submit" class="btn btn-success">Create Banner</button>
+                </form>
+                <br>
                 <h2>Banners</h2>
                 <div class="table-responsive">
                     <table class="table">
