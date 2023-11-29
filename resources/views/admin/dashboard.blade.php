@@ -37,10 +37,11 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link {{ request()->routeIs('admin.banners') ? 'active' : '' }}"
-                               href="{{ route('admin.banners') }}">
+                            <a class="nav-link {{ request()->routeIs('admin.banners.index') ? 'active' : '' }}"
+                               href="{{ route('admin.banners.index') }}">
                                 Banners
                             </a>
+
                         </li>
                     </ul>
                 </div>
