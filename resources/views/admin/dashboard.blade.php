@@ -37,10 +37,10 @@
                             </a>
                         </li>
                         <li class="nav-item">
-{{--                            <a class="nav-link {{ request()->routeIs('admin.banners') ? 'active' : '' }}"--}}
-{{--                               href="{{ route('admin.banners') }}">--}}
+                            <a class="nav-link {{ request()->routeIs('admin.banners') ? 'active' : '' }}"
+                               href="{{ route('admin.banners') }}">
                                 Banners
-{{--                            </a>--}}
+                            </a>
                         </li>
                     </ul>
                 </div>
