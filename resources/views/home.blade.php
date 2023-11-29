@@ -29,7 +29,7 @@
             @foreach($foods as $food)
                 <div class="col-md-3">
                     <div class="card">
-                        <img src="{{ $food->image_url }}" class="card-img-top" alt="Food Image">
+                        <img src="{{ url('storage/' . $food->image_path) }}" class="card-img-top" alt="Food Image">
                         <div class="card-body">
                             <h5 class="card-title">{{ $food->name }}</h5>
                             <p class="card-text">Price: ${{ $food->price }}</p>
