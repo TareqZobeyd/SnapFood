@@ -10,12 +10,12 @@
         </div>
     </div>
     <div class="container mt-4">
-        <h2>Featured Banners</h2>
         <div class="row">
             @foreach($banners as $banner)
                 <div class="col-md-4 mb-3">
                     <div class="card">
-                        <img src="{{ asset('storage/' . $banner->image_path) }}" class="card-img-top" alt="Banner Image">
+                        <img src="{{ url('storage/' . $banner->image_path) }}" class="card-img-top"
+                             alt="Banner Image">
                         <div class="card-body">
                             <p class="card-text">{{ $banner->description }}</p>
                         </div>
