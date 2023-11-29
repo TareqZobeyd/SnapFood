@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\API\CommentController;
+use App\Http\Controllers\BannerController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\FoodController;
 use App\Http\Controllers\FoodDiscountController;
@@ -66,6 +67,7 @@ Route::middleware(['role:super-admin'])->group(function () {
     Route::get('/admin/comments', [AdminController::class, 'showComments'])->name('admin.comments');
     Route::delete('/admin/comments/{id}/soft-delete', [AdminController::class, 'softDeleteComment'])
         ->name('admin.comments.softDelete');
+    Route::resource('admin/banners', BannerController::class)->except(['show']);
 });
 
 Route::middleware(['role:seller|super-admin'])->group(function () {
