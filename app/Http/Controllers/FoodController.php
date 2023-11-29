@@ -55,6 +55,7 @@ class FoodController extends Controller
             'category_id' => 'required|exists:categories,id',
             'food_discount_id' => 'nullable|exists:food_discounts,id',
             'custom_discount' => 'nullable|numeric|between:5,95',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
         $user = Auth::user();
         $restaurant = $user->restaurant;
@@ -63,6 +64,10 @@ class FoodController extends Controller
         $discountPercentage = $request->input('custom_discount');
         $discountedPrice = $this->calculateDiscountedPrice($originalPrice, $foodDiscountId, $discountPercentage);
 
+        $imagePath = null;
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('food_images', 'public');
+        }
         Food::query()->create([
             'name' => $request->input('name'),
             'price' => $originalPrice,
@@ -71,11 +76,12 @@ class FoodController extends Controller
             'food_discount_id' => $foodDiscountId,
             'custom_discount' => $discountPercentage,
             'restaurant_id' => $restaurant->id,
+            'image_path' => $imagePath,
+
         ]);
 
         return redirect()->route('food.index')->with('success', 'Food created successfully.');
     }
-
 
     public function show($id)
     {

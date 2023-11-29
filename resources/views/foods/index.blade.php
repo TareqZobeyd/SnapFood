@@ -5,7 +5,7 @@
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <h2>Create Food Item</h2>
-                <form action="{{ route('food.store') }}" method="post">
+                <form action="{{ route('food.store') }}" method="post" enctype="multipart/form-data">
                     @csrf
                     <div class="form-group">
                         <label for="name">Name:</label>
@@ -14,7 +14,13 @@
                         <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
-
+                    <div class="form-group">
+                        <label for="image">Image:</label>
+                        <input type="file" class="form-control-file" name="image" id="image">
+                        @error('image')
+                        <div class="text-danger">{{ $message }}</div>
+                        @enderror
+                    </div>
                     <div class="form-group">
                         <label for="price">Price:</label>
                         <input type="text" class="form-control" name="price" id="price" value="{{ old('price') }}">

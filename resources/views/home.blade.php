@@ -27,7 +27,7 @@
         <br>
         <div class="row">
             @foreach($foods as $food)
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <div class="card">
                         <img src="{{ url('storage/' . $food->image_path) }}" class="card-img-top" alt="Food Image">
                         <div class="card-body">

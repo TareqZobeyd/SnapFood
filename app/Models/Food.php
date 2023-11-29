@@ -19,7 +19,7 @@ class Food extends Model
         'discounted_price',
         'image_path',
     ];
-    protected $visible = ['discounted_price', 'price', 'count', 'pivot_count', 'custom_discount'];
+    protected $visible = ['discounted_price', 'price', 'count', 'pivot_count', 'custom_discount', 'image_path'];
 
 
     public function categories()
