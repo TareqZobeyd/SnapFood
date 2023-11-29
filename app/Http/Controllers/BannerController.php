@@ -34,4 +34,30 @@ class BannerController extends Controller
         ]);
 
         return redirect()->route('admin.banners.index')->with('success', 'Banner created successfully.');
-    }}
+    }
+
+    public function edit(Banner $banner)
+    {
+        return view('admin.banners.edit', compact('banner'));
+    }
+
+    public function update(Request $request, Banner $banner)
+    {
+        $request->validate([
+            'description' => 'nullable|string',
+        ]);
+
+        $banner->update([
+            'description' => $request->input('description'),
+        ]);
+
+        return redirect()->route('admin.banners.index')->with('success', 'Banner updated successfully.');
+    }
+
+    public function destroy(Banner $banner)
+    {
+        $banner->delete();
+
+        return redirect()->route('admin.banners.index')->with('success', 'Banner deleted successfully.');
+    }
+}
