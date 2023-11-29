@@ -20,11 +20,11 @@ class CommentController extends Controller
 
         if (!is_null($request->food_id)) {
             $comments = Comment::query()
-                ->where(['food_id' => $request->food_id, 'user_id' => $user->id])
-                ->with(['user', 'order.food'])
-                ->orderByDesc('created_at')
+                ->join('food_order', 'comments.order_id', '=', 'food_order.order_id')
+                ->where('food_order.food_id', $request->food_id)
+                ->where('comments.user_id', $user->id)
+                ->orderBy('comments.created_at', 'desc')
                 ->get();
-
             $transformedComments = $comments->map(function ($comment) {
                 return $this->transformComment($comment);
             });
@@ -35,30 +35,21 @@ class CommentController extends Controller
         if (!is_null($request->restaurant_id)) {
             $orders = Order::query()
                 ->where(['restaurant_id' => $request->restaurant_id, 'user_id' => $user->id])
-                ->with('food')
+                ->with(['comments', 'foods'])
                 ->get();
 
-            $comments = collect([]);
-            foreach ($orders as $order) {
-                $orderComments = $order->comments->map(function ($comment) use ($order) {
-                    return [
-                        'author' => [
-                            'name' => $comment->user->name,
-                        ],
-                        'food' => $order->foods->pluck('name')->toArray(),
-                        'created_at' => '',
-                        'score' => $comment->score,
-                        'content' => $comment->message,
-                    ];
+            $comments = $orders->flatMap(function ($order) {
+                return $order->comments->map(function ($comment) use ($order) {
+                    return $this->transformComment($comment);
                 });
-                $comments = $comments->concat($orderComments);
-            }
+            });
 
-            $sortedComments = $comments->sortBy('created_at')->values();
+            $sortedComments = $comments->sortByDesc('created_at')->values();
 
             return response(['comments' => $sortedComments]);
         }
     }
+
 
     public function store(Request $request)
     {
@@ -89,4 +80,17 @@ class CommentController extends Controller
 
         return response(['Message' => 'Comment created successfully']);
     }
+    protected function transformComment($comment)
+    {
+        return [
+            'author' => [
+                'name' => $comment->user->name,
+            ],
+            'food' => $comment->order->foods->pluck('name')->toArray(),
+            'created_at' => $comment->created_at,
+            'score' => $comment->score,
+            'content' => $comment->message,
+        ];
+    }
+
 }
