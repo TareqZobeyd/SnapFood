@@ -13,7 +13,7 @@
                 {{ session('error') }}
             </div>
         @endif
-        <form action="{{ route('food.update', $food->id) }}" method="POST">
+        <form action="{{ route('food.update', $food->id) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
             <div class="form-group">
@@ -50,6 +50,13 @@
                         </option>
                     @endforeach
                 </select>
+            </div>
+            <div class="form-group">
+                <label for="image">Image:</label>
+                <input type="file" class="form-control-file" name="image" id="image">
+                @error('image')
+                <div class="text-danger">{{ $message }}</div>
+                @enderror
             </div>
             <button type="submit" class="btn btn-primary">Update Food</button>
         </form>

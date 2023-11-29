@@ -104,12 +104,13 @@ class FoodController extends Controller
             'category_id' => 'required|exists:categories,id',
             'food_discount_id' => 'nullable|exists:food_discounts,id',
             'custom_discount' => 'nullable|numeric|between:5,95',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
-        $food = Food::query()->find($id);
-        if (!$food) {
-            return redirect()->route('food.index')->with('error', 'Food not found.');
-        }
+
+        $food = Food::query()->findOrFail($id);
+
         $discountPercentage = $request->input('custom_discount') ?? ($food->food_discount ? $food->food_discount->discount_percentage : null);
+
         $food->update([
             'name' => $request->input('name'),
             'price' => $request->input('price'),
@@ -118,7 +119,12 @@ class FoodController extends Controller
             'custom_discount' => $discountPercentage,
         ]);
 
-        return redirect()->route('foods.index')->with('success', 'Food updated successfully.');
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('food_images', 'public');
+            $food->update(['image_path' => $imagePath]);
+        }
+
+        return redirect()->route('food.index')->with('success', 'Food updated successfully.');
     }
 
     public function destroy($id)
