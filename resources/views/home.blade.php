@@ -3,32 +3,31 @@
 @section('content')
     <div class="container">
         <br>
-        <h1>Welcome to Food Delivery</h1>
+        <h1>Welcome to Our Food Delivery</h1>
         <div class="call-to-action">
             <p>You can either sell your food here or order your favorite meals.</p>
-            <p>You have to log in or register first</p>
         </div>
     </div>
     <div class="container mt-4">
         <div class="row">
             @foreach($banners as $banner)
                 <div class="col-md-4 mb-3">
-                    <div class="card">
-                        <img src="{{ url('storage/' . $banner->image_path) }}" class="card-img-top"
-                             alt="Banner Image">
-                        <div class="card-body">
-                            <p class="card-text">{{ $banner->description }}</p>
+                        <div class="card" style="width: 120%;">
+                            <img src="{{ url('storage/' . $banner->image_path) }}" class="card-img-top"
+                                 alt="Banner Image">
+                            <div class="card-body">
+                                <p class="card-text">{{ $banner->description }}</p>
+                            </div>
                         </div>
                     </div>
                 </div>
             @endforeach
         </div>
-    </div>
     <main class="col-md-9 ms-sm-auto col-lg-9 px-md-3 main-container">
         <br>
         <div class="row">
             @foreach($foods as $food)
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <div class="card">
                         <img src="{{ $food->image_url }}" class="card-img-top" alt="Food Image">
                         <div class="card-body">
