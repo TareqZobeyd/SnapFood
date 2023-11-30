@@ -98,7 +98,14 @@ class SellerController extends Controller
         return view('seller.comments', compact('restaurant', 'foods', 'comments'))
             ->with('success', 'Delete request sent successfully.');
     }
+    public function confirmComment($commentId)
+    {
+        $comment = Comment::findOrFail($commentId);
 
+        $comment->update(['confirmed' => true]);
+
+        return redirect()->back()->with('success', 'Comment confirmed successfully.');
+    }
     public function respond(Request $request, $commentId)
     {
         $user = auth()->user();

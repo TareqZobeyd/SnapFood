@@ -93,7 +93,7 @@ Route::middleware(['role:seller|super-admin'])->group(function () {
     Route::get('/seller/comments/filter', [SellerController::class, 'showComments'])->name('seller.comments.filter');
     Route::post('/comments/{comment}/request-delete', [SellerController::class, 'requestDelete'])
         ->name('comments.requestDelete');
-
+    Route::post('comments/{comment}/confirm', [SellerController::class, 'confirmComment'])->name('comments.confirm');
 });
 
 Route::middleware(['role:super-admin'])->group(function () {
