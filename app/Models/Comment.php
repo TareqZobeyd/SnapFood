@@ -16,6 +16,7 @@ class Comment extends Model
         'message',
         'score',
         'seller_response',
+        'delete_request',
     ];
 
     public function user()
