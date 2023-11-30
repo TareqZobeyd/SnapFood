@@ -13,6 +13,8 @@ class Restaurant extends Model
         'name',
         'category_id',
         'address',
+        'latitude',
+        'longitude',
         'phone',
         'bank_account',
         'user_id',

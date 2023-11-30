@@ -46,7 +46,43 @@
                 <input type="text" name="working_hours" id="working_hours" class="form-control"
                        value="{{ $restaurant->working_hours }}">
             </div>
+            <div id="map" style="height: 400px; width: 100%; margin-bottom: 20px;"></div>
+            <div class="form-group">
+                <label for="latitude">Latitude</label>
+                <input type="text" name="latitude" id="latitude" class="form-control" value="{{ $restaurant->latitude }}" readonly>
+            </div>
+            <div class="form-group">
+                <label for="longitude">Longitude</label>
+                <input type="text" name="longitude" id="longitude" class="form-control" value="{{ $restaurant->longitude }}" readonly>
+            </div>
             <button type="submit" class="btn btn-primary">Update Restaurant</button>
         </form>
     </div>
+    <script>
+        let map;
+        let marker;
+
+        function initMap() {
+            const initialLocation = { lat: {{ $restaurant->latitude }}, lng: {{ $restaurant->longitude }} };
+
+            map = new google.maps.Map(document.getElementById("map"), {
+                center: initialLocation,
+                zoom: 15,
+            });
+            marker = new google.maps.Marker({
+                map: map,
+                position: initialLocation,
+                draggable: true,
+            });
+            marker.addListener("dragend", () => {
+                updateLocation(marker.getPosition());
+            });
+        }
+        function updateLocation(location) {
+            document.getElementById("latitude").value = location.lat();
+            document.getElementById("longitude").value = location.lng();
+        }
+        google.maps.event.addDomListener(window, 'load', initMap);
+    </script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA02WfW-15EoTDuVx3-UFIQLuZOUGncWWE&callback=initMap"></script>
 @endsection
