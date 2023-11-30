@@ -91,6 +91,8 @@ Route::middleware(['role:seller|super-admin'])->group(function () {
     Route::get('seller/reports', [SellerReportsController::class, 'index'])->name('seller.reports.index');
     Route::post('seller/reports/filter', [SellerReportsController::class, 'filter'])->name('seller.reports.filter');
     Route::get('/seller/comments/filter', [SellerController::class, 'showComments'])->name('seller.comments.filter');
+    Route::post('/comments/{comment}/request-delete', [CommentController::class, 'requestDelete'])
+        ->name('comments.requestDelete');
 
 });
 

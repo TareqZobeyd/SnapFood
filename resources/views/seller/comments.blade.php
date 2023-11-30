@@ -26,6 +26,7 @@
                         <th>Order ID</th>
                         <th>Created At</th>
                         <th>Response</th>
+                        <th>Action</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -48,6 +49,12 @@
                                             <button type="submit" class="btn btn-primary">Submit Response</button>
                                         </div>
                                     </div>
+                                </form>
+                            </td>
+                            <td>
+                                <form method="post" action="{{ route('comments.requestDelete', $comment->id) }}">
+                                    @csrf
+                                    <button type="submit" class="btn btn-danger">Request Delete</button>
                                 </form>
                             </td>
                         </tr>
