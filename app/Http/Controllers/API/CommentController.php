@@ -26,7 +26,7 @@ class CommentController extends Controller
                 ->orderBy('comments.created_at', 'desc')
                 ->get();
             $transformedComments = $comments->map(function ($comment) {
-                return $this->transformComment($comment);
+                return $this->transformCommentByFood($comment);
             });
 
             return response(['comments' => $transformedComments]);
@@ -40,7 +40,7 @@ class CommentController extends Controller
 
             $comments = $orders->flatMap(function ($order) {
                 return $order->comments->map(function ($comment) use ($order) {
-                    return $this->transformComment($comment);
+                    return $this->transformComment($comment, $order);
                 });
             });
 
@@ -49,7 +49,6 @@ class CommentController extends Controller
             return response(['comments' => $sortedComments]);
         }
     }
-
 
     public function store(Request $request)
     {
@@ -80,14 +79,30 @@ class CommentController extends Controller
 
         return response(['Message' => 'Comment created successfully']);
     }
-    protected function transformComment($comment)
+
+    protected function transformComment($comment, $order)
     {
+        $foods = $order->foods->pluck('name')->toArray();
+
         return [
             'author' => [
                 'name' => $comment->user->name,
             ],
-            'food' => $comment->order->foods->pluck('name')->toArray(),
-            'created_at' => $comment->created_at,
+            'food' => $foods,
+            'created_at' => "",
+            'score' => $comment->score,
+            'content' => $comment->message,
+        ];
+    }
+
+    protected function transformCommentByFood($comment)
+    {
+
+        return [
+            'author' => [
+                'name' => $comment->user->name,
+            ],
+            'created_at' => "",
             'score' => $comment->score,
             'content' => $comment->message,
         ];
