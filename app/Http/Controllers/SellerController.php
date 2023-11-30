@@ -69,13 +69,13 @@ class SellerController extends Controller
         $foods = Food::all();
 
         $commentsQuery = Comment::query()->whereHas('orders.foods', function ($query) use ($restaurant) {
-            $query->where('orders.restaurant_id', $restaurant->id); // Explicitly specify the table for restaurant_id
+            $query->where('orders.restaurant_id', $restaurant->id);
         });
 
         if ($request->has('food_id')) {
             $foodId = $request->input('food_id');
             $commentsQuery->whereHas('orders.foods', function ($query) use ($foodId) {
-                $query->where('food.id', $foodId); // Explicitly specify the table for foods.id
+                $query->where('food.id', $foodId);
             });
         }
 
