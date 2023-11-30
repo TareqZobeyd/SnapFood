@@ -26,6 +26,11 @@
                             <td>{{ $comment->order_id }}</td>
                             <td>{{ $comment->created_at }}</td>
                             <td>
+                                @if($comment->delete_request)
+                                    <span class="badge badge-danger">Deletion Requested</span>
+                                @endif
+                            </td>
+                            <td>
                                 <form action="{{ route('admin.comments.softDelete', $comment->id) }}" method="POST">
                                     @method('DELETE')
                                     @csrf

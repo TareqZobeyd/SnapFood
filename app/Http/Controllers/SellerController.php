@@ -85,14 +85,17 @@ class SellerController extends Controller
     }
     public function requestDelete($commentId)
     {
+        $user = auth()->user();
+        $foods = Food::all();
+        $comments = Comment::all();
+        $restaurant = $user->restaurant;
         $comment = Comment::query()->findOrFail($commentId);
 
-        if (auth()->user()->id === $comment->seller_id) {
+        auth()->user();
             $comment->update(['delete_request' => true]);
 
-            return redirect()->route('seller.comments')->with('success', 'Delete request sent successfully.');
+            return view('seller.comments', compact('restaurant', 'foods', 'comments'))->with('success', 'Delete request sent successfully.');
         }
-    }
 
     public function respond(Request $request, $commentId)
     {
