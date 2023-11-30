@@ -9,29 +9,58 @@ use App\Models\Comment;
 use App\Models\Food;
 use App\Models\Restaurant;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class RestaurantController extends Controller
 {
     public function index(Request $request)
     {
-        $restaurants = Restaurant::all();
+        $user = auth()->user();
 
-        $responseRestaurants = $restaurants->map(function ($restaurant) {
-            return [
-                'id' => $restaurant->id,
-                'title' => $restaurant->name,
-                'address' => [
-                    'address' => $restaurant->address,
-                    'latitude' => $restaurant->latitude,
-                    'longitude' => $restaurant->longitude,
-                ],
-                'is_open' => (bool)$restaurant->is_open,
-                'score' => $restaurant->score ?? null,
-            ];
-        });
-        return response($responseRestaurants);
+        if ($user && $user->addresses()->exists()) {
+            $userAddress = $user->addresses()->where('active', '1')->first();
+
+            $userLatitude = $userAddress->latitude;
+            $userLongitude = $userAddress->longitude;
+
+            $maxDistance = 10;
+
+            $restaurants = Restaurant::query()
+                ->select(
+                    'restaurants.id',
+                    'restaurants.name',
+                    'restaurants.address',
+                    'restaurants.latitude',
+                    'restaurants.longitude',
+                    'restaurants.is_open',
+                    DB::raw('(6371 * acos(cos(radians(?)) * cos(radians(restaurants.latitude)) * cos(radians(restaurants.longitude)
+                     - radians(?)) + sin(radians(?)) * sin(radians(restaurants.latitude)))) AS distance'),
+                    DB::raw('10 as userLatitude')
+                )
+                ->addBinding([$userLatitude, $userLongitude, $userLatitude], 'select')
+                ->having('distance', '<=', $maxDistance)
+                ->orderBy('distance', 'asc')
+                ->get();
+
+            $responseRestaurants = $restaurants->map(function ($restaurant) {
+                return [
+                    'id' => $restaurant->id,
+                    'title' => $restaurant->name,
+                    'address' => [
+                        'address' => $restaurant->address,
+                        'latitude' => $restaurant->latitude,
+                        'longitude' => $restaurant->longitude,
+                    ],
+                    'is_open' => (bool)$restaurant->is_open,
+                    'score' => $restaurant->score ?? null,
+                ];
+            });
+
+            return response($responseRestaurants);
+        } else {
+            return response(['error' => 'User does not have a valid address.'], 400);
+        }
     }
-
 
     public function show($id)
     {
@@ -86,7 +115,8 @@ class RestaurantController extends Controller
     }
 
 
-    public function food($id){
+    public function food($id)
+    {
 
         $restaurant_IDs = Restaurant::all()->pluck('id')->toArray();
         if (!in_array($id, $restaurant_IDs)) return \response(['Message' => "'This restaurant isn't exist"]);
