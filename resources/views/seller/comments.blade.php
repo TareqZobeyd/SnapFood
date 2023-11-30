@@ -27,6 +27,7 @@
                         <th>Created At</th>
                         <th>Response</th>
                         <th>Action</th>
+                        <th>Confirmation</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -55,6 +56,12 @@
                                 <form method="post" action="{{ route('comments.requestDelete', $comment->id) }}">
                                     @csrf
                                     <button type="submit" class="btn btn-danger">Request Delete</button>
+                                </form>
+                            </td>
+                            <td>
+                                <form method="post" action="{{ route('comments.confirm', $comment->id) }}">
+                                    @csrf
+                                    <button type="submit" class="btn btn-success">Confirm</button>
                                 </form>
                             </td>
                         </tr>

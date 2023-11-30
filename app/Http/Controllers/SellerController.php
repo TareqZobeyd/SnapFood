@@ -83,6 +83,7 @@ class SellerController extends Controller
 
         return view('seller.comments', compact('comments', 'foods'));
     }
+
     public function requestDelete($commentId)
     {
         $user = auth()->user();
@@ -92,10 +93,11 @@ class SellerController extends Controller
         $comment = Comment::query()->findOrFail($commentId);
 
         auth()->user();
-            $comment->update(['delete_request' => true]);
+        $comment->update(['delete_request' => true]);
 
-            return view('seller.comments', compact('restaurant', 'foods', 'comments'))->with('success', 'Delete request sent successfully.');
-        }
+        return view('seller.comments', compact('restaurant', 'foods', 'comments'))
+            ->with('success', 'Delete request sent successfully.');
+    }
 
     public function respond(Request $request, $commentId)
     {
