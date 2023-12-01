@@ -26,7 +26,8 @@ class CartController extends Controller
             $cart = $this->getRedisCart($cartId);
 
             if ($cart && is_array($cart['foods'])) {
-                $transformedOrders[] = $this->transformCart($cart);            }
+                $transformedOrders[] = $this->transformCart($cart);
+            }
         }
         $transformedOrders = collect($transformedOrders);
 
@@ -44,7 +45,7 @@ class CartController extends Controller
             return response($this->transformCart($cart));
         }
 
-        return response(['error' => 'Cart not found or invalid data.']);
+        return response(['error' => 'cart not found or invalid data.']);
     }
 
     public function addToCart(Request $request)
@@ -57,7 +58,7 @@ class CartController extends Controller
         $food = Food::query()->find($request->food_id);
 
         if (!$food) {
-            return response(['error' => 'Food not found.']);
+            return response(['error' => 'food not found.']);
         }
 
         $cartId = $request->user()->id;
@@ -65,7 +66,7 @@ class CartController extends Controller
 
         $this->updateCartWithFood($cart, $food, $request->count);
 
-        return response(['Message' => 'Food added to cart successfully']);
+        return response(['message' => 'food added to cart successfully']);
     }
 
     public function payCart(Request $request)
@@ -81,7 +82,7 @@ class CartController extends Controller
             $order->save();
             Mail::to($request->user()->email)->send(new OrderPlaced($order));
 
-            return response(['Message' => 'Cart paid successfully', 'Order ID' => $order->id]);
+            return response(['message' => 'cart paid successfully', 'order id' => $order->id]);
         }
 
         return response(['error' => 'Cart not found or invalid data.']);
@@ -101,10 +102,10 @@ class CartController extends Controller
         if ($cart && is_array($cart['foods'])) {
             $this->updateCartWithFoodCount($cart, $foodId, $request->count);
 
-            return response(['Message' => 'Count of food is updated in the cart']);
+            return response(['message' => 'count of food is updated in the cart']);
         }
 
-        return response(['error' => 'Cart not found or invalid data.']);
+        return response(['error' => 'cart not found or invalid data.']);
     }
 
     private function transformCart($cart)
@@ -181,7 +182,7 @@ class CartController extends Controller
 
         $order = Order::query()->create([
             'user_id' => $request->user()->id,
-            'restaurant_id' => $food->restaurant->id,
+            'restaurant_id' => $cart['restaurant_id'],
             'total_amount' => $cart['total_amount'],
         ]);
 
