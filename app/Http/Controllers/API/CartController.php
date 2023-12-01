@@ -16,17 +16,22 @@ class CartController extends Controller
     public function getAllCarts()
     {
         $cartIds = $this->getRedisCarts();
-        $transformedOrders = collect();
+
+        if (empty($cartIds)) {
+            return response(['message' => 'No carts found.']);
+        }
+        $transformedOrders = [];
 
         foreach ($cartIds as $cartId) {
             $cart = $this->getRedisCart($cartId);
 
             if ($cart && is_array($cart['foods'])) {
-                $transformedOrders->push($this->transformCart($cart));
-            }
+                $transformedOrders[] = $this->transformCart($cart);            }
         }
+        $transformedOrders = collect($transformedOrders);
+
         if ($transformedOrders->isEmpty()) {
-            return response(['message' => 'No carts found.']);
+            return response(['message' => 'No valid carts found.']);
         }
         return response(['carts' => $transformedOrders]);
     }

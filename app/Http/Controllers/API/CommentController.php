@@ -97,7 +97,6 @@ class CommentController extends Controller
 
     protected function transformCommentByFood($comment)
     {
-
         return [
             'author' => [
                 'name' => $comment->user->name,

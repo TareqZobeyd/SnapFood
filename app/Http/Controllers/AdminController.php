@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Comment;
+use App\Models\Food;
+use App\Models\Restaurant;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -19,11 +21,29 @@ class AdminController extends Controller
 
         return view('admin.users.index', compact('users'));
     }
-    public function showComments()
+    public function showComments(Request $request)
     {
-        $comments = Comment::all();
+        $commentsQuery = Comment::query();
 
-        return view('admin.comments.index', compact('comments'));
+        if ($request->has('food_id')) {
+            $foodId = $request->input('food_id');
+            $commentsQuery->whereHas('orders.foods', function ($query) use ($foodId) {
+                $query->where('food.id', $foodId);
+            });
+        }
+
+        if ($request->has('restaurant_id')) {
+            $restaurantId = $request->input('restaurant_id');
+            $commentsQuery->whereHas('orders', function ($query) use ($restaurantId) {
+                $query->where('orders.restaurant_id', $restaurantId);
+            });
+        }
+
+        $comments = $commentsQuery->get();
+        $foods = Food::all();
+        $restaurants = Restaurant::all();
+
+        return view('admin.comments.index', compact('comments', 'foods', 'restaurants'));
     }
     public function softDeleteComment($id)
     {

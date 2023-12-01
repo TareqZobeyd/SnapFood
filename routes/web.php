@@ -67,6 +67,8 @@ Route::middleware(['role:super-admin'])->group(function () {
     Route::get('/admin/comments', [AdminController::class, 'showComments'])->name('admin.comments');
     Route::delete('/admin/comments/{id}/soft-delete', [AdminController::class, 'softDeleteComment'])
         ->name('admin.comments.softDelete');
+    Route::get('/admin/comments/filter', [AdminController::class, 'showComments'])->name('admin.comments.filter');
+
     Route::resource('admin/banners', BannerController::class)->except(['show'])->names([
         'index' => 'admin.banners.index',
         'create' => 'admin.banners.create',

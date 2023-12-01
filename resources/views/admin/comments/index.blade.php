@@ -5,6 +5,28 @@
         <h1 class="mt-4">Comments</h1>
         <div class="card mb-4">
             <div class="card-body">
+                <form action="{{ route('admin.comments.filter') }}" method="get">
+                    @csrf
+                    <label for="food_id">Filter by Food:</label>
+                    <select name="food_id" id="food_id">
+                        <option value="">All</option>
+                        @foreach($foods as $food)
+                            <option value="{{ $food->id }}">{{ $food->name }}</option>
+                        @endforeach
+                    </select>
+
+                    <label for="restaurant_id">Filter by Restaurant:</label>
+                    <select name="restaurant_id" id="restaurant_id">
+                        <option value="">All</option>
+                        {{-- Loop through all restaurants --}}
+                        @foreach($restaurants as $restaurant)
+                            <option value="{{ $restaurant->id }}">{{ $restaurant->name }}</option>
+                        @endforeach
+                    </select>
+
+                    <button type="submit" class="btn btn-primary">Apply Filter</button>
+                </form>
+                <br>
                 <table class="table">
                     <thead>
                     <tr>
