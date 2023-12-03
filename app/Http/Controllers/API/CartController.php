@@ -7,6 +7,7 @@ use App\Models\Food;
 use App\Models\Order;
 use App\Models\Restaurant;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\OrderPlaced;
 use Illuminate\Support\Facades\Redis;
@@ -15,25 +16,34 @@ class CartController extends Controller
 {
     public function getAllCarts()
     {
-        $cartIds = $this->getRedisCarts();
+        if (!Auth::check()) {
+            return response(['message' => 'unauthorized.']);
+        }
+
+        $userId = Auth::id();
+
+        $cartIds = $this->getRedisCarts($userId);
 
         if (empty($cartIds)) {
-            return response(['message' => 'No carts found.']);
+            return response(['message' => 'no carts found.']);
         }
+
         $transformedOrders = [];
 
         foreach ($cartIds as $cartId) {
-            $cart = $this->getRedisCart($cartId);
+            $cart = $this->getRedisCart($userId, $cartId);
 
             if ($cart && is_array($cart['foods'])) {
                 $transformedOrders[] = $this->transformCart($cart);
             }
         }
+
         $transformedOrders = collect($transformedOrders);
 
         if ($transformedOrders->isEmpty()) {
-            return response(['message' => 'No valid carts found.']);
+            return response(['message' => 'no valid carts found.']);
         }
+
         return response(['carts' => $transformedOrders]);
     }
 
