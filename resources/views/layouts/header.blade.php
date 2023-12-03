@@ -24,7 +24,8 @@
                             <a class="nav-link" href="{{ route('admin.dashboard') }}">Dashboard</a>
                         </li>
                     @endif
-                    @if(!auth()->user()->hasRole('super-admin'))
+                    @if(!auth()->user()->hasRole('super-admin', 'seller'))
+                    @else
                         <li class="nav-item">
                             <a class="nav-link" href="restaurants/create">Create Your Restaurant</a>
                         </li>
