@@ -57,10 +57,15 @@
                             </td>
                             <td>
                                 @if(!$comment->seller_response)
-                                    <form method="post" action="{{ route('comments.requestDelete', $comment->id) }}">
-                                        @csrf
-                                        <button type="submit" class="btn btn-danger">Request Delete</button>
-                                    </form>
+                                    @if(!$comment->delete_request)
+                                        <form method="post"
+                                              action="{{ route('comments.requestDelete', $comment->id) }}">
+                                            @csrf
+                                            <button type="submit" class="btn btn-danger">Request Delete</button>
+                                        </form>
+                                    @else
+                                        <span>Deletion request sent</span>
+                                    @endif
                                 @endif
                             </td>
                             <td>
