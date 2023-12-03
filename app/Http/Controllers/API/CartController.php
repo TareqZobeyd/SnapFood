@@ -49,13 +49,19 @@ class CartController extends Controller
 
     public function getCart($id)
     {
-        $cart = $this->getRedisCart($id);
+        if (!Auth::check()) {
+            return response(['error' => 'Unauthorized.']);
+        }
+
+        $userId = Auth::id();
+
+        $cart = $this->getRedisCart($userId, $id);
 
         if ($cart && is_array($cart['foods'])) {
             return response($this->transformCart($cart));
         }
 
-        return response(['error' => 'cart not found or invalid data.']);
+        return response(['error' => 'Cart not found or invalid data.']);
     }
 
     public function addToCart(Request $request)
