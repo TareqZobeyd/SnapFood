@@ -117,6 +117,7 @@ class SellerController extends Controller
         $comment = Comment::query()->find($commentId);
         auth()->user();
         $comment->update(['seller_response' => $request->seller_response]);
+        $comment->update(['confirmed' => true]);
 
         return view('seller.dashboard', compact('restaurant'))->with('success', 'respond added successfully');
     }
