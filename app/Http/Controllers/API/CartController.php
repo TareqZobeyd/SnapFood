@@ -61,7 +61,7 @@ class CartController extends Controller
             return response($this->transformCart($cart));
         }
 
-        return response(['error' => 'Cart not found or invalid data.']);
+        return response(['error' => 'cart not found or invalid data.']);
     }
 
     public function addToCart(Request $request)
@@ -101,7 +101,7 @@ class CartController extends Controller
             return response(['message' => 'cart paid successfully', 'order id' => $order->id]);
         }
 
-        return response(['error' => 'Cart not found or invalid data.']);
+        return response(['error' => 'cart not found or invalid data.']);
     }
 
     public function update(Request $request)

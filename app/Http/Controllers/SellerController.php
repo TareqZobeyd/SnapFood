@@ -96,7 +96,7 @@ class SellerController extends Controller
         $comment->update(['delete_request' => true]);
 
         return view('seller.comments', compact('restaurant', 'foods', 'comments'))
-            ->with('success', 'Delete request sent successfully.');
+            ->with('success', 'delete request sent successfully.');
     }
 
     public function confirmComment($commentId)
@@ -106,7 +106,7 @@ class SellerController extends Controller
         $comment = Comment::query()->findOrFail($commentId);
         $comment->update(['confirmed' => true]);
 
-        return view('seller.comments', compact('foods', 'comments'))->with('success', 'Comment confirmed successfully.');
+        return view('seller.comments', compact('foods', 'comments'))->with('success', 'comment confirmed successfully.');
     }
 
     public function respond(Request $request, $commentId)

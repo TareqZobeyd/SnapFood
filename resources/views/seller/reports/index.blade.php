@@ -7,7 +7,7 @@
             <h2>Seller Reports</h2>
             <br>
             <p>Total Revenue: ${{ $totalRevenue }}</p>
-            <form action="{{ route('seller.reports.filter') }}" method="post">
+            <form action="{{ route('seller.reports.filter') }}" method="get">
                 @csrf
                 <label for="seller_status">Status:</label>
                 <select name="seller_status" id="seller_status">
