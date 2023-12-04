@@ -71,18 +71,25 @@ class CartController extends Controller
             'count' => 'required|integer|min:1',
         ]);
 
-        $food = Food::query()->find($request->food_id);
+        $foodId = $request->food_id;
 
-        if (!$food) {
-            return response(['error' => 'food not found.']);
-        }
+        $food = Food::query()->find($foodId);
 
-        $cartId = $request->user()->id;
-        $cart = $this->getOrCreateRedisCart($cartId);
+        $userId = $request->user()->id;
+
+        $cartId = uniqid();
+        $cart = $this->getRedisCart($userId, $cartId);
+
+        // Ensure that $cart['foods'] is initialized as an array
+        $cart['foods'] = $cart['foods'] ?? [];
+
+        $cart['id'] = $cartId;
+        $cart['user_id'] = $userId;
+        $cart['restaurant_id'] = $food->restaurant_id;
 
         $this->updateCartWithFood($cart, $food, $request->count);
 
-        return response(['message' => 'food added to cart successfully']);
+        return response(['message' => 'food added to a new cart successfully']);
     }
 
     public function payCart(Request $request)
@@ -142,35 +149,6 @@ class CartController extends Controller
         ];
     }
 
-
-    private function getOrCreateRedisCart($id)
-    {
-        $cart = $this->getRedisCart($id);
-
-        if (!$cart) {
-            $cart = [
-                'id' => $id,
-                'foods' => [],
-                'total_amount' => 0,
-                'restaurant_id' => null,
-                'restaurant' => null,
-            ];
-            $food = Food::with('restaurant')->first();
-
-            if ($food && $food->restaurant) {
-                $cart['restaurant_id'] = $food->restaurant->id;
-                $cart['restaurant'] = [
-                    'name' => $food->restaurant->name,
-                    'image' => $food->restaurant->image,
-                ];
-            }
-
-            $this->storeRedisCart($id, $cart);
-        }
-
-        return $cart;
-    }
-
     private function updateCartWithFood($cart, $food, $count)
     {
         $existingFood = collect($cart['foods'])->where('id', $food->id)->first();
@@ -186,6 +164,8 @@ class CartController extends Controller
                 'restaurant_id' => $food->restaurant->id,
             ];
         }
+
+        $cart['total_amount'] = $cart['total_amount'] ?? 0;
 
         $cart['total_amount'] += $food->discounted_price * $count;
 
@@ -210,7 +190,7 @@ class CartController extends Controller
         return $order;
     }
 
-    private function updateCartWithFoodCount($cart, $foodId, $count)
+    private function updateCartWithFoodCount($cart, $foodId, $count, $food)
     {
         $existingFoodIndex = collect($cart['foods'])->search(function ($item) use ($foodId) {
             return $item['id'] == $foodId;
@@ -221,37 +201,28 @@ class CartController extends Controller
 
             $existingFood['count'] = $count;
 
-            $cart['total_amount'] = $count * $existingFood['price'];
+            // Use the correct variable for the food price
+            $existingFood['price'] = $food->discounted_price;
+
+            // Recalculate the total amount based on the prices of all foods in the cart
+            $cart['total_amount'] = collect($cart['foods'])->sum(function ($food) {
+                return $food['price'] * $food['count'];
+            });
 
             $cart['foods'][$existingFoodIndex] = $existingFood;
 
             $this->storeRedisCart($cart['id'], $cart);
         }
     }
-
-    private function getRestaurantDetails($restaurantId)
-    {
-        $restaurant = Restaurant::query()->find($restaurantId);
-
-        if ($restaurant) {
-            return [
-                'title' => $restaurant->name,
-                'image' => $restaurant->image,
-            ];
-        }
-
-        return null;
-    }
-
     private function getRedisCarts()
     {
         $cartKeys = Redis::keys('cart:*');
         return $cartKeys;
     }
 
-    private function getRedisCart($id)
+    private function getRedisCart($userId, $cartId)
     {
-        return json_decode(Redis::get("cart:$id"), true);
+        return json_decode(Redis::get("cart:$userId:$cartId"), true);
     }
 
     private function storeRedisCart($id, $cart)
