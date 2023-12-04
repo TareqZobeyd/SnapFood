@@ -11,7 +11,10 @@
                     <select name="food_id" id="food_id">
                         <option value="">All</option>
                         @foreach($foods as $food)
-                            <option value="{{ $food->id }}">{{ $food->name }}</option>
+                            <option
+                                value="{{ $food->id }}" {{ ($request->filled('food_id') && $request->input('food_id') == $food->id) ? 'selected' : '' }}>
+                                {{ $food->name }}
+                            </option>
                         @endforeach
                     </select>
                     <button type="submit" class="btn btn-primary">Apply Filter</button>

@@ -81,7 +81,7 @@ class SellerController extends Controller
 
         $comments = $commentsQuery->get();
 
-        return view('seller.comments', compact('comments', 'foods'));
+        return view('seller.comments', compact('comments', 'foods', 'request'));
     }
 
     public function requestDelete($commentId)
