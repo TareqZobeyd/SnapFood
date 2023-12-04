@@ -64,16 +64,16 @@ class CommentController extends Controller
         ]);
         $order = Order::query()->find($request->order_id);
         if (!$order) {
-            return response(['error' => 'Order not found.']);
+            return response(['error' => 'order not found.']);
         }
         if ($order->seller_status !== 'delivered') {
-            return response(['error' => 'You can only comment on delivered orders.']);
+            return response(['error' => 'you can only comment on delivered orders.']);
         }
         $existingComment = Comment::where('user_id', auth()->user()->id)
             ->where('order_id', $order->id)
             ->first();
         if ($existingComment) {
-            return response(['error' => 'You have already commented on this order.']);
+            return response(['error' => 'you have already commented on this order.']);
         }
         Comment::query()->create([
             'user_id' => auth()->user()->id,
@@ -82,7 +82,7 @@ class CommentController extends Controller
             'score' => $request->score,
         ]);
 
-        return response(['Message' => 'Comment created successfully']);
+        return response(['message' => 'comment created successfully']);
     }
 
     protected function transformComment($comment, $order)
