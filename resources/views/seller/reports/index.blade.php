@@ -11,27 +11,39 @@
                 @csrf
                 <label for="seller_status">Status:</label>
                 <select name="seller_status" id="seller_status">
-                    <option value="">All</option>
-                    <option value="pending">Pending</option>
-                    <option value="preparing">Preparing</option>
-                    <option value="send">Send</option>
-                    <option value="delivered">Delivered</option>
+                    <option value="" {{ request('seller_status') === '' ? 'selected' : '' }}>All</option>
+                    <option value="pending" {{ request('seller_status') === 'pending' ? 'selected' : '' }}>Pending
+                    </option>
+                    <option value="preparing" {{ request('seller_status') === 'preparing' ? 'selected' : '' }}>
+                        Preparing
+                    </option>
+                    <option value="send" {{ request('seller_status') === 'send' ? 'selected' : '' }}>Send</option>
+                    <option value="delivered" {{ request('seller_status') === 'delivered' ? 'selected' : '' }}>
+                        Delivered
+                    </option>
                 </select>
 
                 <label for="food_id">Food:</label>
                 <select name="food_id" id="food_id">
-                    <option value="">All</option>
+                    <option value="" {{ request('food_id') === '' ? 'selected' : '' }}>All</option>
                     @foreach($foods as $food)
-                        <option value="{{ $food->id }}">{{ $food->name }}</option>
+                        <option value="{{ $food->id }}" {{ request('food_id') == $food->id ? 'selected' : '' }}>
+                            {{ $food->name }}
+                        </option>
                     @endforeach
                 </select>
+
                 <label for="filter_last_week">Last Week:</label>
-                <input type="checkbox" name="filter_last_week" id="filter_last_week">
+                <input type="checkbox" name="filter_last_week"
+                       id="filter_last_week" {{ request('filter_last_week') ? 'checked' : '' }}>
 
                 <label for="filter_last_month">Last Month:</label>
-                <input type="checkbox" name="filter_last_month" id="filter_last_month">
+                <input type="checkbox" name="filter_last_month"
+                       id="filter_last_month" {{ request('filter_last_month') ? 'checked' : '' }}>
+
                 <button type="submit" class="btn btn-primary">Apply Filters</button>
             </form>
+
             <br>
             <div class="table-responsive">
                 <table class="table table-striped">
