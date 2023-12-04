@@ -56,7 +56,7 @@
                                 @endif
                             </td>
                             <td>
-                                @if(!$comment->seller_response )
+                                @if(!$comment->seller_response && !$comment->confirmed)
                                     @if(!$comment->delete_request)
                                         <form method="post"
                                               action="{{ route('comments.requestDelete', $comment->id) }}">
@@ -74,6 +74,8 @@
                                         @csrf
                                         <button type="submit" class="btn btn-success">Confirm</button>
                                     </form>
+                                @elseif($comment->confirmed)
+                                    <span>Confirmed</span>
                                 @endif
                             </td>
                         </tr>
