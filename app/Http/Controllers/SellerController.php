@@ -68,11 +68,11 @@ class SellerController extends Controller
         $restaurant = $user->restaurant;
         $foods = Food::all();
 
-        $commentsQuery = Comment::query()->whereHas('orders.foods', function ($query) use ($restaurant) {
-            $query->where('orders.restaurant_id', $restaurant->id);
+        $commentsQuery = Comment::query()->whereHas('orders', function ($query) use ($restaurant) {
+            $query->where('restaurant_id', $restaurant->id);
         });
 
-        if ($request->has('food_id')) {
+        if ($request->filled('food_id')) {
             $foodId = $request->input('food_id');
             $commentsQuery->whereHas('orders.foods', function ($query) use ($foodId) {
                 $query->where('food.id', $foodId);
@@ -98,6 +98,7 @@ class SellerController extends Controller
         return view('seller.comments', compact('restaurant', 'foods', 'comments'))
             ->with('success', 'Delete request sent successfully.');
     }
+
     public function confirmComment($commentId)
     {
         $comments = Comment::all();
@@ -107,6 +108,7 @@ class SellerController extends Controller
 
         return view('seller.comments', compact('foods', 'comments'))->with('success', 'Comment confirmed successfully.');
     }
+
     public function respond(Request $request, $commentId)
     {
         $user = auth()->user();

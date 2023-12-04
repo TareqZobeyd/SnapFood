@@ -30,7 +30,7 @@
 
                 <label for="filter_last_month">Last Month:</label>
                 <input type="checkbox" name="filter_last_month" id="filter_last_month">
-                <button type="submit">Apply Filters</button>
+                <button type="submit" class="btn btn-primary">Apply Filters</button>
             </form>
             <br>
             <div class="table-responsive">
