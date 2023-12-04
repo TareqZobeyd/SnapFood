@@ -41,18 +41,19 @@ class CommentController extends Controller
                 ->get();
 
             $comments = $orders->flatMap(function ($order) {
-                return $order->comments->map(function ($comment) use ($order) {
+                $confirmedComments = $order->comments->where('confirmed', true);
+
+                return $confirmedComments->map(function ($comment) use ($order) {
                     return $this->transformComment($comment, $order);
                 });
             });
 
-            $confirmedComments = $comments->where('confirmed', true);
-
-            $sortedComments = $confirmedComments->sortByDesc('created_at')->values();
+            $sortedComments = $comments->sortByDesc('created_at')->values();
 
             return response(['comments' => $sortedComments]);
         }
     }
+
 
     public function store(Request $request)
     {
