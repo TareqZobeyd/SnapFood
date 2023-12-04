@@ -23,8 +23,10 @@ class CommentController extends Controller
                 ->join('food_order', 'comments.order_id', '=', 'food_order.order_id')
                 ->where('food_order.food_id', $request->food_id)
                 ->where('comments.user_id', $user->id)
+                ->where('comments.confirmed', true)
                 ->orderBy('comments.created_at', 'desc')
                 ->get();
+
             $transformedComments = $comments->map(function ($comment) {
                 return $this->transformCommentByFood($comment);
             });
@@ -44,7 +46,9 @@ class CommentController extends Controller
                 });
             });
 
-            $sortedComments = $comments->sortByDesc('created_at')->values();
+            $confirmedComments = $comments->where('confirmed', true);
+
+            $sortedComments = $confirmedComments->sortByDesc('created_at')->values();
 
             return response(['comments' => $sortedComments]);
         }
@@ -55,7 +59,7 @@ class CommentController extends Controller
         $request->validate([
             'order_id' => 'required|integer',
             'score' => 'required|integer|min:1|max:5',
-            'message' => 'required|string',
+            'message' => 'required|string|min:5',
         ]);
         $order = Order::query()->find($request->order_id);
         if (!$order) {
