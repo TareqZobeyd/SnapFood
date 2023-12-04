@@ -37,11 +37,16 @@ class SellerReportsController extends Controller
             });
         }
         if ($request->input('filter_last_week')) {
-            $query->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]);
+            $query->whereBetween('created_at', [
+                now()->subDays(6)->startOfDay(),
+                now()->endOfDay(),
+            ]);
         }
-
         if ($request->input('filter_last_month')) {
-            $query->whereBetween('created_at', [Carbon::now()->startOfMonth(), Carbon::now()->endOfMonth()]);
+            $query->whereBetween('created_at', [
+                now()->subDays(29)->startOfDay(),
+                now()->endOfDay(),
+            ]);
         }
         $filteredOrders = $query->get();
         $totalRevenue = $filteredOrders->sum('total_amount');
