@@ -84,7 +84,7 @@ class SellerController extends Controller
         return view('seller.comments', compact('comments', 'foods', 'request'));
     }
 
-    public function requestDelete($commentId)
+    public function requestDelete($commentId, Request $request)
     {
         $user = auth()->user();
         $foods = Food::all();
@@ -95,7 +95,7 @@ class SellerController extends Controller
         auth()->user();
         $comment->update(['delete_request' => true]);
 
-        return view('seller.comments', compact('restaurant', 'foods', 'comments'))
+        return view('seller.comments', compact('restaurant', 'foods', 'comments', 'request'))
             ->with('success', 'delete request sent successfully.');
     }
 
@@ -122,6 +122,6 @@ class SellerController extends Controller
         $comment->update(['seller_response' => $request->seller_response]);
         $comment->update(['confirmed' => true]);
 
-        return view('seller.comments', compact('restaurant'))->with('success', 'respond added successfully');
+        return view('seller.comments', compact('restaurant', 'request'))->with('success', 'respond added successfully');
     }
 }

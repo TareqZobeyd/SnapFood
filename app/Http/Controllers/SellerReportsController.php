@@ -23,8 +23,8 @@ class SellerReportsController extends Controller
     {
         $status = $request->input('seller_status');
         $foodId = $request->input('food_id');
-        $foods = Food::all();
         $restaurant = auth()->user()->restaurant;
+        $foods = $restaurant->food;
 
         $query = $restaurant->orders()->where('restaurant_id', $restaurant->id);
 
