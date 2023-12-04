@@ -40,7 +40,7 @@
                             <td>{{ $comment->created_at }}</td>
                             <td>{{ $comment->seller_response }}</td>
                             <td>
-                                @if(!$comment->seller_response)
+                                @if(!$comment->seller_response && !$comment->delete_request)
                                     <form method="post" action="{{ route('comments.respond', $comment->id) }}">
                                         @csrf
                                         <div class="row">
@@ -56,7 +56,7 @@
                                 @endif
                             </td>
                             <td>
-                                @if(!$comment->seller_response)
+                                @if(!$comment->seller_response )
                                     @if(!$comment->delete_request)
                                         <form method="post"
                                               action="{{ route('comments.requestDelete', $comment->id) }}">
@@ -69,7 +69,7 @@
                                 @endif
                             </td>
                             <td>
-                                @if(!$comment->confirmed)
+                                @if(!$comment->delete_request && !$comment->confirmed)
                                     <form method="post" action="{{ route('comments.confirm', $comment->id) }}">
                                         @csrf
                                         <button type="submit" class="btn btn-success">Confirm</button>
