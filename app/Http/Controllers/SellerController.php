@@ -100,11 +100,12 @@ class SellerController extends Controller
     }
     public function confirmComment($commentId)
     {
-        $comment = Comment::findOrFail($commentId);
-
+        $comments = Comment::all();
+        $foods = Food::all();
+        $comment = Comment::query()->findOrFail($commentId);
         $comment->update(['confirmed' => true]);
 
-        return redirect()->back()->with('success', 'Comment confirmed successfully.');
+        return view('seller.comments', compact('foods', 'comments'))->with('success', 'Comment confirmed successfully.');
     }
     public function respond(Request $request, $commentId)
     {
@@ -119,6 +120,6 @@ class SellerController extends Controller
         $comment->update(['seller_response' => $request->seller_response]);
         $comment->update(['confirmed' => true]);
 
-        return view('seller.dashboard', compact('restaurant'))->with('success', 'respond added successfully');
+        return view('seller.comments', compact('restaurant'))->with('success', 'respond added successfully');
     }
 }
