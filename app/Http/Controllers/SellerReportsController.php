@@ -14,7 +14,7 @@ class SellerReportsController extends Controller
         $restaurant = auth()->user()->restaurant;
         $orders = $restaurant->orders;
         $totalRevenue = $orders->sum('total_amount');
-        $foods = Food::all();
+        $foods = $restaurant->food;
 
         return view('seller.reports.index', compact('orders', 'totalRevenue', 'foods'));
     }

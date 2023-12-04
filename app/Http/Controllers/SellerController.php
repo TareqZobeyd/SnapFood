@@ -66,7 +66,7 @@ class SellerController extends Controller
     {
         $user = auth()->user();
         $restaurant = $user->restaurant;
-        $foods = Food::all();
+        $foods = $restaurant->food;
 
         $commentsQuery = Comment::query()->whereHas('orders', function ($query) use ($restaurant) {
             $query->where('restaurant_id', $restaurant->id);
