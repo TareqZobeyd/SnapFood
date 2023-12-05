@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\API\CartController;
 use App\Http\Controllers\API\CommentController;
 use App\Http\Controllers\BannerController;
 use App\Http\Controllers\CategoryController;
@@ -68,6 +69,8 @@ Route::middleware(['role:super-admin'])->group(function () {
     Route::delete('/admin/comments/{id}/soft-delete', [AdminController::class, 'softDeleteComment'])
         ->name('admin.comments.softDelete');
     Route::get('/admin/comments/filter', [AdminController::class, 'showComments'])->name('admin.comments.filter');
+    Route::get('admin/cart/cart-ids', [CartController::class, 'getCartIdsView'])->name('cart.ids.view');
+
 
     Route::resource('admin/banners', BannerController::class)->except(['show'])->names([
         'index' => 'admin.banners.index',
