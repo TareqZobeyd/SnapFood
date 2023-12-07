@@ -29,7 +29,7 @@ class AuthController extends Controller
 
         $token = $user->createToken('authToken')->plainTextToken;
 
-        return response(['Message' => 'You registered successfully', 'Token' => $token], 201);
+        return response(['message' => 'you registered successfully', 'token' => $token], 201);
     }
 
     public function login(Request $request)
@@ -42,10 +42,10 @@ class AuthController extends Controller
         $user = User::query()->where('email', $request->input('email'))->first();
         if (!$user || !Hash::check($request->input('password'), $user->password)) {
             throw ValidationException::withMessages([
-                'email' => ['The provided credentials are incorrect.'],
+                'email' => ['email or password are incorrect.'],
             ]);
         }
-        return response(['Message' => 'you are logged in', 'Token' => $user->createToken('authToken')->plainTextToken]);
+        return response(['message' => 'you are logged in', 'token' => $user->createToken('authToken')->plainTextToken]);
     }
 
     public function logout()
@@ -72,6 +72,6 @@ class AuthController extends Controller
 
         $user->save();
 
-        return response(['Message' => 'Your personal information updated successfully', 'user' => $user]);
+        return response(['message' => 'your personal information updated successfully', 'user' => $user]);
     }
 }

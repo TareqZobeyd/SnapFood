@@ -34,15 +34,16 @@ class AddressController extends Controller
 
     public function store(Request $request)
     {
+        $user = auth()->user();
         $fields = $request->validate([
-            'title' => 'required|string',
+            'title' => 'required|string|unique:addresses,title,NULL,id,addressable_id,' . $user->id,
             'address' => 'required|string|unique:addresses,address,NULL,id,addressable_id,'
                 . auth()->user()->id . ',latitude,' . $request->latitude . ',longitude,' . $request->longitude,
             'latitude' => 'required|numeric',
             'longitude' => 'required|numeric',
         ]);
 
-        $address = User::query()->find(auth()->user()->id)->addresses()->create([
+        User::query()->find(auth()->user()->id)->addresses()->create([
             'title' => $fields['title'],
             'address' => $fields['address'],
             'latitude' => $fields['latitude'],
