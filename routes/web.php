@@ -99,6 +99,7 @@ Route::middleware(['role:seller|super-admin'])->group(function () {
     Route::post('/comments/{comment}/request-delete', [SellerController::class, 'requestDelete'])
         ->name('comments.requestDelete');
     Route::post('comments/{comment}/confirm', [SellerController::class, 'confirmComment'])->name('comments.confirm');
+    Route::get('/seller/reports/export', [SellerReportsController::class, 'export'])->name('seller.reports.export');
 });
 
 Route::middleware(['role:super-admin'])->group(function () {
