@@ -66,13 +66,14 @@ class SellerController extends Controller
     {
         $user = auth()->user();
         $restaurant = $user->restaurant;
-        $foods = Food::all();
+        $foods = $restaurant->food;
 
-        $commentsQuery = Comment::query()->whereHas('orders.foods', function ($query) use ($restaurant) {
-            $query->where('orders.restaurant_id', $restaurant->id);
-        });
+        $commentsQuery = Comment::query()
+            ->whereHas('orders', function ($query) use ($restaurant) {
+                $query->where('restaurant_id', $restaurant->id);
+            });
 
-        if ($request->has('food_id')) {
+        if ($request->filled('food_id')) {
             $foodId = $request->input('food_id');
             $commentsQuery->whereHas('orders.foods', function ($query) use ($foodId) {
                 $query->where('food.id', $foodId);
@@ -81,10 +82,11 @@ class SellerController extends Controller
 
         $comments = $commentsQuery->get();
 
-        return view('seller.comments', compact('comments', 'foods'));
+        return view('seller.comments', compact('comments', 'foods', 'request'));
     }
 
-    public function requestDelete($commentId)
+
+    public function requestDelete($commentId, Request $request)
     {
         $user = auth()->user();
         $foods = Food::all();
@@ -95,17 +97,20 @@ class SellerController extends Controller
         auth()->user();
         $comment->update(['delete_request' => true]);
 
-        return view('seller.comments', compact('restaurant', 'foods', 'comments'))
-            ->with('success', 'Delete request sent successfully.');
+        return view('seller.comments', compact('restaurant', 'foods', 'comments', 'request'))
+            ->with('success', 'delete request sent successfully.');
     }
+
     public function confirmComment($commentId)
     {
-        $comment = Comment::findOrFail($commentId);
-
+        $comments = Comment::all();
+        $foods = Food::all();
+        $comment = Comment::query()->findOrFail($commentId);
         $comment->update(['confirmed' => true]);
 
-        return redirect()->back()->with('success', 'Comment confirmed successfully.');
+        return view('seller.comments', compact('foods', 'comments'))->with('success', 'comment confirmed successfully.');
     }
+
     public function respond(Request $request, $commentId)
     {
         $user = auth()->user();
@@ -117,7 +122,8 @@ class SellerController extends Controller
         $comment = Comment::query()->find($commentId);
         auth()->user();
         $comment->update(['seller_response' => $request->seller_response]);
+        $comment->update(['confirmed' => true]);
 
-        return view('seller.dashboard', compact('restaurant'))->with('success', 'respond added successfully');
+        return view('seller.comments', compact('restaurant', 'request'))->with('success', 'respond added successfully');
     }
 }

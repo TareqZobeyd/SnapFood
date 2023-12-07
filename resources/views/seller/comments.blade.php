@@ -11,7 +11,10 @@
                     <select name="food_id" id="food_id">
                         <option value="">All</option>
                         @foreach($foods as $food)
-                            <option value="{{ $food->id }}">{{ $food->name }}</option>
+                            <option
+                                value="{{ $food->id }}" {{ ($request->filled('food_id') && $request->input('food_id') == $food->id) ? 'selected' : '' }}>
+                                {{ $food->name }}
+                            </option>
                         @endforeach
                     </select>
                     <button type="submit" class="btn btn-primary">Apply Filter</button>
@@ -40,29 +43,43 @@
                             <td>{{ $comment->created_at }}</td>
                             <td>{{ $comment->seller_response }}</td>
                             <td>
-                                <form method="post" action="{{ route('comments.respond', $comment->id) }}">
-                                    @csrf
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <textarea name="seller_response" placeholder="Write a response" class="form-control"></textarea>
+                                @if(!$comment->seller_response && !$comment->delete_request)
+                                    <form method="post" action="{{ route('comments.respond', $comment->id) }}">
+                                        @csrf
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <textarea name="seller_response" placeholder="Write a response"
+                                                          class="form-control"></textarea>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <button type="submit" class="btn btn-primary">Submit Response</button>
+                                            </div>
                                         </div>
-                                        <div class="col-md-6">
-                                            <button type="submit" class="btn btn-primary">Submit Response</button>
-                                        </div>
-                                    </div>
-                                </form>
+                                    </form>
+                                @endif
                             </td>
                             <td>
-                                <form method="post" action="{{ route('comments.requestDelete', $comment->id) }}">
-                                    @csrf
-                                    <button type="submit" class="btn btn-danger">Request Delete</button>
-                                </form>
+                                @if(!$comment->seller_response && !$comment->confirmed)
+                                    @if(!$comment->delete_request)
+                                        <form method="post"
+                                              action="{{ route('comments.requestDelete', $comment->id) }}">
+                                            @csrf
+                                            <button type="submit" class="btn btn-danger">Request Delete</button>
+                                        </form>
+                                    @else
+                                        <span>Deletion request sent</span>
+                                    @endif
+                                @endif
                             </td>
                             <td>
-                                <form method="post" action="{{ route('comments.confirm', $comment->id) }}">
-                                    @csrf
-                                    <button type="submit" class="btn btn-success">Confirm</button>
-                                </form>
+                                @if(!$comment->delete_request && !$comment->confirmed)
+                                    <form method="post" action="{{ route('comments.confirm', $comment->id) }}">
+                                        @csrf
+                                        <button type="submit" class="btn btn-success">Confirm</button>
+                                    </form>
+                                @elseif($comment->confirmed)
+                                    <span>Confirmed</span>
+                                @endif
                             </td>
                         </tr>
                     @endforeach

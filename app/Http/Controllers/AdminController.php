@@ -25,14 +25,14 @@ class AdminController extends Controller
     {
         $commentsQuery = Comment::query();
 
-        if ($request->has('food_id')) {
+        if ($request->filled('food_id')) {
             $foodId = $request->input('food_id');
             $commentsQuery->whereHas('orders.foods', function ($query) use ($foodId) {
-                $query->where('food.id', $foodId);
+                $query->where('food_order.food_id', $foodId);
             });
         }
 
-        if ($request->has('restaurant_id')) {
+        if ($request->filled('restaurant_id')) {
             $restaurantId = $request->input('restaurant_id');
             $commentsQuery->whereHas('orders', function ($query) use ($restaurantId) {
                 $query->where('orders.restaurant_id', $restaurantId);

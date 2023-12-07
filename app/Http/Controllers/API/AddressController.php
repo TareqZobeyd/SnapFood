@@ -10,15 +10,16 @@ use Illuminate\Support\Facades\Gate;
 
 class AddressController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
         $user = auth()->user();
-        $addresses = $user->addresses->map(function ($address) {
+        $addresses = $user->addresses;
+
+        if ($addresses->count() === 0) {
+            return response(['message' => 'you dont have any addresses.']);
+        }
+
+        $formattedAddresses = $addresses->map(function ($address) {
             return [
                 'id' => $address->id,
                 'title' => $address->title,
@@ -27,41 +28,31 @@ class AddressController extends Controller
                 'longitude' => $address->longitude,
             ];
         });
-        return response($addresses);
+
+        return response($formattedAddresses);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
+        $user = auth()->user();
         $fields = $request->validate([
-            'title' => 'required|string',
-            'address' => 'required|string|unique:addresses',
-            'latitude' => 'required|numeric|unique:addresses',
-            'longitude' => 'required|numeric|unique:addresses',
+            'title' => 'required|string|unique:addresses,title,NULL,id,addressable_id,' . $user->id,
+            'address' => 'required|string|unique:addresses,address,NULL,id,addressable_id,'
+                . auth()->user()->id . ',latitude,' . $request->latitude . ',longitude,' . $request->longitude,
+            'latitude' => 'required|numeric',
+            'longitude' => 'required|numeric',
         ]);
 
-        $address = User::query()->find(auth()->user()->id)->addresses()->create([
+        User::query()->find(auth()->user()->id)->addresses()->create([
             'title' => $fields['title'],
             'address' => $fields['address'],
             'latitude' => $fields['latitude'],
             'longitude' => $fields['longitude'],
         ]);
 
-        return response(['Message' => 'Your address is submitted successfully']);
+        return response(['message' => 'your address is submitted successfully']);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
         $address = Address::query()->find($id);
@@ -72,7 +63,7 @@ class AddressController extends Controller
             'longitude' => 'required|numeric',
         ]);
         $address->update($request->all());
-        return response(['Message' => 'Your address is updated successfully']);
+        return response(['message' => 'your address is updated successfully']);
     }
 
     public function setActiveAddress($id)
@@ -84,11 +75,11 @@ class AddressController extends Controller
             $user->addresses()->update(['active' => '0']);
             $specificAddress->update(['active' => '1']);
             return response([
-                'Message' => 'Your main address is updated'
+                'message' => 'your main address is updated'
             ]);
         }
         return response([
-            'Message' => "You don't have access to update this address"
+            'message' => "you don't have access to update this address"
         ], 403);
     }
 }

@@ -11,16 +11,21 @@
                     <select name="food_id" id="food_id">
                         <option value="">All</option>
                         @foreach($foods as $food)
-                            <option value="{{ $food->id }}">{{ $food->name }}</option>
+                            <option
+                                value="{{ $food->id }}" {{ ($food->id == request()->input('food_id')) ? 'selected' : '' }}>
+                                {{ $food->name }}
+                            </option>
                         @endforeach
                     </select>
 
                     <label for="restaurant_id">Filter by Restaurant:</label>
                     <select name="restaurant_id" id="restaurant_id">
                         <option value="">All</option>
-                        {{-- Loop through all restaurants --}}
                         @foreach($restaurants as $restaurant)
-                            <option value="{{ $restaurant->id }}">{{ $restaurant->name }}</option>
+                            <option
+                                value="{{ $restaurant->id }}" {{ ($restaurant->id == request()->input('restaurant_id')) ? 'selected' : '' }}>
+                                {{ $restaurant->name }}
+                            </option>
                         @endforeach
                     </select>
 

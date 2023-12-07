@@ -7,41 +7,32 @@ use App\Models\Food;
 use App\Models\Order;
 use App\Models\Restaurant;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\OrderPlaced;
 use Illuminate\Support\Facades\Redis;
 
 class CartController extends Controller
 {
-    public function getAllCarts()
+    public function getAllCarts(Request $request)
     {
-        $cartIds = $this->getRedisCarts();
+        $userId = $request->user()->id;
+        $cart = $this->getRedisCart($userId);
 
-        if (empty($cartIds)) {
-            return response(['message' => 'No carts found.']);
+        if ($cart && is_array($cart['foods'])) {
+            $userCarts = [$this->transformCart($cart)];
+            return response(['user_carts' => $userCarts]);
         }
-        $transformedOrders = [];
 
-        foreach ($cartIds as $cartId) {
-            $cart = $this->getRedisCart($cartId);
-
-            if ($cart && is_array($cart['foods'])) {
-                $transformedOrders[] = $this->transformCart($cart);
-            }
-        }
-        $transformedOrders = collect($transformedOrders);
-
-        if ($transformedOrders->isEmpty()) {
-            return response(['message' => 'No valid carts found.']);
-        }
-        return response(['carts' => $transformedOrders]);
+        return response(['error' => 'you do not have any carts.']);
     }
 
-    public function getCart($id)
+    public function getCart($id, Request $request)
     {
         $cart = $this->getRedisCart($id);
 
-        if ($cart && is_array($cart['foods'])) {
+        if ($cart && is_array($cart['foods']) && $cart['id'] == $request->user()->id) {
             return response($this->transformCart($cart));
         }
 
@@ -51,7 +42,7 @@ class CartController extends Controller
     public function addToCart(Request $request)
     {
         $request->validate([
-            'food_id' => 'required',
+            'food_id' => 'required|exists:food,id',
             'count' => 'required|integer|min:1',
         ]);
 
@@ -64,9 +55,18 @@ class CartController extends Controller
         $cartId = $request->user()->id;
         $cart = $this->getOrCreateRedisCart($cartId);
 
+        if ($this->foodExistsInCart($cart, $food->id)) {
+            return response(['error' => 'food already exists in the cart.']);
+        }
+
         $this->updateCartWithFood($cart, $food, $request->count);
 
         return response(['message' => 'food added to cart successfully']);
+    }
+
+    private function foodExistsInCart($cart, $foodId)
+    {
+        return collect($cart['foods'])->contains('id', $foodId);
     }
 
     public function payCart(Request $request)
@@ -85,7 +85,7 @@ class CartController extends Controller
             return response(['message' => 'cart paid successfully', 'order id' => $order->id]);
         }
 
-        return response(['error' => 'Cart not found or invalid data.']);
+        return response(['error' => 'cart not found or invalid data.']);
     }
 
     public function update(Request $request)
@@ -113,6 +113,7 @@ class CartController extends Controller
 
         return [
             'id' => $cart['id'],
+            'total_amount' => $cart['total_amount'],
             'food' => collect($cart['foods'])->map(function ($food) {
                 return [
                     'id' => $food['id'],
@@ -126,7 +127,6 @@ class CartController extends Controller
         ];
     }
 
-
     private function getOrCreateRedisCart($id)
     {
         $cart = $this->getRedisCart($id);
@@ -136,18 +136,8 @@ class CartController extends Controller
                 'id' => $id,
                 'foods' => [],
                 'total_amount' => 0,
-                'restaurant_id' => null,
-                'restaurant' => null,
             ];
-            $food = Food::with('restaurant')->first();
-
-            if ($food && $food->restaurant) {
-                $cart['restaurant_id'] = $food->restaurant->id;
-                $cart['restaurant'] = [
-                    'name' => $food->restaurant->name,
-                    'image' => $food->restaurant->image,
-                ];
-            }
+            Food::with('restaurant')->first();
 
             $this->storeRedisCart($id, $cart);
         }
@@ -178,19 +168,16 @@ class CartController extends Controller
 
     private function createOrderFromCart($request, $cart)
     {
-        $food = Food::query()->find($request->food_id);
-
         $order = Order::query()->create([
             'user_id' => $request->user()->id,
-            'restaurant_id' => $cart['restaurant_id'],
             'total_amount' => $cart['total_amount'],
+            'restaurant_id' => $cart['foods'][0]['restaurant_id'] ?? null,
         ]);
 
         foreach ($cart['foods'] as $cartFood) {
             $food = Food::query()->find($cartFood['id']);
             $order->foods()->attach($food, ['count' => $cartFood['count']]);
         }
-
         return $order;
     }
 

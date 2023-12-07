@@ -54,7 +54,9 @@
                         @foreach($restaurant->food as $food)
                             <div class="col-md-4">
                                 <div class="card">
-                                    <img src="{{ url('storage/' . $food->image_path) }}" class="card-img-top" alt="Food Image">
+                                    <img src="{{ url('storage/' . $food->image_path) }}" class="card-img-top"
+                                         alt="Food Image"
+                                         style="height: 200px; object-fit: cover;">
                                     <div class="card-body">
                                         <h5 class="card-title">{{ $food->name }}</h5>
                                         <p class="card-text">Price: ${{ $food->price }}</p>

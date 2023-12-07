@@ -16,15 +16,16 @@ class CommentController extends Controller
             'restaurant_id' => 'nullable|exists:restaurants,id',
         ]);
 
-        $user = auth()->user();
+        auth()->user();
 
         if (!is_null($request->food_id)) {
             $comments = Comment::query()
                 ->join('food_order', 'comments.order_id', '=', 'food_order.order_id')
                 ->where('food_order.food_id', $request->food_id)
-                ->where('comments.user_id', $user->id)
+                ->where('comments.confirmed', true)
                 ->orderBy('comments.created_at', 'desc')
                 ->get();
+
             $transformedComments = $comments->map(function ($comment) {
                 return $this->transformCommentByFood($comment);
             });
@@ -34,12 +35,14 @@ class CommentController extends Controller
 
         if (!is_null($request->restaurant_id)) {
             $orders = Order::query()
-                ->where(['restaurant_id' => $request->restaurant_id, 'user_id' => $user->id])
+                ->where(['restaurant_id' => $request->restaurant_id])
                 ->with(['comments', 'foods'])
                 ->get();
 
             $comments = $orders->flatMap(function ($order) {
-                return $order->comments->map(function ($comment) use ($order) {
+                $confirmedComments = $order->comments->where('confirmed', true);
+
+                return $confirmedComments->map(function ($comment) use ($order) {
                     return $this->transformComment($comment, $order);
                 });
             });
@@ -50,34 +53,38 @@ class CommentController extends Controller
         }
     }
 
+
     public function store(Request $request)
     {
         $request->validate([
             'order_id' => 'required|integer',
             'score' => 'required|integer|min:1|max:5',
-            'message' => 'required|string',
+            'message' => 'required|string|min:5',
         ]);
         $order = Order::query()->find($request->order_id);
         if (!$order) {
-            return response(['error' => 'Order not found.']);
+            return response(['error' => 'order not found.']);
         }
         if ($order->seller_status !== 'delivered') {
-            return response(['error' => 'You can only comment on delivered orders.']);
+            return response(['error' => 'you can only comment on delivered orders.']);
         }
         $existingComment = Comment::where('user_id', auth()->user()->id)
             ->where('order_id', $order->id)
             ->first();
         if ($existingComment) {
-            return response(['error' => 'You have already commented on this order.']);
+            return response(['error' => 'you have already commented on this order.']);
         }
+        $restaurantId = $order->restaurant_id;
+
         Comment::query()->create([
             'user_id' => auth()->user()->id,
             'order_id' => $order->id,
+            'restaurant_id' => $restaurantId,
             'message' => $request->message,
             'score' => $request->score,
         ]);
 
-        return response(['Message' => 'Comment created successfully']);
+        return response(['message' => 'comment created successfully']);
     }
 
     protected function transformComment($comment, $order)
