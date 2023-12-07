@@ -37,11 +37,11 @@ class CartController extends Controller
         return response(['carts' => $transformedOrders]);
     }
 
-    public function getCart($id)
+    public function getCart($id, Request $request)
     {
         $cart = $this->getRedisCart($id);
 
-        if ($cart && is_array($cart['foods'])) {
+        if ($cart && is_array($cart['foods']) && $cart['id'] == $request->user()->id) {
             return response($this->transformCart($cart));
         }
 
