@@ -20,10 +20,15 @@ class RestaurantController extends Controller
         if ($user && $user->addresses()->exists()) {
             $userAddress = $user->addresses()->where('active', '1')->first();
 
-            $userLatitude = $userAddress->latitude;
-            $userLongitude = $userAddress->longitude;
+            if ($userAddress) {
+                $userLatitude = $userAddress->latitude;
+                $userLongitude = $userAddress->longitude;
 
-            $maxDistance = 10;
+            } else {
+                return response(['error' => 'you do not have an active address.'], 400);
+            }
+
+            $maxDistance = 5;
 
             $restaurants = Restaurant::query()
                 ->select(
@@ -35,7 +40,7 @@ class RestaurantController extends Controller
                     'restaurants.is_open',
                     DB::raw('(6371 * acos(cos(radians(?)) * cos(radians(restaurants.latitude)) * cos(radians(restaurants.longitude)
                      - radians(?)) + sin(radians(?)) * sin(radians(restaurants.latitude)))) AS distance'),
-                    DB::raw('10 as userLatitude')
+                    DB::raw('5 as userLatitude')
                 )
                 ->addBinding([$userLatitude, $userLongitude, $userLatitude], 'select')
                 ->having('distance', '<=', $maxDistance)
@@ -58,7 +63,7 @@ class RestaurantController extends Controller
 
             return response($responseRestaurants);
         } else {
-            return response(['error' => 'User does not have a valid address.'], 400);
+            return response(['error' => 'user does not have a valid address.'], 400);
         }
     }
 
@@ -68,7 +73,7 @@ class RestaurantController extends Controller
         $comments = Comment::query()->find($id);
 
         if (!$restaurant) {
-            return response(['Message' => "This restaurant doesn't exist"], 404);
+            return response(['message' => "this restaurant doesn't exist"], 404);
         }
         $schedule = [
             'saturday' => [
@@ -114,14 +119,12 @@ class RestaurantController extends Controller
         return response($response);
     }
 
-
     public function food($id)
     {
 
         $restaurant_IDs = Restaurant::all()->pluck('id')->toArray();
-        if (!in_array($id, $restaurant_IDs)) return \response(['Message' => "'This restaurant isn't exist"]);
+        if (!in_array($id, $restaurant_IDs)) return \response(['message' => "'this restaurant isn't exist"]);
 
-        return \response(["Foods details of restaurant number $id:" => new RestaurantFoodsResource(Restaurant::query()->find($id))]);
+        return response(["foods details of restaurant number $id:" => new RestaurantFoodsResource(Restaurant::query()->find($id))]);
     }
-
 }
