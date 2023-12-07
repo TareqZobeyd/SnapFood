@@ -16,7 +16,7 @@ class CommentController extends Controller
             'restaurant_id' => 'nullable|exists:restaurants,id',
         ]);
 
-        $user = auth()->user();
+        auth()->user();
 
         if (!is_null($request->food_id)) {
             $comments = Comment::query()
