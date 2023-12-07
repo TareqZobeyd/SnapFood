@@ -58,20 +58,16 @@ class AuthController extends Controller
     {
         $request->validate([
             'name' => 'required|string',
-            'email' => 'required|email',
             'phone' => 'required|string|min:11',
-            'password' => 'required|string',
         ]);
 
         $user = User::query()->find(auth()->user()->id);
 
         $user->name = $request->name;
-        $user->email = $request->email;
         $user->phone = $request->phone;
-        $user->password = bcrypt($request->password);
 
         $user->save();
 
-        return response(['message' => 'your personal information updated successfully', 'user' => $user]);
+        return response(['message' => 'your personal information updated successfully']);
     }
 }
