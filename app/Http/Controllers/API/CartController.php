@@ -7,34 +7,25 @@ use App\Models\Food;
 use App\Models\Order;
 use App\Models\Restaurant;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\OrderPlaced;
 use Illuminate\Support\Facades\Redis;
 
 class CartController extends Controller
 {
-    public function getAllCarts()
+    public function getAllCarts(Request $request)
     {
-        $cartIds = $this->getRedisCarts();
+        $userId = $request->user()->id;
+        $cart = $this->getRedisCart($userId);
 
-        if (empty($cartIds)) {
-            return response(['message' => 'No carts found.']);
+        if ($cart && is_array($cart['foods'])) {
+            $userCarts = [$this->transformCart($cart)];
+            return response(['user_carts' => $userCarts]);
         }
-        $transformedOrders = [];
 
-        foreach ($cartIds as $cartId) {
-            $cart = $this->getRedisCart($cartId);
-
-            if ($cart && is_array($cart['foods'])) {
-                $transformedOrders[] = $this->transformCart($cart);
-            }
-        }
-        $transformedOrders = collect($transformedOrders);
-
-        if ($transformedOrders->isEmpty()) {
-            return response(['message' => 'No valid carts found.']);
-        }
-        return response(['carts' => $transformedOrders]);
+        return response(['error' => 'no cart found for the user.']);
     }
 
     public function getCart($id, Request $request)
