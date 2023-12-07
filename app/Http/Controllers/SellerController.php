@@ -68,9 +68,10 @@ class SellerController extends Controller
         $restaurant = $user->restaurant;
         $foods = $restaurant->food;
 
-        $commentsQuery = Comment::query()->whereHas('orders', function ($query) use ($restaurant) {
-            $query->where('restaurant_id', $restaurant->id);
-        });
+        $commentsQuery = Comment::query()
+            ->whereHas('orders', function ($query) use ($restaurant) {
+                $query->where('restaurant_id', $restaurant->id);
+            });
 
         if ($request->filled('food_id')) {
             $foodId = $request->input('food_id');
@@ -83,6 +84,7 @@ class SellerController extends Controller
 
         return view('seller.comments', compact('comments', 'foods', 'request'));
     }
+
 
     public function requestDelete($commentId, Request $request)
     {

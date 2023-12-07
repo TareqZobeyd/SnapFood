@@ -136,18 +136,8 @@ class CartController extends Controller
                 'id' => $id,
                 'foods' => [],
                 'total_amount' => 0,
-                'restaurant_id' => null,
-                'restaurant' => null,
             ];
-            $food = Food::with('restaurant')->first();
-
-            if ($food && $food->restaurant) {
-                $cart['restaurant_id'] = $food->restaurant->id;
-                $cart['restaurant'] = [
-                    'name' => $food->restaurant->name,
-                    'image' => $food->restaurant->image,
-                ];
-            }
+            Food::with('restaurant')->first();
 
             $this->storeRedisCart($id, $cart);
         }
@@ -178,19 +168,16 @@ class CartController extends Controller
 
     private function createOrderFromCart($request, $cart)
     {
-        $food = Food::query()->find($request->food_id);
-
         $order = Order::query()->create([
             'user_id' => $request->user()->id,
-            'restaurant_id' => $cart['restaurant_id'],
             'total_amount' => $cart['total_amount'],
+            'restaurant_id' => $cart['foods'][0]['restaurant_id'] ?? null,
         ]);
 
         foreach ($cart['foods'] as $cartFood) {
             $food = Food::query()->find($cartFood['id']);
             $order->foods()->attach($food, ['count' => $cartFood['count']]);
         }
-
         return $order;
     }
 

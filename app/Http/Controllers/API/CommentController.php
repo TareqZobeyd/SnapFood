@@ -74,9 +74,12 @@ class CommentController extends Controller
         if ($existingComment) {
             return response(['error' => 'you have already commented on this order.']);
         }
+        $restaurantId = $order->restaurant_id;
+
         Comment::query()->create([
             'user_id' => auth()->user()->id,
             'order_id' => $order->id,
+            'restaurant_id' => $restaurantId,
             'message' => $request->message,
             'score' => $request->score,
         ]);
