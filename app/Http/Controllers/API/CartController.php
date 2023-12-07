@@ -51,22 +51,31 @@ class CartController extends Controller
     public function addToCart(Request $request)
     {
         $request->validate([
-            'food_id' => 'required',
+            'food_id' => 'required|exists:food,id',
             'count' => 'required|integer|min:1',
         ]);
 
-        $food = Food::query()->find($request->food_id);
+        $food = Food::find($request->food_id);
 
         if (!$food) {
             return response(['error' => 'food not found.']);
         }
 
         $cartId = $request->user()->id;
-        $cart = $this->getOrCreateRedisCart($cartId);
+        $cart = $this->getRedisCart($cartId);
+
+        if ($this->foodExistsInCart($cart, $food->id)) {
+            return response(['error' => 'food already exists in the cart.']);
+        }
 
         $this->updateCartWithFood($cart, $food, $request->count);
 
         return response(['message' => 'food added to cart successfully']);
+    }
+
+    private function foodExistsInCart($cart, $foodId)
+    {
+        return collect($cart['foods'])->contains('id', $foodId);
     }
 
     public function payCart(Request $request)
