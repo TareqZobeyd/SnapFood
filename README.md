@@ -20,17 +20,5 @@ super.admin@gmail.com
 <br>
 pass : 123456
 </h5>
-<h3>Seller</h3>
-<h5>
-    tareq@gmail.com
-<br>
-    pass : 123456
-</h5>
-<h3>User</h3>
-<h5>
-    jafar@gmail.com
-<br>
-    pass : 123456
-</h5>
 
 <h4>and don't forget migrate --seed</h4>
