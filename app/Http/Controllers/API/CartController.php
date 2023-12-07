@@ -122,6 +122,7 @@ class CartController extends Controller
 
         return [
             'id' => $cart['id'],
+            'total_amount' => $cart['total_amount'],
             'food' => collect($cart['foods'])->map(function ($food) {
                 return [
                     'id' => $food['id'],
@@ -134,7 +135,6 @@ class CartController extends Controller
             'updated_at' => "",
         ];
     }
-
 
     private function getOrCreateRedisCart($id)
     {
