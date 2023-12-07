@@ -25,7 +25,7 @@ class CartController extends Controller
             return response(['user_carts' => $userCarts]);
         }
 
-        return response(['error' => 'no cart found for the user.']);
+        return response(['error' => 'you do not have any carts.']);
     }
 
     public function getCart($id, Request $request)
@@ -46,14 +46,14 @@ class CartController extends Controller
             'count' => 'required|integer|min:1',
         ]);
 
-        $food = Food::find($request->food_id);
+        $food = Food::query()->find($request->food_id);
 
         if (!$food) {
             return response(['error' => 'food not found.']);
         }
 
         $cartId = $request->user()->id;
-        $cart = $this->getRedisCart($cartId);
+        $cart = $this->getOrCreateRedisCart($cartId);
 
         if ($this->foodExistsInCart($cart, $food->id)) {
             return response(['error' => 'food already exists in the cart.']);
