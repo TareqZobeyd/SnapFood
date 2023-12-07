@@ -22,7 +22,6 @@ class CommentController extends Controller
             $comments = Comment::query()
                 ->join('food_order', 'comments.order_id', '=', 'food_order.order_id')
                 ->where('food_order.food_id', $request->food_id)
-                ->where('comments.user_id', $user->id)
                 ->where('comments.confirmed', true)
                 ->orderBy('comments.created_at', 'desc')
                 ->get();
@@ -36,7 +35,7 @@ class CommentController extends Controller
 
         if (!is_null($request->restaurant_id)) {
             $orders = Order::query()
-                ->where(['restaurant_id' => $request->restaurant_id, 'user_id' => $user->id])
+                ->where(['restaurant_id' => $request->restaurant_id])
                 ->with(['comments', 'foods'])
                 ->get();
 
