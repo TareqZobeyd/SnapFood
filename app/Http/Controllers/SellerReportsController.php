@@ -6,6 +6,8 @@ use App\Models\Food;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use App\Exports\SellerReportsExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class SellerReportsController extends Controller
 {
@@ -53,5 +55,10 @@ class SellerReportsController extends Controller
         $orders = $query->get();
 
         return view('seller.reports.index', compact('filteredOrders', 'totalRevenue', 'foods', 'orders'));
+    }
+
+    public function export()
+    {
+        return Excel::download(new SellerReportsExport, 'seller_reports.xlsx');
     }
 }
