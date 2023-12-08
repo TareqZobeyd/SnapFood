@@ -10,12 +10,14 @@
                     <label for="food_id">Filter by Food:</label>
                     <select name="food_id" id="food_id">
                         <option value="">All</option>
+                        @if(isset($foods))
                         @foreach($foods as $food)
                             <option
                                 value="{{ $food->id }}" {{ ($request->filled('food_id') && $request->input('food_id') == $food->id) ? 'selected' : '' }}>
                                 {{ $food->name }}
                             </option>
                         @endforeach
+                        @endif
                     </select>
                     <button type="submit" class="btn btn-primary">Apply Filter</button>
                 </form>
@@ -34,7 +36,8 @@
                     </tr>
                     </thead>
                     <tbody>
-                    @foreach($comments as $comment)
+                    @if(isset($comments))
+                        @foreach($comments as $comment)
                         <tr>
                             <td>{{ $comment->user->name }}</td>
                             <td>{{ $comment->message }}</td>
@@ -83,6 +86,7 @@
                             </td>
                         </tr>
                     @endforeach
+                    @endif
                     </tbody>
                 </table>
             </div>
