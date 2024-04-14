@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\LoginRequest;
 use App\Http\Requests\StoreUserRequest;
 use App\Models\Restaurant;
 use App\Models\User;
@@ -22,17 +23,11 @@ class UserController extends Controller
     /**
      * @throws ValidationException
      */
-    public function login(Request $request)
+    public function login(LoginRequest $request)
     {
-        $request->validate([
-            'email' => ['required', 'email'],
-            'password' => ['required'],
-        ]);
+        $credentials = $request->only('email', 'password');
 
-        if (Auth::attempt([
-            'email' => $request->post('email'),
-            'password' => $request->post('password')
-        ])) {
+        if (Auth::attempt($credentials)) {
             return redirect('/');
         }
 
