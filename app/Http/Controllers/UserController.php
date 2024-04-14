@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreUserRequest;
 use App\Models\Restaurant;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 use Spatie\Permission\Models\Role;
 
@@ -44,24 +46,18 @@ class UserController extends Controller
         return view('user.register');
     }
 
-    public function store(Request $request)
+    public function store(StoreUserRequest $request)
     {
-        $this->validate($request, [
-            'name' => 'required|string',
-            'email' => 'required|email|unique:users,email',
-            'phone' => 'required|string|min:11',
-            'password' => 'required|min:6',
+        $userData = $request->validated();
+
+        User::query()->create([
+            'name' => $userData['name'],
+            'email' => $userData['email'],
+            'phone' => $userData['phone'],
+            'password' => Hash::make($userData['password']),
         ]);
 
-         User::query()->create([
-            'name' => $request->input('name'),
-            'email' => $request->input('email'),
-            'phone' => $request->input('phone'),
-            'password' => bcrypt($request->input('password')),
-        ]);
-
-
-        return redirect('user/login')->with('success', 'Registration successful. You can now log in.');
+        return redirect('user/login')->with('success', 'registration successful. you can now log in.');
     }
 
     public function logout(Request $request)
