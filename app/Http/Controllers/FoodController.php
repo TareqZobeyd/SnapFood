@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreFoodRequest;
 use App\Models\Food;
 use App\Models\Category;
 use App\Models\FoodDiscount;
@@ -47,16 +48,8 @@ class FoodController extends Controller
         return $originalPrice;
     }
 
-    public function store(Request $request)
+    public function store(StoreFoodRequest $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'price' => 'required|numeric',
-            'category_id' => 'required|exists:categories,id',
-            'food_discount_id' => 'nullable|exists:food_discounts,id',
-            'custom_discount' => 'nullable|numeric|between:5,95',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
         $user = Auth::user();
         $restaurant = $user->restaurant;
         $originalPrice = $request->input('price');
