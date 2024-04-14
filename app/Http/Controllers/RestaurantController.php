@@ -58,10 +58,6 @@ class RestaurantController extends Controller
     {
         $categories = Category::all();
 
-        if (!$restaurant) {
-            return redirect()->route('restaurants.index')->with('error', 'Restaurant not found.');
-        }
-
         return view('admin.restaurants.edit', compact('restaurant', 'categories'));
     }
 
@@ -100,19 +96,14 @@ class RestaurantController extends Controller
             'working_hours' => $request->input('working_hours'),
         ]);
 
-        return redirect()->route('home')->with('success', 'Restaurant details updated successfully.');
+        return redirect()->route('home')->with('success', 'restaurant details updated successfully.');
     }
 
-    public function destroy($id)
+    public function destroy(Restaurant $restaurant)
     {
-        $restaurant = Restaurant::query()->find($id);
-
-        if (!$restaurant) {
-            return redirect()->route('admin.restaurants.index')->with('error', 'Restaurant not found.');
-        }
 
         $restaurant->delete();
 
-        return redirect()->route('admin.restaurants.index')->with('success', 'Restaurant deleted successfully.');
+        return redirect()->route('admin.restaurants.index')->with('success', 'restaurant deleted successfully.');
     }
 }

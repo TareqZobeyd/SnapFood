@@ -61,7 +61,7 @@ class FoodDiscountController extends Controller
             'food_party' => $request->input('food_party'),
         ]);
 
-        return redirect()->route('food_discounts.index')->with('success', 'Food Discount updated successfully.');
+        return redirect()->route('food_discounts.index')->with('success', 'food discount updated successfully.');
     }
 
     public function destroy(FoodDiscount $foodDiscount)
