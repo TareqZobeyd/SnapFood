@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreFoodDiscountRequest;
 use App\Models\Food;
 use App\Models\FoodDiscount;
 use Illuminate\Http\Request;
@@ -19,13 +20,10 @@ class FoodDiscountController extends Controller
         return view('admin.food_discounts.create');
     }
 
-    public function store(Request $request)
+    public function store(StoreFoodDiscountRequest $request)
     {
-        $data = $request->validate([
-            'restaurant_id' => 'nullable|exists:restaurants,id',
-            'discount_percentage' => 'required|numeric|between:5,95',
-            'food_party' => 'nullable|string',
-        ]);
+        $data = $request->validated();
+
         $foodDiscount = FoodDiscount::query()->create([
             'restaurant_id' => $data['restaurant_id'],
             'discount_percentage' => $data['discount_percentage'],
@@ -40,7 +38,7 @@ class FoodDiscountController extends Controller
             }
         }
 
-        return redirect()->route('food_discounts.index')->with('success', 'Discount Created Successfully.');
+        return redirect()->route('food_discounts.index')->with('success', 'discount created successfully.');
     }
 
 
@@ -54,19 +52,8 @@ class FoodDiscountController extends Controller
         return view('admin.food_discounts.edit', compact('foodDiscount'));
     }
 
-    public function update(Request $request, $id)
+    public function update(StoreFoodDiscountRequest $request, FoodDiscount $foodDiscount)
     {
-        $request->validate([
-            'restaurant_id' => 'nullable|exists:restaurants,id',
-            'discount_percentage' => 'required|numeric',
-            'food_party' => 'nullable|string',
-        ]);
-
-        $foodDiscount = FoodDiscount::query()->find($id);
-
-        if (!$foodDiscount) {
-            return redirect()->route('food_discounts.index')->with('error', 'Food Discount not found.');
-        }
 
         $foodDiscount->update([
             'restaurant_id' => $request->input('restaurant_id'),
@@ -77,17 +64,11 @@ class FoodDiscountController extends Controller
         return redirect()->route('food_discounts.index')->with('success', 'Food Discount updated successfully.');
     }
 
-    public function destroy($id)
+    public function destroy(FoodDiscount $foodDiscount)
     {
-        $foodDiscount = FoodDiscount::query()->find($id);
 
-        if ($foodDiscount) {
-            $foodDiscount->delete();
-            return redirect()->route('food_discounts.index')->with('success', 'Food Discount deleted successfully.');
-        }
-
-        return redirect()->route('food_discounts.index')->with('error', 'Food Discount not found.');
+        $foodDiscount->delete();
+        return redirect()->route('food_discounts.index')->with('success', 'food discount deleted successfully.');
     }
-
 
 }
