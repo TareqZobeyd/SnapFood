@@ -88,15 +88,14 @@ class FoodController extends Controller
         // Display a specific food
     }
 
-    public function edit($id)
+    public function edit(Food $food)
     {
-        $food = Food::query()->find($id);
         $categories = Category::all();
         $discounts = FoodDiscount::all();
         return view('foods.edit', compact('food', 'categories', 'discounts'));
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, Food $food)
     {
         $request->validate([
             'name' => 'required|string|max:255',
@@ -106,8 +105,6 @@ class FoodController extends Controller
             'custom_discount' => 'nullable|numeric|between:5,95',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
-
-        $food = Food::query()->findOrFail($id);
 
         $discountPercentage = $request->input('custom_discount') ?? ($food->food_discount ? $food->food_discount->discount_percentage : null);
 
@@ -127,14 +124,10 @@ class FoodController extends Controller
         return redirect()->route('food.index')->with('success', 'Food updated successfully.');
     }
 
-    public function destroy($id)
+    public function destroy(Food $food)
     {
-        $food = Food::query()->find($id);
-        if ($food) {
             $food->delete();
-            return redirect()->route('food.index')->with('success', 'Food deleted successfully.');
-        }
 
-        return redirect()->route('foods.index')->with('error', 'Food not found.');
+            return redirect()->route('food.index')->with('success', 'food deleted successfully.');
     }
 }
