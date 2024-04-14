@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreRestaurantRequest;
 use App\Models\Category;
 use App\Models\Restaurant;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Models\Role;
 
 class RestaurantController extends Controller
@@ -22,16 +24,10 @@ class RestaurantController extends Controller
         return view('restaurants.create', compact('categories'));
     }
 
-    public function store(Request $request)
+    public function store(StoreRestaurantRequest $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'category_id' => 'required|exists:categories,id',
-            'phone' => 'required|string|min:11|unique:restaurants',
-            'address' => 'required|string',
-            'bank_account' => 'required|string|unique:restaurants',
-        ]);
-        $user = auth()->user();
+        $user = Auth::user();
+
         Restaurant::query()->create([
             'name' => $request->input('name'),
             'category_id' => $request->input('category_id'),
@@ -42,7 +38,7 @@ class RestaurantController extends Controller
         ]);
 
         if (!$user->hasRole('seller')) {
-            $sellerRole = Role::query()->where('name', 'seller')->first();
+            $sellerRole = Role::query()->where('name', 'seller')->firstOrFail();
             $user->assignRole($sellerRole);
         }
 
