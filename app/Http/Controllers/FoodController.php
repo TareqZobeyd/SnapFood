@@ -33,21 +33,6 @@ class FoodController extends Controller
 
     }
 
-    private function calculateDiscountedPrice($originalPrice, $foodDiscountId, $customDiscount)
-    {
-        if ($customDiscount !== null) {
-            return $originalPrice - ($originalPrice * ($customDiscount / 100));
-        }
-        if ($foodDiscountId !== null) {
-            $foodDiscount = FoodDiscount::query()->find($foodDiscountId);
-            if ($foodDiscount) {
-                $discount = $foodDiscount->discount_percentage;
-                return $originalPrice - ($originalPrice * ($discount / 100));
-            }
-        }
-        return $originalPrice;
-    }
-
     public function store(StoreFoodRequest $request)
     {
         $user = Auth::user();
@@ -73,7 +58,7 @@ class FoodController extends Controller
 
         ]);
 
-        return redirect()->route('food.index')->with('success', 'Food created successfully.');
+        return redirect()->route('food.index')->with('success', 'food created successfully.');
     }
 
     public function show($id)
