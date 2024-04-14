@@ -1,6 +1,5 @@
 <?php
 
-
 use App\Models\FoodDiscount;
 
 function calculateDiscountedPrice($originalPrice, $foodDiscountId, $customDiscount)

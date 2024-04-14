@@ -21,7 +21,6 @@ class FoodController extends Controller
 
     public function index()
     {
-        $user = Auth::user();
         $foodCategories = Category::query()->where('type', 'food')->get();
         $discounts = FoodDiscount::all();
         $restaurants = Restaurant::all();
@@ -73,18 +72,11 @@ class FoodController extends Controller
         return view('foods.edit', compact('food', 'categories', 'discounts'));
     }
 
-    public function update(Request $request, Food $food)
+    public function update(StoreFoodRequest $request, Food $food)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'price' => 'required|numeric',
-            'category_id' => 'required|exists:categories,id',
-            'food_discount_id' => 'nullable|exists:food_discounts,id',
-            'custom_discount' => 'nullable|numeric|between:5,95',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
 
-        $discountPercentage = $request->input('custom_discount') ?? ($food->food_discount ? $food->food_discount->discount_percentage : null);
+        $discountPercentage = $request->input('custom_discount') ?? ($food->food_discount ?
+            $food->food_discount->discount_percentage : null);
 
         $food->update([
             'name' => $request->input('name'),
@@ -108,4 +100,5 @@ class FoodController extends Controller
 
             return redirect()->route('food.index')->with('success', 'food deleted successfully.');
     }
+
 }
