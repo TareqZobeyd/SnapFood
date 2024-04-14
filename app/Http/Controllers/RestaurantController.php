@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreRestaurantRequest;
+use App\Http\Requests\UpdateRestaurantRequest;
 use App\Models\Category;
 use App\Models\Restaurant;
 use App\Models\User;
@@ -57,26 +58,9 @@ class RestaurantController extends Controller
         return view('admin.restaurants.edit', compact('restaurant', 'categories'));
     }
 
-    public function update(Request $request, $id)
+    public function update(UpdateRestaurantRequest $request, Restaurant $restaurant)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'category_id' => 'required|exists:categories,id',
-            'phone' => 'required|string',
-            'address' => 'required|string',
-            'latitude' => 'required|numeric',
-            'longitude' => 'required|numeric',
-            'bank_account' => 'required|string',
-            'is_open' => 'required|in:on,off',
-            'delivery_cost' => 'required|numeric',
-            'working_hours' => 'nullable|string',
-        ]);
 
-        $restaurant = Restaurant::query()->find($id);
-
-        if (!$restaurant) {
-            return redirect()->route('home')->with('error', 'Restaurant not found.');
-        }
         $is_open = $request->input('is_open') === 'on';
 
         $restaurant->update([
