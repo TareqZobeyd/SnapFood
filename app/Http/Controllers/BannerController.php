@@ -49,10 +49,10 @@ class BannerController extends Controller
                 'description' => $request->input('description'),
             ]);
         } catch (\Exception $e) {
-            return redirect()->route('admin.banners.edit', $banner)->with('error', 'Failed to update banner.');
+            return redirect()->route('admin.banners.edit', $banner)->with('error', 'failed to update banner.');
         }
 
-        return redirect()->route('admin.banners.index')->with('success', 'Banner updated successfully.');
+        return redirect()->route('admin.banners.index')->with('success', 'banner updated successfully.');
     }
 
     public function destroy(Banner $banner)
