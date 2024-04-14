@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\BannerRequest;
+use App\Http\Requests\UpdateBannerRequest;
 use Illuminate\Http\Request;
 use App\Models\Banner;
 
@@ -41,15 +42,15 @@ class BannerController extends Controller
         return view('admin.banners.edit', compact('banner'));
     }
 
-    public function update(Request $request, Banner $banner)
+    public function update(UpdateBannerRequest $request, Banner $banner)
     {
-        $request->validate([
-            'description' => 'nullable|string',
-        ]);
-
-        $banner->update([
-            'description' => $request->input('description'),
-        ]);
+        try {
+            $banner->update([
+                'description' => $request->input('description'),
+            ]);
+        } catch (\Exception $e) {
+            return redirect()->route('admin.banners.edit', $banner)->with('error', 'Failed to update banner.');
+        }
 
         return redirect()->route('admin.banners.index')->with('success', 'Banner updated successfully.');
     }
