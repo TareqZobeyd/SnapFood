@@ -40,7 +40,7 @@ class UserController extends Controller
         }
 
         throw ValidationException::withMessages([
-            'email' => ['Invalid email or password. Please try again.'],
+            'email' => ['invalid email or password. Please try again.'],
         ]);
     }
 

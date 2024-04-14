@@ -51,9 +51,9 @@ class AdminController extends Controller
 
         if ($comment) {
             $comment->delete();
-            return redirect()->route('admin.comments')->with('success', 'Comment soft deleted successfully.');
+            return redirect()->route('admin.comments')->with('success', 'comment soft deleted successfully.');
         }
 
-        return redirect()->route('admin.comments')->with('error', 'Comment not found.');
+        return redirect()->route('admin.comments')->with('error', 'comment not found.');
     }
 }
