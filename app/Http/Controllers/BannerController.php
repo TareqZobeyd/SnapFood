@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\BannerRequest;
 use Illuminate\Http\Request;
 use App\Models\Banner;
 
@@ -19,24 +20,20 @@ class BannerController extends Controller
         return view('admin.banners.create');
     }
 
-    public function store(Request $request)
+    public function store(BannerRequest $request)
     {
-        $request->validate([
-            'image_path' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'description' => 'nullable|string',
-        ]);
-
         try {
             $imagePath = $request->file('image_path')->store('banners', 'public');
         } catch (\Exception $e) {
             return redirect()->route('admin.banners.create')->with('error', 'Error uploading image.');
         }
+
         Banner::query()->create([
             'image_path' => $imagePath,
             'description' => $request->input('description'),
         ]);
 
-        return redirect()->route('admin.banners.index')->with('success', 'Banner created successfully.');
+        return redirect()->route('admin.banners.index')->with('success', 'banner created successfully.');
     }
 
     public function edit(Banner $banner)
