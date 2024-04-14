@@ -16,11 +16,6 @@ class UserController extends Controller
         $restaurants = Restaurant::all();
         return view('user.restaurants', compact('restaurants'));
     }
-    public function showLogin()
-    {
-        return view('user.login');
-    }
-
 
     /**
      * @throws ValidationException
@@ -68,6 +63,7 @@ class UserController extends Controller
 
         return redirect('user/login')->with('success', 'Registration successful. You can now log in.');
     }
+
     public function logout(Request $request)
     {
         Auth::logout();
