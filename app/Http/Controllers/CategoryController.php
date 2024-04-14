@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreCategoryRequest;
 use App\Models\Category;
 use Illuminate\Http\Request;
 
@@ -29,19 +30,18 @@ class CategoryController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreCategoryRequest $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'type' => 'required|in:food,restaurant',
-        ]);
+        try {
+            Category::query()->create([
+                'name' => $request->input('name'),
+                'type' => $request->input('type'),
+            ]);
+        } catch (\Exception $e) {
+            return redirect()->route('categories.create')->with('error', 'failed to create category.');
+        }
 
-        Category::query()->create([
-            'name' => $request->input('name'),
-            'type' => $request->input('type'),
-        ]);
-
-        return redirect()->route('categories.create')->with('success', 'Category created successfully.');
+        return redirect()->route('categories.create')->with('success', 'category created successfully.');
     }
 
     /**
