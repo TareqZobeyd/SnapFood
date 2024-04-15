@@ -3,25 +3,21 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CommentIndexRequest;
 use App\Models\Comment;
 use App\Models\Order;
 use Illuminate\Http\Request;
 
 class CommentController extends Controller
 {
-    public function index(Request $request)
+    public function index(CommentIndexRequest $request)
     {
-        $request->validate([
-            'food_id' => 'nullable|exists:food,id',
-            'restaurant_id' => 'nullable|exists:restaurants,id',
-        ]);
+        $validated = $request->validated();
 
-        auth()->user();
-
-        if (!is_null($request->food_id)) {
+        if (!is_null($validated['food_id'])) {
             $comments = Comment::query()
                 ->join('food_order', 'comments.order_id', '=', 'food_order.order_id')
-                ->where('food_order.food_id', $request->food_id)
+                ->where('food_order.food_id', $validated['food_id'])
                 ->where('comments.confirmed', true)
                 ->orderBy('comments.created_at', 'desc')
                 ->get();
@@ -30,25 +26,24 @@ class CommentController extends Controller
                 return $this->transformCommentByFood($comment);
             });
 
-            return response(['comments' => $transformedComments]);
+            return response()->json(['comments' => $transformedComments]);
         }
 
-        if (!is_null($request->restaurant_id)) {
+        if (!is_null($validated['restaurant_id'])) {
             $orders = Order::query()
-                ->where(['restaurant_id' => $request->restaurant_id])
+                ->where('restaurant_id', $validated['restaurant_id'])
                 ->with(['comments', 'foods'])
                 ->get();
 
             $comments = $orders->flatMap(function ($order) {
-                $confirmedComments = $order->comments->where('confirmed', true);
-
-                return $confirmedComments->map(function ($comment) use ($order) {
+                return $order->comments->where('confirmed', true)->map(function ($comment) use ($order) {
                     return $this->transformComment($comment, $order);
                 });
             });
         }
+
         $sortedComments = $comments->sortByDesc('created_at')->values();
-        return response(['comments' => $sortedComments]);
+        return response()->json(['comments' => $sortedComments]);
     }
 
 
