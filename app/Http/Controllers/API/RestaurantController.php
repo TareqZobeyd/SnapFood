@@ -73,6 +73,7 @@ class RestaurantController extends Controller
         $restaurant_IDs = Restaurant::all()->pluck('id')->toArray();
         if (!in_array($id, $restaurant_IDs)) return \response(['message' => "'this restaurant isn't exist"]);
 
-        return response(["foods details of restaurant number $id:" => new RestaurantFoodsResource(Restaurant::query()->find($id))]);
+        return response(["foods details of restaurant number $id:"
+        => new RestaurantFoodsResource(Restaurant::query()->find($id))]);
     }
 }

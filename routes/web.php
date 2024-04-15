@@ -27,7 +27,9 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', [HomeController::class, 'home'])->name('home');
-Route::get('categories/index', [CategoryController::class, 'index'])->middleware('role:super-admin')->name('categories.index');
+Route::get('categories/index', [CategoryController::class, 'index'])->middleware('role:super-admin')
+    ->name('categories.index');
+
 Route::middleware(['role:super-admin'])->group(function () {
     Route::resource('categories', CategoryController::class)->names([
         'create' => 'categories.create',
@@ -38,39 +40,16 @@ Route::middleware(['role:super-admin'])->group(function () {
         'update' => 'categories.update',
         'destroy' => 'categories.destroy',
     ]);
-});
-Route::prefix('/user')->name('user.')->controller(UserController::class)->group(function () {
-    Route::get('/register', 'create')->name('register');
-    Route::post('/register', 'store')->name('store');
-    Route::get('/login', 'showLogin')->name('show-login');
-    Route::post('/login', 'login')->name('login');
-    Route::post('/logout', 'logout')->name('logout');
-    Route::get('/restaurants', 'index')->name('restaurants');
-});
 
-Route::get('/food/list', [FoodController::class, 'list'])->middleware('role:super-admin')->name('food.list');
-Route::resource('food', FoodController::class)->middleware('role:super-admin|seller')->names([
-    'index' => 'food.index',
-    'create' => 'food.create',
-    'store' => 'food.store',
-    'show' => 'food.show',
-    'edit' => 'food.edit',
-    'update' => 'food.update',
-    'destroy' => 'food.destroy',
-]);
-Route::get('restaurants/create', [RestaurantController::class, 'create'])->middleware('auth')->name('restaurants.create');
-Route::post('restaurants', [RestaurantController::class, 'store'])->name('restaurants.store');
-
-Route::middleware(['role:super-admin'])->group(function () {
-    Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
-    Route::get('admin/users', [AdminController::class, 'showUsers'])->name('admin.users');
-    Route::get('admin/restaurants', [RestaurantController::class, 'index'])->name('admin.restaurants.index');
-    Route::get('/admin/comments', [AdminController::class, 'showComments'])->name('admin.comments');
-    Route::delete('/admin/comments/{id}/soft-delete', [AdminController::class, 'softDeleteComment'])
-        ->name('admin.comments.softDelete');
-    Route::get('/admin/comments/filter', [AdminController::class, 'showComments'])->name('admin.comments.filter');
-    Route::get('admin/cart/cart-ids', [CartController::class, 'getCartIdsView'])->name('cart.ids.view');
-
+    Route::resource('food_discounts', FoodDiscountController::class)->names([
+        'index' => 'food_discounts.index',
+        'create' => 'food_discounts.create',
+        'store' => 'food_discounts.store',
+        'show' => 'food_discounts.show',
+        'edit' => 'food_discounts.edit',
+        'update' => 'food_discounts.update',
+        'destroy' => 'food_discounts.destroy',
+    ]);
 
     Route::resource('admin/banners', BannerController::class)->except(['show'])->names([
         'index' => 'admin.banners.index',
@@ -80,7 +59,35 @@ Route::middleware(['role:super-admin'])->group(function () {
         'update' => 'admin.banners.update',
         'destroy' => 'admin.banners.destroy',
     ]);
+
+    Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
+    Route::get('admin/users', [AdminController::class, 'showUsers'])->name('admin.users');
+    Route::get('admin/restaurants', [RestaurantController::class, 'index'])->name('admin.restaurants.index');
+    Route::get('/admin/comments', [AdminController::class, 'showComments'])->name('admin.comments');
+    Route::delete('/admin/comments/{id}/soft-delete', [AdminController::class, 'softDeleteComment'])
+        ->name('admin.comments.softDelete');
+    Route::get('/admin/comments/filter', [AdminController::class, 'showComments'])->name('admin.comments.filter');
+    Route::get('admin/cart/cart-ids', [CartController::class, 'getCartIdsView'])->name('cart.ids.view');
+
 });
+
+Route::get('/food/list', [FoodController::class, 'list'])->middleware('role:super-admin')
+    ->name('food.list');
+
+Route::resource('food', FoodController::class)->middleware('role:super-admin|seller')->names([
+    'index' => 'food.index',
+    'create' => 'food.create',
+    'store' => 'food.store',
+    'show' => 'food.show',
+    'edit' => 'food.edit',
+    'update' => 'food.update',
+    'destroy' => 'food.destroy',
+]);
+
+Route::get('restaurants/create', [RestaurantController::class, 'create'])->middleware('auth')
+    ->name('restaurants.create');
+
+Route::post('restaurants', [RestaurantController::class, 'store'])->name('restaurants.store');
 
 Route::middleware(['role:seller|super-admin'])->group(function () {
     Route::get('/seller/dashboard', [SellerController::class, 'index'])->name('seller.dashboard.index');
@@ -101,17 +108,15 @@ Route::middleware(['role:seller|super-admin'])->group(function () {
     Route::post('comments/{comment}/confirm', [SellerController::class, 'confirmComment'])->name('comments.confirm');
 });
 
-Route::middleware(['role:super-admin'])->group(function () {
-    Route::resource('food_discounts', FoodDiscountController::class)->names([
-        'index' => 'food_discounts.index',
-        'create' => 'food_discounts.create',
-        'store' => 'food_discounts.store',
-        'show' => 'food_discounts.show',
-        'edit' => 'food_discounts.edit',
-        'update' => 'food_discounts.update',
-        'destroy' => 'food_discounts.destroy',
-    ]);
+Route::prefix('/user')->name('user.')->controller(UserController::class)->group(function () {
+    Route::get('/register', 'create')->name('register');
+    Route::post('/register', 'store')->name('store');
+    Route::get('/login', 'showLogin')->name('show-login');
+    Route::post('/login', 'login')->name('login');
+    Route::post('/logout', 'logout')->name('logout');
+    Route::get('/restaurants', 'index')->name('restaurants');
 });
+
 
 
 

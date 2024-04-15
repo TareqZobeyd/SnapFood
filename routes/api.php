@@ -4,7 +4,6 @@ use App\Http\Controllers\API\AddressController;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\CartController;
 use App\Http\Controllers\API\CommentController;
-use App\Http\Controllers\API\OrderController;
 use App\Http\Controllers\API\RestaurantController;
 use Illuminate\Support\Facades\Route;
 
