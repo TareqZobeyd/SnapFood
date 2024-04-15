@@ -4,9 +4,11 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CommentIndexRequest;
+use App\Http\Requests\StoreCommentRequest;
 use App\Models\Comment;
 use App\Models\Order;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Response;
 
 class CommentController extends Controller
 {
@@ -47,37 +49,38 @@ class CommentController extends Controller
     }
 
 
-    public function store(Request $request)
+    public function store(StoreCommentRequest $request)
     {
-        $request->validate([
-            'order_id' => 'required|integer',
-            'score' => 'required|integer|min:1|max:5',
-            'message' => 'required|string|min:5',
-        ]);
-        $order = Order::query()->find($request->order_id);
+        $validated = $request->validated();
+
+        $order = Order::query()->find($validated['order_id']);
         if (!$order) {
-            return response(['error' => 'order not found.']);
+            return Response::json(['error' => 'order not found.'], 404);
         }
+
         if ($order->seller_status !== 'delivered') {
-            return response(['error' => 'you can only comment on delivered orders.']);
+            return Response::json(['error' => 'you can only comment on delivered orders.'], 403);
         }
+
         $existingComment = Comment::where('user_id', auth()->user()->id)
             ->where('order_id', $order->id)
             ->first();
+
         if ($existingComment) {
-            return response(['error' => 'you have already commented on this order.']);
+            return Response::json(['error' => 'you have already commented on this order.'], 409);
         }
+
         $restaurantId = $order->restaurant_id;
 
         Comment::query()->create([
             'user_id' => auth()->user()->id,
             'order_id' => $order->id,
             'restaurant_id' => $restaurantId,
-            'message' => $request->message,
-            'score' => $request->score,
+            'message' => $validated['message'],
+            'score' => $validated['score'],
         ]);
 
-        return response(['message' => 'comment created successfully']);
+        return Response::json(['message' => 'comment created successfully'], 201);
     }
 
     protected function transformComment($comment, $order)
