@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RegisterUserRequest;
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -25,12 +26,7 @@ class AuthController extends Controller
             'password' => Hash::make($validated['password']),
         ]);
 
-        $token = $user->createToken('authToken')->plainTextToken;
-
-        return response()->json([
-            'message' => 'you registered successfully.',
-            'token' => $token
-        ], ResponseAlias::HTTP_CREATED);
+        return new UserResource($user);
     }
 
     public function login(Request $request)
