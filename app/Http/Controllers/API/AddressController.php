@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreAddressRequest;
 use App\Http\Requests\UpdateAddressRequest;
+use App\Http\Resources\AddressResource;
 use App\Models\Address;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -17,24 +18,14 @@ class AddressController extends Controller
 {
     public function index()
     {
-        $user = auth()->user();
+        $user = Auth::user();
         $addresses = $user->addresses;
 
-        if ($addresses->count() === 0) {
-            return response(['message' => 'you dont have any addresses.']);
+        if ($addresses->isEmpty()) {
+            return response()->json(['message' => 'you don\'t have any addresses.'], 404);
         }
 
-        $formattedAddresses = $addresses->map(function ($address) {
-            return [
-                'id' => $address->id,
-                'title' => $address->title,
-                'address' => $address->address,
-                'latitude' => $address->latitude,
-                'longitude' => $address->longitude,
-            ];
-        });
-
-        return response($formattedAddresses);
+        return AddressResource::collection($addresses);
     }
 
     public function store(StoreAddressRequest $request)
