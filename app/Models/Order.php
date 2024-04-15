@@ -37,23 +37,4 @@ class Order extends Model
         return $this->hasMany(Comment::class);
     }
 
-    public function getAdditionalInfoAttribute()
-    {
-        $restaurant = $this->restaurant;
-
-        $foods = $this->foods->map(function ($food) {
-            return [
-                'id' => $food->id,
-                'title' => $food->name,
-                'count' => $food->pivot->count,
-                'price' => $food->discounted_price,
-            ];
-        });
-        return [
-            'restaurant' => [
-                'title' => $restaurant->name,
-            ],
-            'food' => $foods,
-        ];
-    }
 }

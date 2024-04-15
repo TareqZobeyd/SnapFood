@@ -30,20 +30,4 @@ class Comment extends Model
         return $this->belongsTo(Order::class, 'order_id');
     }
 
-    public function getAdditionalInfoAttribute()
-    {
-        $additionalInfo = [
-            'author' => [
-                'name' => $this->user->name,
-            ],
-            'created_at' => $this->created_at->format('Y-m-d H:i:s'),
-            'score' => $this->score,
-            'content' => $this->message,
-        ];
-        if ($this->order) {
-            $additionalInfo['food'] = $this->order->foods->pluck('name')->all();
-        }
-        return $additionalInfo;
-    }
-
 }
