@@ -23,7 +23,8 @@ class RestaurantResource extends JsonResource
                 'longitude' => $this->longitude,
             ],
             'is_open' => (bool) $this->is_open,
-            'score' => $this->score ?? null,
+            'score' => $this->comments->avg('score') ?? null,
+            'comments_count' => $this->comments_count,
         ];
     }
 }

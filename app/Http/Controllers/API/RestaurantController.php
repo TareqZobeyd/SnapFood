@@ -58,54 +58,13 @@ class RestaurantController extends Controller
 
     public function show($id)
     {
-        $restaurant = Restaurant::query()->find($id);
-        $comments = Comment::query()->find($id);
+        $restaurant = Restaurant::query()->withCount('comments')->find($id);
 
         if (!$restaurant) {
             return response(['message' => "this restaurant doesn't exist"], 404);
         }
-        $schedule = [
-            'saturday' => [
-                'start' => '11:00',
-                'end' => '23:00',
-            ],
-            'sunday' => [
-                'start' => '11:00',
-                'end' => '23:00',
-            ],
-            'monday' => [
-                'start' => '11:00',
-                'end' => '23:00',
-            ],
-            'tuesday' => [
-                'start' => '11:00',
-                'end' => '23:00',
-            ],
-            'wednesday' => [
-                'start' => '11:00',
-                'end' => '23:00',
-            ],
-            'thursday' => [
-                'start' => '11:00',
-                'end' => '23:00',
-            ],
-            'friday' => null,
-        ];
 
-        $response = [
-            'id' => $restaurant->id,
-            'title' => $restaurant->name,
-            'address' => [
-                'address' => $restaurant->address,
-                'latitude' => $restaurant->latitude,
-                'longitude' => $restaurant->longitude,
-            ],
-            'is_open' => (bool)$restaurant->is_open,
-            'score' => $comments->score ?? null,
-            'comments_count' => $restaurant->comments_count ?? null,
-            'schedule' => $schedule,
-        ];
-        return response($response);
+        return new RestaurantResource($restaurant);
     }
 
     public function food($id)
