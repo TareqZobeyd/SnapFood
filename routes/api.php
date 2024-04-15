@@ -21,13 +21,13 @@ use Illuminate\Support\Facades\Route;
 //Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //    return $request->user();
 //});
-Route::post('auth/register', [AuthController::class, 'register'])->name('api.auth.register');
-Route::post('auth/login', [AuthController::class, 'logIn'])->name('api.auth.login');
+Route::post('auth/register', [AuthController::class, 'register']);
+Route::post('auth/login', [AuthController::class, 'logIn']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('auth/logout', [AuthController::class, 'logout']);
-    Route::put('auth/edit', [AuthController::class, 'edit']);
-    Route::patch('auth/edit', [AuthController::class, 'edit']);
+    Route::put('auth/edit', [AuthController::class, 'update']);
+    Route::patch('auth/edit', [AuthController::class, 'update']);
     Route::get('addresses', [AddressController::class, 'index']);
     Route::post('addresses', [AddressController::class, 'store']);
     Route::post('addresses/{id}', [AddressController::class, 'setActiveAddress']);

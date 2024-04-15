@@ -54,7 +54,7 @@ class AuthController extends Controller
         return response(['message' => 'logged out'], 200);
     }
 
-    public function edit(Request $request)
+    public function update(Request $request)
     {
         $request->validate([
             'name' => 'required|string',
@@ -70,4 +70,5 @@ class AuthController extends Controller
 
         return response(['message' => 'your personal information updated successfully']);
     }
+
 }
