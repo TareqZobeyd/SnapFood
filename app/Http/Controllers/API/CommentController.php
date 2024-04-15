@@ -48,7 +48,6 @@ class CommentController extends Controller
         return response()->json(['comments' => $sortedComments]);
     }
 
-
     public function store(StoreCommentRequest $request)
     {
         $validated = $request->validated();
