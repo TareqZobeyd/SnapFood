@@ -5,6 +5,8 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CommentIndexRequest;
 use App\Http\Requests\StoreCommentRequest;
+use App\Http\Resources\CommentByFoodResource;
+use App\Http\Resources\CommentResource;
 use App\Models\Comment;
 use App\Models\Order;
 use Illuminate\Http\Request;
@@ -24,11 +26,7 @@ class CommentController extends Controller
                 ->orderBy('comments.created_at', 'desc')
                 ->get();
 
-            $transformedComments = $comments->map(function ($comment) {
-                return $this->transformCommentByFood($comment);
-            });
-
-            return response()->json(['comments' => $transformedComments]);
+            return response()->json(['comments' => CommentByFoodResource::collection($comments)]);
         }
 
         if (!is_null($validated['restaurant_id'])) {
@@ -39,13 +37,13 @@ class CommentController extends Controller
 
             $comments = $orders->flatMap(function ($order) {
                 return $order->comments->where('confirmed', true)->map(function ($comment) use ($order) {
-                    return $this->transformComment($comment, $order);
+                    return new CommentResource($comment);
                 });
             });
         }
 
         $sortedComments = $comments->sortByDesc('created_at')->values();
-        return response()->json(['comments' => $sortedComments]);
+        return response()->json(['comments' => CommentResource::collection($sortedComments)]);
     }
 
     public function store(StoreCommentRequest $request)
@@ -80,33 +78,6 @@ class CommentController extends Controller
         ]);
 
         return Response::json(['message' => 'comment created successfully'], 201);
-    }
-
-    protected function transformComment($comment, $order)
-    {
-        $foods = $order->foods->pluck('name')->toArray();
-
-        return [
-            'author' => [
-                'name' => $comment->user->name,
-            ],
-            'food' => $foods,
-            'created_at' => "",
-            'score' => $comment->score,
-            'content' => $comment->message,
-        ];
-    }
-
-    protected function transformCommentByFood($comment)
-    {
-        return [
-            'author' => [
-                'name' => $comment->user->name,
-            ],
-            'created_at' => "",
-            'score' => $comment->score,
-            'content' => $comment->message,
-        ];
     }
 
 }
