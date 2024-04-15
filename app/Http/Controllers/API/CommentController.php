@@ -46,11 +46,9 @@ class CommentController extends Controller
                     return $this->transformComment($comment, $order);
                 });
             });
-
-            $sortedComments = $comments->sortByDesc('created_at')->values();
-
-            return response(['comments' => $sortedComments]);
         }
+        $sortedComments = $comments->sortByDesc('created_at')->values();
+        return response(['comments' => $sortedComments]);
     }
 
 
