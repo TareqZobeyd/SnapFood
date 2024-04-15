@@ -52,9 +52,8 @@ class AddressController extends Controller
         return response()->json(['message' => 'your address is updated successfully'], ResponseAlias::HTTP_OK);
     }
 
-    public function setActiveAddress($id)
+    public function setActiveAddress(Address $specificAddress)
     {
-        $specificAddress = Address::query()->findOrFail($id);
         $user = auth()->user();
 
         if ($user->id === $specificAddress->addressable_id && $specificAddress->addressable_type === 'App\\Models\\User') {
