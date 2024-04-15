@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterUserRequest;
+use App\Http\Requests\UpdateUserRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -54,21 +55,18 @@ class AuthController extends Controller
         return response(['message' => 'logged out'], 200);
     }
 
-    public function update(Request $request)
+    public function update(UpdateUserRequest $request)
     {
-        $request->validate([
-            'name' => 'required|string',
-            'phone' => 'required|string|min:11',
-        ]);
+        $validated = $request->validated();
 
-        $user = User::query()->find(auth()->user()->id);
-
-        $user->name = $request->name;
-        $user->phone = $request->phone;
-
+        $user = User::query()->findOrFail(Auth::id());
+        $user->name = $validated['name'];
+        $user->phone = $validated['phone'];
         $user->save();
 
-        return response(['message' => 'your personal information updated successfully']);
+        return response()->json([
+            'message' => 'your personal information updated successfully.',
+        ]);
     }
 
 }
