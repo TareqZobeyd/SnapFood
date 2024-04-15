@@ -3,10 +3,14 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreAddressRequest;
 use App\Models\Address;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
 class AddressController extends Controller
 {
@@ -32,25 +36,20 @@ class AddressController extends Controller
         return response($formattedAddresses);
     }
 
-    public function store(Request $request)
+    public function store(StoreAddressRequest $request)
     {
-        $user = auth()->user();
-        $fields = $request->validate([
-            'title' => 'required|string|unique:addresses,title,NULL,id,addressable_id,' . $user->id,
-            'address' => 'required|string|unique:addresses,address,NULL,id,addressable_id,'
-                . auth()->user()->id . ',latitude,' . $request->latitude . ',longitude,' . $request->longitude,
-            'latitude' => 'required|numeric',
-            'longitude' => 'required|numeric',
+        $user = Auth::user();
+
+        $validated = $request->validated();
+
+        $user->addresses()->create([
+            'title' => $validated['title'],
+            'address' => $validated['address'],
+            'latitude' => $validated['latitude'],
+            'longitude' => $validated['longitude'],
         ]);
 
-        User::query()->find(auth()->user()->id)->addresses()->create([
-            'title' => $fields['title'],
-            'address' => $fields['address'],
-            'latitude' => $fields['latitude'],
-            'longitude' => $fields['longitude'],
-        ]);
-
-        return response(['message' => 'your address is submitted successfully']);
+        return response()->json(['message' => 'Your address is submitted successfully'], ResponseAlias::HTTP_CREATED);
     }
 
     public function update(Request $request, $id)
