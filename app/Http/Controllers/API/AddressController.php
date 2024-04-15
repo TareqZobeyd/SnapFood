@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreAddressRequest;
+use App\Http\Requests\UpdateAddressRequest;
 use App\Models\Address;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -52,17 +53,12 @@ class AddressController extends Controller
         return response()->json(['message' => 'Your address is submitted successfully'], ResponseAlias::HTTP_CREATED);
     }
 
-    public function update(Request $request, $id)
+    public function update(UpdateAddressRequest $request, Address $address)
     {
-        $address = Address::query()->find($id);
-        $request->validate([
-            'title' => 'required|string',
-            'address' => 'required|string',
-            'latitude' => 'required|numeric',
-            'longitude' => 'required|numeric',
-        ]);
-        $address->update($request->all());
-        return response(['message' => 'your address is updated successfully']);
+
+        $address->update($request->validated());
+
+        return response()->json(['message' => 'your address is updated successfully'], ResponseAlias::HTTP_OK);
     }
 
     public function setActiveAddress($id)
