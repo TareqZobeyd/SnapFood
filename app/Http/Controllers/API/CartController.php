@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\AddToCartRequest;
 use App\Models\Food;
 use App\Models\Order;
 use App\Models\Restaurant;
@@ -39,12 +40,8 @@ class CartController extends Controller
         return response(['error' => 'cart not found or invalid data.']);
     }
 
-    public function addToCart(Request $request)
+    public function addToCart(AddToCartRequest $request)
     {
-        $request->validate([
-            'food_id' => 'required|exists:food,id',
-            'count' => 'required|integer|min:1',
-        ]);
 
         $food = Food::query()->find($request->food_id);
 
@@ -88,12 +85,8 @@ class CartController extends Controller
         return response(['error' => 'cart not found or invalid data.']);
     }
 
-    public function update(Request $request)
+    public function update(AddToCartRequest $request)
     {
-        $request->validate([
-            'food_id' => 'required',
-            'count' => 'required|integer|min:1',
-        ]);
 
         $cartId = $request->user()->id;
         $foodId = $request->food_id;
@@ -198,26 +191,6 @@ class CartController extends Controller
 
             $this->storeRedisCart($cart['id'], $cart);
         }
-    }
-
-    private function getRestaurantDetails($restaurantId)
-    {
-        $restaurant = Restaurant::query()->find($restaurantId);
-
-        if ($restaurant) {
-            return [
-                'title' => $restaurant->name,
-                'image' => $restaurant->image,
-            ];
-        }
-
-        return null;
-    }
-
-    private function getRedisCarts()
-    {
-        $cartKeys = Redis::keys('cart:*');
-        return $cartKeys;
     }
 
     private function getRedisCart($id)
