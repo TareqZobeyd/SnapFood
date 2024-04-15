@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterUserRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
@@ -29,26 +30,28 @@ class AuthController extends Controller
         return new UserResource($user);
     }
 
-    public function login(Request $request)
+    public function login(LoginRequest $request)
     {
-        $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
-        ]);
+        $validated = $request->validated();
 
-        $user = User::query()->where('email', $request->input('email'))->first();
-        if (!$user || !Hash::check($request->input('password'), $user->password)) {
+        if (!Auth::attempt($validated)) {
             throw ValidationException::withMessages([
-                'email' => ['email or password are incorrect.'],
+                'email' => ['email or password is incorrect.'],
             ]);
         }
-        return response(['message' => 'you are logged in', 'token' => $user->createToken('authToken')->plainTextToken]);
+
+        $user = Auth::user();
+
+        return (new UserResource($user))
+            ->additional([
+                'message' => 'you are logged in.',
+            ]);
     }
 
     public function logout()
     {
         Auth::user()->tokens()->delete();
-        return response(['Message' => 'logged out'], 200);
+        return response(['message' => 'logged out'], 200);
     }
 
     public function edit(Request $request)
