@@ -3,33 +3,34 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\RegisterUserRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
 class AuthController extends Controller
 {
-    public function register(Request $request)
+    public function register(RegisterUserRequest $request)
     {
-        $fields = $request->validate([
-            'name' => 'required|string',
-            'email' => 'required|unique:users|email',
-            'phone' => 'required|string|min:11',
-            'password' => 'required|string',
-        ]);
+        $validated = $request->validated();
 
         $user = User::query()->create([
-            'name' => $fields['name'],
-            'email' => $fields['email'],
-            'phone' => $fields['phone'],
-            'password' => bcrypt($fields['password']),
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'phone' => $validated['phone'],
+            'password' => Hash::make($validated['password']),
         ]);
 
         $token = $user->createToken('authToken')->plainTextToken;
 
-        return response(['message' => 'you registered successfully', 'token' => $token], 201);
+        return response()->json([
+            'message' => 'you registered successfully.',
+            'token' => $token
+        ], ResponseAlias::HTTP_CREATED);
     }
 
     public function login(Request $request)
