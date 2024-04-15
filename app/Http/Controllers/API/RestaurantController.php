@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\RestaurantFoodsResource;
+use App\Http\Resources\RestaurantResource;
 use App\Models\Category;
 use App\Models\Comment;
 use App\Models\Food;
@@ -13,7 +14,7 @@ use Illuminate\Support\Facades\DB;
 
 class RestaurantController extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
         $user = auth()->user();
 
@@ -23,7 +24,6 @@ class RestaurantController extends Controller
             if ($userAddress) {
                 $userLatitude = $userAddress->latitude;
                 $userLongitude = $userAddress->longitude;
-
             } else {
                 return response(['error' => 'you do not have an active address.'], 400);
             }
@@ -38,8 +38,9 @@ class RestaurantController extends Controller
                     'restaurants.latitude',
                     'restaurants.longitude',
                     'restaurants.is_open',
-                    DB::raw('(6371 * acos(cos(radians(?)) * cos(radians(restaurants.latitude)) * cos(radians(restaurants.longitude)
-                     - radians(?)) + sin(radians(?)) * sin(radians(restaurants.latitude)))) AS distance'),
+                    DB::raw('(6371 * acos(cos(radians(?)) * cos(radians(restaurants.latitude)) *
+                     cos(radians(restaurants.longitude) - radians(?)) + sin(radians(?)) * sin(radians(restaurants.latitude))))
+                      AS distance'),
                     DB::raw('5 as userLatitude')
                 )
                 ->addBinding([$userLatitude, $userLongitude, $userLatitude], 'select')
@@ -47,19 +48,7 @@ class RestaurantController extends Controller
                 ->orderBy('distance', 'asc')
                 ->get();
 
-            $responseRestaurants = $restaurants->map(function ($restaurant) {
-                return [
-                    'id' => $restaurant->id,
-                    'title' => $restaurant->name,
-                    'address' => [
-                        'address' => $restaurant->address,
-                        'latitude' => $restaurant->latitude,
-                        'longitude' => $restaurant->longitude,
-                    ],
-                    'is_open' => (bool)$restaurant->is_open,
-                    'score' => $restaurant->score ?? null,
-                ];
-            });
+            $responseRestaurants = RestaurantResource::collection($restaurants);
 
             return response($responseRestaurants);
         } else {
