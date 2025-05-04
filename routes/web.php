@@ -113,6 +113,7 @@ Route::prefix('/user')->name('user.')->controller(UserController::class)->group(
     Route::post('/register', 'store')->name('store');
     Route::get('/login', 'showLogin')->name('show-login');
     Route::post('/login', 'login')->name('login');
+    Route::get('/logout', 'showLogout')->name('logout.show');
     Route::post('/logout', 'logout')->name('logout');
     Route::get('/restaurants', 'index')->name('restaurants');
 });

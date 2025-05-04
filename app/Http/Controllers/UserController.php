@@ -36,6 +36,11 @@ class UserController extends Controller
         ]);
     }
 
+    public function showLogin()
+    {
+        return view('user.login');
+    }
+
     public function create()
     {
         return view('user.register');
@@ -55,14 +60,18 @@ class UserController extends Controller
         return redirect('user/login')->with('success', 'registration successful. you can now log in.');
     }
 
+    public function showLogout()
+    {
+        return view('auth.logout');
+    }
+
     public function logout(Request $request)
     {
         Auth::logout();
 
         $request->session()->invalidate();
-
         $request->session()->regenerateToken();
 
-        return redirect('/');
+        return redirect('/')->with('success', 'شما با موفقیت از حساب کاربری خود خارج شدید.');
     }
 }

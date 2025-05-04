@@ -11,41 +11,28 @@ class Restaurant extends Model
 
     protected $fillable = [
         'name',
-        'category_id',
+        'description',
         'address',
-        'latitude',
-        'longitude',
         'phone',
-        'bank_account',
+        'image',
+        'category_id',
         'user_id',
-        'is_open',
-        'delivery_cost',
-        'working_hours'
+        'is_open'
     ];
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class);
     }
 
-    public function categories()
+    public function foods()
     {
-        return $this->hasMany(Category::class, 'category_id');
-    }
-
-    public function food()
-    {
-        return $this->hasMany(Food::class, 'restaurant_id');
-    }
-
-    public function comments()
-    {
-        return $this->hasMany(Comment::class);
-    }
-
-    public function address()
-    {
-        return $this->morphOne(Address::class, 'addressable');
+        return $this->hasMany(Food::class);
     }
 
     public function orders()
